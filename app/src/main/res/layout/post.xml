@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/post_margin"
+    card_view:cardCornerRadius="@dimen/cardview_default_radius"
+    card_view:cardElevation="@dimen/cardview_default_elevation"
+    card_view:contentPadding="@dimen/post_contentPadding">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_post_border"
+        android:orientation="vertical"
+        android:padding="@dimen/post_layoutPadding">
+
+        <include layout="@layout/post_header" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/post_dividerHeight"
+            android:layout_marginBottom="@dimen/post_dividerMargin"
+            android:layout_marginTop="@dimen/post_dividerMargin"
+            android:background="@android:color/black" />
+
+        <android.support.v4.widget.Space
+            android:layout_width="0dp"
+            android:layout_height="@dimen/post_verticalSpacing" />
+
+        <TextView
+            android:id="@+id/post_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="@string/text" />
+
+        <android.support.v4.widget.Space
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginBottom="@dimen/post_mediaMargin"
+            android:layout_marginTop="@dimen/post_mediaMargin" />
+
+        <LinearLayout
+            android:id="@+id/content_media"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+
+        <android.support.v4.widget.Space
+            android:layout_width="0dp"
+            android:layout_height="@dimen/post_verticalSpacing" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/post_dividerHeight"
+            android:layout_marginBottom="@dimen/post_dividerMargin"
+            android:layout_marginTop="@dimen/post_dividerMargin"
+            android:background="@android:color/black" />
+
+        <include layout="@layout/post_footer" />
+
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>
