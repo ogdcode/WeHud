@@ -96,8 +96,6 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
         mAdapter = new VPAdapter(getChildFragmentManager());
         mAdapter.add(PostsFragment.newInstance(), getString(R.string.tab_myFeeds));
 
-        this.getPages();
-
         mPager.setAdapter(mAdapter);
         mPager.setCurrentItem(mCurrentPage);
         mPager.addOnPageChangeListener(this);
@@ -108,6 +106,8 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
         filter.addAction(Constants.INTENT_PAGES_LIST);
 
         mContext.registerReceiver(mReceiver, filter);
+
+        this.getPages();
 
         return view;
     }
