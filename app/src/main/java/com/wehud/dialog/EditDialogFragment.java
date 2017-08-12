@@ -70,11 +70,11 @@ public final class EditDialogFragment extends DialogFragment {
         final String hint = bundle.getString(KEY_HINT);
         final boolean isPassword = bundle.getBoolean(KEY_PASSWORD);
 
-        final View headerView = LayoutInflater.from(context).inflate(R.layout.dialog_edit_header, null);
+        final View headerView = LayoutInflater.from(context).inflate(R.layout.dialog_header, null);
         final View bodyView = LayoutInflater.from(context).inflate(R.layout.dialog_edit, null);
 
-        final TextView headerTitle = (TextView) headerView.findViewById(R.id.dialog_headerTitle);
-        if (!TextUtils.isEmpty(title)) headerTitle.setText(title);
+        final TextView titleView = (TextView) headerView.findViewById(R.id.dialog_title);
+        if (!TextUtils.isEmpty(title)) titleView.setText(title);
 
 
         final EditText bodyField = (EditText) bodyView.findViewById(R.id.dialog_editField);

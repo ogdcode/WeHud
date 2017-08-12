@@ -2,15 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?attr/colorPrimary"
     android:orientation="vertical"
-    android:padding="@dimen/dialog_headerPadding">
+    android:padding="@dimen/dialog_bodyPadding">
 
     <TextView
-        android:id="@+id/dialog_headerTitle"
-        style="@style/TextAppearance.AppCompat.Medium"
+        android:id="@+id/dialog_message"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@android:color/white" />
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

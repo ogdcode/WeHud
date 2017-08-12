@@ -31,6 +31,9 @@ public final class Constants {
 
     public static final String GET = "GET";
     public static final String POST = "POST";
+    public static final String PUT = "PUT";
+    public static final String DELETE = "DELETE";
+    public static final String PATCH = "PATCH";
 
     public static final int HTTP_OK = 200;
     public static final int HTTP_CREATED = 201;
@@ -45,6 +48,7 @@ public final class Constants {
 
     public static final String INTENT_POSTS = "intent_posts";
     public static final String INTENT_PAGES_ADD = "intent_pages_add";
+    public static final String INTENT_PAGES_REMOVE = "intent_pages_remove";
     public static final String INTENT_PAGES_LIST = "intent_pages_list";
     public static final String EXTRA_API_CALLBACK = "extra_callback";
 }

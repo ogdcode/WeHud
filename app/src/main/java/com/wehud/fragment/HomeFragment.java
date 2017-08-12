@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,10 +21,12 @@ import com.google.gson.reflect.TypeToken;
 import com.wehud.R;
 import com.wehud.adapter.VPAdapter;
 import com.wehud.dialog.EditDialogFragment;
+import com.wehud.dialog.TextDialogFragment;
 import com.wehud.model.Page;
 import com.wehud.network.APICall;
 import com.wehud.util.Constants;
 import com.wehud.util.GsonUtils;
+import com.wehud.util.Utils;
 
 import java.lang.reflect.Type;
 import java.util.HashMap;
@@ -31,17 +34,19 @@ import java.util.List;
 import java.util.Map;
 
 public class HomeFragment extends Fragment implements ViewPager.OnPageChangeListener,
-        EditDialogFragment.OnEditListener {
+        EditDialogFragment.OnEditListener, TextDialogFragment.OnDismissOkListener {
 
     private static final String KEY_CURRENT_PAGE = "key_currentPage";
 
-    private static final String KEY_TITLE = "key_title";
+    private static final String PARAM_TITLE = "title";
 
     private VPAdapter mAdapter;
     private ViewPager mPager;
 
     private int mCurrentPage;
     private Context mContext;
+
+    private List<Page> mPages;
 
     private boolean mPaused;
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
@@ -51,6 +56,7 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
 
             if (intent.getAction().equals(Constants.INTENT_PAGES_ADD) && !mPaused) {
                 Page page = GsonUtils.getInstance().fromJson(payload, Page.class);
+                mPages.add(page);
                 mAdapter.add(PostsFragment.newInstance(), page.getTitle());
                 mAdapter.notifyDataSetChanged();
                 mPager.invalidate();
@@ -58,15 +64,23 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
 
             if (intent.getAction().equals(Constants.INTENT_PAGES_LIST) && !mPaused) {
                 Type pageListType = new TypeToken<List<Page>>(){}.getType();
-                List<Page> pageList = GsonUtils.getInstance().fromJson(payload, pageListType);
+                mPages = GsonUtils.getInstance().fromJson(payload, pageListType);
 
-                if (!pageList.isEmpty()) {
-                    for (Page page : pageList)
+                if (!mPages.isEmpty()) {
+                    for (Page page : mPages)
                         mAdapter.add(PostsFragment.newInstance(), page.getTitle());
 
                     mAdapter.notifyDataSetChanged();
                     mPager.invalidate();
                 }
+            }
+
+            if (intent.getAction().equals(Constants.INTENT_PAGES_REMOVE) && !mPaused) {
+                mAdapter.remove(mAdapter.getItem(mCurrentPage), mAdapter.getPageTitle(mCurrentPage));
+                mAdapter.notifyDataSetChanged();
+                mPager.invalidate();
+
+                Utils.toast(mContext, getString(R.string.message_pageRemoved));
             }
         }
     };
@@ -102,6 +116,7 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
         IntentFilter filter = new IntentFilter();
         filter.addAction(Constants.INTENT_PAGES_ADD);
         filter.addAction(Constants.INTENT_PAGES_LIST);
+        filter.addAction(Constants.INTENT_PAGES_REMOVE);
 
         mContext.registerReceiver(mReceiver, filter);
 
@@ -117,8 +132,9 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
     @Override
     public void onResume() {
         super.onResume();
+        if (!mPaused) this.getPages();
+
         mPaused = false;
-        if (mReceiver != null) this.getPages();
     }
 
     @Override
@@ -147,6 +163,11 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
                 );
                 break;
             case R.id.menu_delete:
+                String pageTitle = mPages.get(mCurrentPage - 1).getTitle();
+                TextDialogFragment.generate(
+                        getFragmentManager(), this,
+                        pageTitle, getString(R.string.dialogMessage_removePage)
+                );
                 break;
             default:
                 return super.onOptionsItemSelected(item);
@@ -181,6 +202,11 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
         if (mReceiver != null) this.createPage(text);
     }
 
+    @Override
+    public void onDismissOk() {
+        if (mReceiver != null) this.removePage();
+    }
+
     private void getPages() {
         Map<String, String> headers = new HashMap<>();
         headers.put(Constants.HEADER_CONTENT_TYPE, Constants.APPLICATION_JSON);
@@ -193,7 +219,28 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
                 Constants.API_PAGES,
                 headers
         );
-        call.execute();
+        if (!call.isLoading()) call.execute();
+    }
+
+    private void removePage() {
+        Map<String, String> headers = new HashMap<>();
+        headers.put(Constants.HEADER_CONTENT_TYPE, Constants.APPLICATION_JSON);
+        headers.put(Constants.HEADER_ACCEPT, Constants.APPLICATION_JSON);
+
+        Map<String, String> parameters = new HashMap<>();
+        parameters.put(Constants.PARAM_TOKEN, Constants.TOKEN);
+
+        String pageId = mPages.get(mCurrentPage - 1).getId();
+
+        APICall call = new APICall(
+                mContext,
+                Constants.INTENT_PAGES_REMOVE,
+                Constants.DELETE,
+                Constants.API_PAGES + '/' + pageId,
+                headers,
+                parameters
+        );
+        if (!call.isLoading()) call.execute();
     }
 
     private void createPage(String title) {
@@ -205,7 +252,7 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
         parameters.put(Constants.PARAM_TOKEN, Constants.TOKEN);
 
         Map<String, String> page = new HashMap<>();
-        page.put(KEY_TITLE, title);
+        page.put(PARAM_TITLE, title);
 
         String body = GsonUtils.getInstance().toJson(page);
 
@@ -218,6 +265,6 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
                 headers,
                 parameters
         );
-        call.execute();
+        if (!call.isLoading()) call.execute();
     }
 }

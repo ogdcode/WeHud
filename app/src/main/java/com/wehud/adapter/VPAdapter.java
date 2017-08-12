@@ -57,7 +57,7 @@ public final class VPAdapter extends FragmentStatePagerAdapter {
     }
 
     @Override
-    public CharSequence getPageTitle(int position) {
+    public String getPageTitle(int position) {
         return mTitles.get(position);
     }
 }

@@ -51,7 +51,7 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 if (!mPosts.isEmpty()) {
                     PostsAdapter adapter = new PostsAdapter(mPosts);
                     mPostListView.setAdapter(adapter);
-                    
+
                     mEmptyLayout.setVisibility(View.GONE);
                     mSwipeLayout.setVisibility(View.VISIBLE);
                     mSwipeLayout.setRefreshing(false);
@@ -134,6 +134,6 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 Constants.API_POSTS,
                 headers
         );
-        call.execute();
+        if (!call.isLoading()) call.execute();
     }
 }

@@ -23,6 +23,8 @@ public final class APICall extends AsyncTask<Void, Void, Response> {
     private Map<String, String> mHeaders;
     private Map<String, String> mParameters;
 
+    private boolean mIsLoading;
+
     // This class should not be called without parameters.
     private APICall() {
     }
@@ -48,6 +50,16 @@ public final class APICall extends AsyncTask<Void, Void, Response> {
         mParameters = parameters;
     }
 
+    public boolean isLoading() {
+        return mIsLoading;
+    }
+
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+        mIsLoading = true;
+    }
+
     @Override
     protected final Response doInBackground(Void... params) {
         Request request = new Request(mMethod, mUrl, mBody, mHeaders, mParameters);
@@ -56,6 +68,7 @@ public final class APICall extends AsyncTask<Void, Void, Response> {
 
     @Override
     protected void onPostExecute(Response response) {
+        mIsLoading = false;
         String content = response.getContent();
         Intent intent = new Intent(mAction);
         intent.putExtra(Constants.EXTRA_API_CALLBACK, content);

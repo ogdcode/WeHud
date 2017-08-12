@@ -21,4 +21,6 @@
     <string name="editDialog_show_password">Show Password</string>
     <string name="dialogTitle_addPage">New Page</string>
     <string name="hint_name">Name</string>
+    <string name="dialogMessage_removePage">Remove this page?</string>
+    <string name="message_pageRemoved">Page Removed</string>
 </resources>
