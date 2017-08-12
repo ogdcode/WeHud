@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -52,7 +51,7 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            String payload = intent.getStringExtra(Constants.EXTRA_API_CALLBACK);
+            String payload = intent.getStringExtra(Constants.EXTRA_API_RESPONSE);
 
             if (intent.getAction().equals(Constants.INTENT_PAGES_ADD) && !mPaused) {
                 Page page = GsonUtils.getInstance().fromJson(payload, Page.class);
@@ -76,6 +75,7 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
             }
 
             if (intent.getAction().equals(Constants.INTENT_PAGES_REMOVE) && !mPaused) {
+                mPages.remove(mCurrentPage);
                 mAdapter.remove(mAdapter.getItem(mCurrentPage), mAdapter.getPageTitle(mCurrentPage));
                 mAdapter.notifyDataSetChanged();
                 mPager.invalidate();

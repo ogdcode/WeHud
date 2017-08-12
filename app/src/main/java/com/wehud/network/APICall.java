@@ -71,7 +71,7 @@ public final class APICall extends AsyncTask<Void, Void, Response> {
         mIsLoading = false;
         String content = response.getContent();
         Intent intent = new Intent(mAction);
-        intent.putExtra(Constants.EXTRA_API_CALLBACK, content);
+        intent.putExtra(Constants.EXTRA_API_RESPONSE, content);
         mContext.sendBroadcast(intent);
     }
 }

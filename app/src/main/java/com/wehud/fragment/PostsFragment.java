@@ -12,7 +12,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,7 +42,7 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            String payload = intent.getStringExtra(Constants.EXTRA_API_CALLBACK);
+            String payload = intent.getStringExtra(Constants.EXTRA_API_RESPONSE);
 
             if (intent.getAction().equals(Constants.INTENT_POSTS) && !mPaused) {
                 Type postListType = new TypeToken<List<Post>>(){}.getType();

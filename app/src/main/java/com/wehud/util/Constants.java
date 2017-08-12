@@ -50,5 +50,5 @@ public final class Constants {
     public static final String INTENT_PAGES_ADD = "intent_pages_add";
     public static final String INTENT_PAGES_REMOVE = "intent_pages_remove";
     public static final String INTENT_PAGES_LIST = "intent_pages_list";
-    public static final String EXTRA_API_CALLBACK = "extra_callback";
+    public static final String EXTRA_API_RESPONSE = "extra_APIResponse";
 }
