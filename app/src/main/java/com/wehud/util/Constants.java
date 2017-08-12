@@ -23,7 +23,11 @@ public final class Constants {
     public static final String HEADER_CONTENT_TYPE = "Content-Type";
     public static final String HEADER_ACCEPT = "Accept";
 
+    public static final String PARAM_TOKEN = "token";
+
     public static final String APPLICATION_JSON = "application/json";
+
+    public static final String TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1OThmMWQ2NTQ5M2E2MjBhYTkxOGJlNDIiLCJpYXQiOjE1MDI1NTE0MTksImV4cCI6MTUwMjYzNzgxOX0.LwvyrvYORHf4Rstxu9_k0FNc0_1QKtGNNntrm35Ccq4";
 
     public static final String GET = "GET";
     public static final String POST = "POST";
@@ -40,5 +44,7 @@ public final class Constants {
     public static final int READ_TIMEOUT = 3000;
 
     public static final String INTENT_POSTS = "intent_posts";
+    public static final String INTENT_PAGES_ADD = "intent_pages_add";
+    public static final String INTENT_PAGES_LIST = "intent_pages_list";
     public static final String EXTRA_API_CALLBACK = "extra_callback";
 }

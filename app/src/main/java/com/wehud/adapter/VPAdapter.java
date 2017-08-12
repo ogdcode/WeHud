@@ -43,6 +43,15 @@ public final class VPAdapter extends FragmentStatePagerAdapter {
     }
 
     @Override
+    public int getItemPosition(Object item) {
+        Fragment fragment = (Fragment) item;
+        int position = mFragments.indexOf(fragment);
+
+        if (position >=  0) return position;
+        else return POSITION_NONE;
+    }
+
+    @Override
     public int getCount() {
         return mFragments.size();
     }
