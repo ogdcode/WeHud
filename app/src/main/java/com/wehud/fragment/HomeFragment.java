@@ -88,10 +88,8 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
             mCurrentPage = savedInstanceState.getInt(KEY_CURRENT_PAGE);
         else mCurrentPage = 0;
 
-
         TabLayout tabs = (TabLayout) view.findViewById(android.R.id.tabs);
         mPager = (ViewPager) view.findViewById(R.id.pager);
-
 
         mAdapter = new VPAdapter(getChildFragmentManager());
         mAdapter.add(PostsFragment.newInstance(), getString(R.string.tab_myFeeds));
@@ -107,8 +105,6 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
 
         mContext.registerReceiver(mReceiver, filter);
 
-        this.getPages();
-
         return view;
     }
 
@@ -116,13 +112,13 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
     public void onPause() {
         super.onPause();
         mPaused = true;
-        if (mReceiver != null) this.getPages();
     }
 
     @Override
     public void onResume() {
         super.onResume();
         mPaused = false;
+        if (mReceiver != null) this.getPages();
     }
 
     @Override
