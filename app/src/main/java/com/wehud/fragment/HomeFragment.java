@@ -35,7 +35,7 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
 
     private static final String KEY_CURRENT_PAGE = "key_currentPage";
 
-    private static final String KEY_TITLE = "title";
+    private static final String KEY_TITLE = "key_title";
 
     private VPAdapter mAdapter;
     private ViewPager mPager;
@@ -61,11 +61,11 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
                 List<Page> pageList = GsonUtils.getInstance().fromJson(payload, pageListType);
 
                 if (!pageList.isEmpty()) {
-                    for (Page page : pageList) {
+                    for (Page page : pageList)
                         mAdapter.add(PostsFragment.newInstance(), page.getTitle());
-                        mAdapter.notifyDataSetChanged();
-                        mPager.invalidate();
-                    }
+
+                    mAdapter.notifyDataSetChanged();
+                    mPager.invalidate();
                 }
             }
         }
