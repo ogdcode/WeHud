@@ -17,11 +17,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.gson.reflect.TypeToken;
 import com.wehud.R;
+import com.wehud.adapter.PostsAdapter;
 import com.wehud.model.Post;
 import com.wehud.network.APICall;
 import com.wehud.util.Constants;
+import com.wehud.util.GsonUtils;
 
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,7 +46,16 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             String payload = intent.getStringExtra(Constants.EXTRA_API_CALLBACK);
 
             if (intent.getAction().equals(Constants.INTENT_POSTS) && !mPaused) {
-                Log.d("MAIN", payload);
+                Type postListType = new TypeToken<List<Post>>(){}.getType();
+                mPosts = GsonUtils.getInstance().fromJson(payload, postListType);
+                if (!mPosts.isEmpty()) {
+                    PostsAdapter adapter = new PostsAdapter(mPosts);
+                    mPostListView.setAdapter(adapter);
+                    
+                    mEmptyLayout.setVisibility(View.GONE);
+                    mSwipeLayout.setVisibility(View.VISIBLE);
+                    mSwipeLayout.setRefreshing(false);
+                }
             }
         }
     };

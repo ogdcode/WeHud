@@ -1,6 +1,7 @@
 package com.wehud.model;
 
 import com.google.gson.annotations.SerializedName;
+import com.wehud.util.Utils;
 
 import java.util.List;
 
@@ -11,6 +12,9 @@ import java.util.List;
  */
 
 public final class User {
+
+    @SerializedName("_id")
+    private String mId;
 
     @SerializedName("avatar")
     private String mAvatar;
@@ -33,4 +37,42 @@ public final class User {
     @SerializedName("score")
     private int mScore;
 
+    @SerializedName("createdAt")
+    private String mDatetimeCreated;
+
+    public String getId() {
+        return mId;
+    }
+
+    public String getAvatar() {
+        return mAvatar;
+    }
+
+    public String getUsername() {
+        return mUsername;
+    }
+
+    public String getPassword() {
+        return mPassword;
+    }
+
+    public String getEmail() {
+        return mEmail;
+    }
+
+    public List<User> getFollowers() {
+        return mFollowers;
+    }
+
+    public boolean isConnected() {
+        return mIsConnected;
+    }
+
+    public int getScore() {
+        return mScore;
+    }
+
+    public String getDatetimeCreated() {
+        return Utils.isoDateStringToLocalDateString(mDatetimeCreated);
+    }
 }
