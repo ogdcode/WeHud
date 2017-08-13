@@ -44,7 +44,7 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         public void onReceive(Context context, Intent intent) {
             String payload = intent.getStringExtra(Constants.EXTRA_API_RESPONSE);
 
-            if (intent.getAction().equals(Constants.INTENT_POSTS) && !mPaused) {
+            if (intent.getAction().equals(Constants.INTENT_POSTS_LIST) && !mPaused) {
                 Type postListType = new TypeToken<List<Post>>(){}.getType();
                 mPosts = GsonUtils.getInstance().fromJson(payload, postListType);
                 if (!mPosts.isEmpty()) {
@@ -92,7 +92,7 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         super.onActivityCreated(savedInstanceState);
 
         IntentFilter filter = new IntentFilter();
-        filter.addAction(Constants.INTENT_POSTS);
+        filter.addAction(Constants.INTENT_POSTS_LIST);
         mContext.registerReceiver(mReceiver, filter);
     }
 
@@ -128,7 +128,7 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
         APICall call = new APICall(
                 mContext,
-                Constants.INTENT_POSTS,
+                Constants.INTENT_POSTS_LIST,
                 Constants.GET,
                 Constants.API_POSTS,
                 headers

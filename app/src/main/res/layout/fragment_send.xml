@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.wehud.fragment.SendFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/newPost_paddingBottom">
+
+        <EditText
+            android:id="@+id/newPost_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_text"
+            android:maxLines="@integer/text_maxLines" />
+
+        <EditText
+            android:id="@+id/newPost_video"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/newPost_marginTop"
+            android:hint="@string/hint_video"
+            android:maxLines="@integer/text_maxLines" />
+
+        <CheckBox
+            android:id="@+id/newPost_isOpinion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/newPost_isOpinion_marginTop"
+            android:text="@string/newPost_isOpinion" />
+
+        <CheckBox
+            android:id="@+id/newPost_isMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/newPost_isMessage_marginTop"
+            android:text="@string/newPost_isMessage" />
+
+        <LinearLayout
+            android:id="@+id/newPost_gameLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/newPost_btnAddGame_marginTop"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="@dimen/newPost_paddingBottom">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/newPost_game"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:text="@string/newPost_game_defaultValue"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+                <Button
+                    android:id="@+id/newPost_btnAddGame"
+                    style="@style/Widget.AppCompat.Button.Colored"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/newPost_btnAddGame" />
+
+            </LinearLayout>
+
+            <RatingBar
+                android:id="@+id/newPost_gameRating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/newPost_marginTop"
+                android:numStars="@integer/newPost_gameRating_limit" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/newPost_followerLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/newPost_btnAddFollower_marginTop"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="@dimen/newPost_paddingBottom">
+
+            <TextView
+                android:id="@+id/newPost_follower"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="@string/newPost_follower_defaultValue"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+            <Button
+                android:id="@+id/newPost_btnAddFollower"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/newPost_btnAddFollower" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>

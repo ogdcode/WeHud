@@ -23,4 +23,13 @@
     <string name="hint_name">Name</string>
     <string name="dialogMessage_removePage">Remove this page?</string>
     <string name="message_pageRemoved">Page Removed</string>
+    <string name="hint_video">YouTube Video ID (Optionnal)</string>
+    <string name="newPost_isOpinion">This post is an opinion about a game</string>
+    <string name="hint_text">What\'s up?</string>
+    <string name="newPost_btnAddGame">Add a game</string>
+    <string name="newPost_btnAddFollower">Add a follower</string>
+    <string name="newPost_game_defaultValue">No game specified</string>
+    <string name="newPost_follower_defaultValue">No follower specified</string>
+    <string name="newPost_isMessage">This post is for a follower</string>
+    <string name="title_send">Send</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.wehud.network;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.wehud.util.Constants;
@@ -85,7 +86,8 @@ public final class Request {
                     connection.setRequestProperty(entry.getKey(), entry.getValue());
 
             // If this is a POST method, there must be a body.
-            if (mMethod.equals(Constants.POST)) {
+            if (mMethod.equals(Constants.POST) || mMethod.equals(Constants.PUT) ||
+                    (mMethod.equals(Constants.PATCH) && !TextUtils.isEmpty(mBody))) {
                 connection.setDoOutput(true);
                 DataOutputStream dos = new DataOutputStream(connection.getOutputStream());
                 dos.writeBytes(mBody);

@@ -31,10 +31,10 @@
     <dimen name="comment_dividerMargin">4dp</dimen>
     <dimen name="comment_verticalSpacing">32dp</dimen>
     <dimen name="comment_mediaMargin">16dp</dimen>
-    <dimen name="newPost_padding">16dp</dimen>
-    <dimen name="newPost_marginTop">16dp</dimen>
+    <dimen name="newPost_paddingBottom">8dp</dimen>
+    <dimen name="newPost_marginTop">8dp</dimen>
     <dimen name="newPost_marginLeftStart">8dp</dimen>
-    <dimen name="publishButton_marginTop">36dp</dimen>
+    <dimen name="newPost_btnAddGame_marginTop">36dp</dimen>
     <dimen name="infoWindow_marginRightEnd">8dp</dimen>
     <dimen name="infoWindow_marginLeftStart">8dp</dimen>
     <dimen name="infoWindow_marginTop">16dp</dimen>
@@ -88,4 +88,7 @@
     <dimen name="contact_txtMarginRightEnd">16dp</dimen>
     <dimen name="contact_marginRightEnd">8dp</dimen>
     <dimen name="contact_paddingBottom">16dp</dimen>
+    <dimen name="newPost_btnAddFollower_marginTop">16dp</dimen>
+    <dimen name="newPost_isOpinion_marginTop">16dp</dimen>
+    <dimen name="newPost_isMessage_marginTop">16dp</dimen>
 </resources>

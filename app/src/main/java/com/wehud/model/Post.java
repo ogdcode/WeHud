@@ -1,11 +1,14 @@
 package com.wehud.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 import com.wehud.util.Utils;
 
 import java.util.List;
 
-public final class Post {
+public final class Post implements Parcelable {
 
     @SerializedName("_id")
     private String mId;
@@ -82,5 +85,51 @@ public final class Post {
 
     public String getDatetimeCreated() {
         return Utils.isoDateStringToLocalDateString(mDatetimeCreated);
+    }
+
+    protected Post(Parcel in) {
+        mId = in.readString();
+        mPublisher = in.readParcelable(User.class.getClassLoader());
+        mGame = in.readParcelable(Game.class.getClassLoader());
+        mReceiver = in.readParcelable(User.class.getClassLoader());
+        mText = in.readString();
+        mIsOpinion = in.readByte() != 0;
+        mIsMessage = in.readByte() != 0;
+        mRating = in.readInt();
+        mVideoUri = in.readString();
+        mLikes = in.createStringArrayList();
+        mDatetimeCreated = in.readString();
+    }
+
+    public static final Creator<Post> CREATOR = new Creator<Post>() {
+        @Override
+        public Post createFromParcel(Parcel in) {
+            return new Post(in);
+        }
+
+        @Override
+        public Post[] newArray(int size) {
+            return new Post[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(mId);
+        parcel.writeParcelable(mPublisher, i);
+        parcel.writeParcelable(mGame, i);
+        parcel.writeParcelable(mReceiver, i);
+        parcel.writeString(mText);
+        parcel.writeByte((byte) (mIsOpinion ? 1 : 0));
+        parcel.writeByte((byte) (mIsMessage ? 1 : 0));
+        parcel.writeInt(mRating);
+        parcel.writeString(mVideoUri);
+        parcel.writeStringList(mLikes);
+        parcel.writeString(mDatetimeCreated);
     }
 }

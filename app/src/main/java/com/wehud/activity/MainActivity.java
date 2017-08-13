@@ -9,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 
 import com.wehud.R;
 import com.wehud.fragment.HomeFragment;
+import com.wehud.fragment.SendFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -46,10 +47,12 @@ public class MainActivity extends AppCompatActivity {
                 fragment = HomeFragment.newInstance();
                 titleResourceId = R.string.menu_home;
                 break;
-            default:
-                fragment = new Fragment();
-                titleResourceId = R.string.app_name;
+            case R.id.menu_send:
+                fragment = SendFragment.newInstance();
+                titleResourceId = R.string.title_send;
                 break;
+            default:
+                return;
         }
 
         setTitle(getString(titleResourceId));

@@ -46,7 +46,8 @@ public final class Constants {
     public static final int CONNECT_TIMEOUT = 3000;
     public static final int READ_TIMEOUT = 3000;
 
-    public static final String INTENT_POSTS = "intent_posts";
+    public static final String INTENT_POSTS_LIST = "intent_posts_list";
+    public static final String INTENT_POSTS_ADD = "intent_posts_add";
     public static final String INTENT_PAGES_ADD = "intent_pages_add";
     public static final String INTENT_PAGES_REMOVE = "intent_pages_remove";
     public static final String INTENT_PAGES_LIST = "intent_pages_list";

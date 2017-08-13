@@ -13,12 +13,14 @@ import com.squareup.picasso.Picasso;
 import com.wehud.R;
 import com.wehud.model.Post;
 import com.wehud.model.User;
+import com.wehud.util.Utils;
 
 import java.util.List;
 
 public final class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsVH> {
 
     private List<Post> mPosts;
+    private static int mSelectedItem = -1;
 
     public PostsAdapter(List<Post> posts) {
         mPosts = posts;
@@ -44,7 +46,7 @@ public final class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsV
         if (TextUtils.isEmpty(avatar))
             holder.postAvatar.setImageResource(R.mipmap.ic_launcher_round);
         else
-            Picasso.with(holder.context).load(avatar).into(holder.postAvatar);
+            Utils.loadImage(holder.context, avatar, holder.postAvatar);
 
         holder.postUsername.setText(username);
         holder.postCreatedAt.setText(datetimeCreated);
@@ -57,7 +59,13 @@ public final class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsV
         return mPosts.size();
     }
 
-    static class PostsVH extends RecyclerView.ViewHolder {
+    @Override
+    public long getItemId(int position) {
+        if (position == -1) return mSelectedItem;
+        return super.getItemId(position);
+    }
+
+    static class PostsVH extends RecyclerView.ViewHolder implements View.OnClickListener {
         private Context context;
         private ImageView postAvatar;
         private TextView postUsername;
@@ -68,6 +76,7 @@ public final class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsV
 
         PostsVH(View view) {
             super(view);
+            view.setOnClickListener(this);
             context = view.getContext();
             postAvatar = (ImageView) view.findViewById(R.id.post_avatar);
             postUsername = (TextView) view.findViewById(R.id.post_username);
@@ -75,6 +84,11 @@ public final class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsV
             postText = (TextView) view.findViewById(R.id.post_text);
             mediaContent = (ViewGroup) view.findViewById(R.id.content_media);
             postLikes = (TextView) view.findViewById(R.id.post_likes);
+        }
+
+        @Override
+        public void onClick(View view) {
+            mSelectedItem = getAdapterPosition();
         }
     }
 }

@@ -1,5 +1,8 @@
 package com.wehud.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 import com.wehud.util.Utils;
 
@@ -11,7 +14,7 @@ import java.util.List;
  * @author Olivier Gonçalves, WeHud, 2017
  */
 
-public final class User {
+public final class User implements Parcelable {
 
     @SerializedName("_id")
     private String mId;
@@ -74,5 +77,47 @@ public final class User {
 
     public String getDatetimeCreated() {
         return Utils.isoDateStringToLocalDateString(mDatetimeCreated);
+    }
+
+    protected User(Parcel in) {
+        mId = in.readString();
+        mAvatar = in.readString();
+        mUsername = in.readString();
+        mPassword = in.readString();
+        mEmail = in.readString();
+        mFollowers = in.createTypedArrayList(User.CREATOR);
+        mIsConnected = in.readByte() != 0;
+        mScore = in.readInt();
+        mDatetimeCreated = in.readString();
+    }
+
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(mId);
+        parcel.writeString(mAvatar);
+        parcel.writeString(mUsername);
+        parcel.writeString(mPassword);
+        parcel.writeString(mEmail);
+        parcel.writeTypedList(mFollowers);
+        parcel.writeByte((byte) (mIsConnected ? 1 : 0));
+        parcel.writeInt(mScore);
+        parcel.writeString(mDatetimeCreated);
     }
 }
