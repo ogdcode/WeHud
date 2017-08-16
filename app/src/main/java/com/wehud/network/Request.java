@@ -73,6 +73,7 @@ public final class Request {
                 }
             }
             URL formattedUri = new URL(baseUrl);
+            Log.d("MAIN", formattedUri.toString());
 
             // Configure the connection.
             HttpURLConnection connection = (HttpURLConnection) formattedUri.openConnection();

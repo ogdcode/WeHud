@@ -32,6 +32,7 @@ import com.wehud.model.User;
 import com.wehud.network.APICall;
 import com.wehud.util.Constants;
 import com.wehud.util.GsonUtils;
+import com.wehud.util.Utils;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -68,10 +69,15 @@ public class SendFragment extends Fragment
         @Override
         public void onReceive(Context context, Intent intent) {
             String payload = intent.getStringExtra(Constants.EXTRA_API_RESPONSE);
+            Log.d("MAIN", payload);
 
             if (intent.getAction().equals(Constants.INTENT_USERS_LIST) && !mPaused) {
                 Type userListType = new TypeToken<List<User>>(){}.getType();
                 mFollowers = GsonUtils.getInstance().fromJson(payload, userListType);
+            }
+
+            if (intent.getAction().equals(Constants.INTENT_POSTS_ADD) && !mPaused) {
+                Utils.toast(mContext, "You published a post!");
             }
         }
     };
@@ -111,6 +117,7 @@ public class SendFragment extends Fragment
 
         IntentFilter filter = new IntentFilter();
         filter.addAction(Constants.INTENT_USERS_LIST);
+        filter.addAction(Constants.INTENT_POSTS_ADD);
         mContext.registerReceiver(mReceiver, filter);
 
         return view;
@@ -161,7 +168,13 @@ public class SendFragment extends Fragment
                 break;
             case R.id.newPost_btnAddFollower:
                 UsersAdapter adapter = new UsersAdapter(mFollowers);
-                ListDialogFragment.generate(getFragmentManager(), this, "Choose a follower", mFollowers, adapter);
+                ListDialogFragment.generate(
+                        getFragmentManager(),
+                        this,
+                        "Choose a follower",
+                        mFollowers,
+                        adapter
+                );
                 break;
             default:
                 break;
@@ -203,7 +216,6 @@ public class SendFragment extends Fragment
     }
 
     private void createPost() {
-
         String text = mNewPostText.getText().toString();
         String videoUri = mNewPostVideo.getText().toString();
         String game = mNewPostGame.getText().toString();
@@ -219,10 +231,17 @@ public class SendFragment extends Fragment
 
         Map<String, String> post = new HashMap<>();
         post.put(PARAM_TEXT, text);
+
         if (!TextUtils.isEmpty(videoUri)) post.put(PARAM_VIDEO_URI, videoUri);
-        if (!TextUtils.isEmpty(game)) post.put(PARAM_GAME, game);
-        if (!TextUtils.isEmpty(follower)) post.put(PARAM_FOLLOWER, follower);
-        if (!TextUtils.isEmpty(rating)) post.put(PARAM_RATING, rating);
+
+        if (mNewPostGameLayout.getVisibility() == View.VISIBLE)
+            if (!TextUtils.isEmpty(game) && !TextUtils.isEmpty(rating)) {
+                post.put(PARAM_GAME, game);
+                post.put(PARAM_RATING, rating);
+            }
+
+        if (mNewPostFollowerLayout.getVisibility() == View.VISIBLE)
+            if (!TextUtils.isEmpty(follower)) post.put(PARAM_FOLLOWER, follower);
 
         String body = GsonUtils.getInstance().toJson(post);
 

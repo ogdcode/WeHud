@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.wehud.R;
 import com.wehud.model.User;
 
 import java.util.List;
@@ -13,10 +14,12 @@ import java.util.List;
 public final class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UsersVH> {
 
     private List<User> mUsers;
-    private static int mSelectedItem = -1;
+    private static int mSelectedPosition = -1;
+    private static View mSelectedView;
 
     public UsersAdapter(List<User> users) {
         mUsers = users;
+        setHasStableIds(true);
     }
 
     @Override
@@ -28,6 +31,11 @@ public final class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UsersV
 
     @Override
     public void onBindViewHolder(UsersVH holder, int position) {
+        if (position == mSelectedPosition) {
+            holder.itemView.setSelected(true);
+            mSelectedView = holder.itemView;
+        } else holder.itemView.setSelected(false);
+
         User user = mUsers.get(position);
 
         String username = user.getUsername();
@@ -42,22 +50,37 @@ public final class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UsersV
 
     @Override
     public long getItemId(int position) {
-        if (position == -1) return mSelectedItem;
+        if (position == -1) return mSelectedPosition;
         return super.getItemId(position);
     }
 
     static class UsersVH extends RecyclerView.ViewHolder implements View.OnClickListener {
+        private View itemView;
         private TextView username;
 
         UsersVH(View view) {
             super(view);
+            view.setClickable(true);
             view.setOnClickListener(this);
+            itemView = view;
             username = (TextView) view.findViewById(android.R.id.text1);
+            username.setBackgroundResource(R.drawable.list_item_selector);
         }
 
         @Override
         public void onClick(View view) {
-            mSelectedItem = getAdapterPosition();
+            if (!view.isSelected()) {
+                if (mSelectedView != null)
+                    mSelectedView.setSelected(false);
+
+                mSelectedPosition = getAdapterPosition();
+                mSelectedView = view;
+            } else {
+                mSelectedPosition = -1;
+                mSelectedView = null;
+            }
+
+            view.setSelected(!view.isSelected());
         }
     }
 }

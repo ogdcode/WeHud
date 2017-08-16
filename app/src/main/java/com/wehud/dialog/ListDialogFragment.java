@@ -86,8 +86,9 @@ public final class ListDialogFragment extends DialogFragment {
             @Override
             public void onClick(DialogInterface dialog, int id) {
                 if (list != null && !list.isEmpty()) {
-                    Parcelable p = list.get((int) mAdapter.getItemId(-1));
-                    if (p != null) {
+                    int selectedParcelable = Long.valueOf(mAdapter.getItemId(-1)).intValue();
+                    if (selectedParcelable != -1) {
+                        Parcelable p = list.get(selectedParcelable);
                         mListener.onDismissOk(p);
                         dismiss();
                     } else

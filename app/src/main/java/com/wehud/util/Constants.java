@@ -27,7 +27,7 @@ public final class Constants {
 
     public static final String APPLICATION_JSON = "application/json";
 
-    public static final String TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1OThmMWQ2NTQ5M2E2MjBhYTkxOGJlNDIiLCJpYXQiOjE1MDI1NTE0MTksImV4cCI6MTUwMjYzNzgxOX0.LwvyrvYORHf4Rstxu9_k0FNc0_1QKtGNNntrm35Ccq4";
+    public static final String TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1OThmMWQ2NTQ5M2E2MjBhYTkxOGJlNDIiLCJpYXQiOjE1MDI4OTI4MDgsImV4cCI6MTUwMjk3OTIwOH0.XFmctjhm8PC1QJd41ykB3QwluXCAzzlmDpL37MiaCec";
 
     public static final String GET = "GET";
     public static final String POST = "POST";
@@ -35,7 +35,6 @@ public final class Constants {
     public static final String DELETE = "DELETE";
     public static final String PATCH = "PATCH";
 
-    public static final int HTTP_OK = 200;
     public static final int HTTP_CREATED = 201;
     public static final int HTTP_NO_CONTENT = 204;
     public static final int HTTP_BAD_REQUEST = 400;
