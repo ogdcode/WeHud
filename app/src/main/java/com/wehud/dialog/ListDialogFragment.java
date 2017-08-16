@@ -46,10 +46,10 @@ public final class ListDialogFragment extends DialogFragment {
     }
 
     public static void generate(FragmentManager manager, OnDismissOkListener listener, String title,
-                                List<Parcelable> list, RecyclerView.Adapter adapter) {
+                                ArrayList<? extends Parcelable> list, RecyclerView.Adapter adapter) {
         Bundle bundle = new Bundle();
         bundle.putString(KEY_TITLE, title);
-        bundle.putParcelableArrayList(KEY_LIST, (ArrayList<Parcelable>) list);
+        bundle.putParcelableArrayList(KEY_LIST, list);
 
         ListDialogFragment dialog = ListDialogFragment.newInstance();
         dialog.setArguments(bundle);
@@ -65,7 +65,7 @@ public final class ListDialogFragment extends DialogFragment {
         final Context context = getActivity();
         final Bundle bundle = getArguments();
         final String title = bundle.getString(KEY_TITLE);
-        final List<Parcelable> list = bundle.getParcelableArrayList(KEY_LIST);
+        final List<? extends Parcelable> list = bundle.getParcelableArrayList(KEY_LIST);
 
         final View headerView = LayoutInflater.from(context).inflate(R.layout.dialog_header, null);
         final View bodyView = LayoutInflater.from(context).inflate(R.layout.dialog_list, null);

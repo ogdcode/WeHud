@@ -120,4 +120,19 @@ public final class User implements Parcelable {
         parcel.writeInt(mScore);
         parcel.writeString(mDatetimeCreated);
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id='" + mId + '\'' +
+                ", avatar='" + mAvatar + '\'' +
+                ", username='" + mUsername + '\'' +
+                ", password='" + mPassword + '\'' +
+                ", email='" + mEmail + '\'' +
+                ", followers=" + mFollowers +
+                ", isConnected=" + mIsConnected +
+                ", score=" + mScore +
+                ", datetimeCreated='" + mDatetimeCreated + '\'' +
+                '}';
+    }
 }

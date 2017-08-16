@@ -81,4 +81,15 @@ public final class Page implements Parcelable {
         parcel.writeTypedList(mUsers);
         parcel.writeTypedList(mPosts);
     }
+
+    @Override
+    public String toString() {
+        return "Page{" +
+                "id='" + mId + '\'' +
+                ", title='" + mTitle + '\'' +
+                ", owner=" + mOwner +
+                ", users=" + mUsers +
+                ", posts=" + mPosts +
+                '}';
+    }
 }

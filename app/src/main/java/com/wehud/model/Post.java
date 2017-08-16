@@ -132,4 +132,21 @@ public final class Post implements Parcelable {
         parcel.writeStringList(mLikes);
         parcel.writeString(mDatetimeCreated);
     }
+
+    @Override
+    public String toString() {
+        return "Post{" +
+                "id='" + mId + '\'' +
+                ", publisher=" + mPublisher +
+                ", game=" + mGame +
+                ", receiver=" + mReceiver +
+                ", text='" + mText + '\'' +
+                ", isOpinion=" + mIsOpinion +
+                ", isMessage=" + mIsMessage +
+                ", rating=" + mRating +
+                ", videoUri='" + mVideoUri + '\'' +
+                ", likes=" + mLikes +
+                ", datetimeCreated='" + mDatetimeCreated + '\'' +
+                '}';
+    }
 }

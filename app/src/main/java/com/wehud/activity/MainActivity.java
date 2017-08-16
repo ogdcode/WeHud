@@ -1,17 +1,20 @@
 package com.wehud.activity;
 
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 
 import com.wehud.R;
 import com.wehud.fragment.HomeFragment;
 import com.wehud.fragment.SendFragment;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
     private static final String KEY_MENUID = "key_menuId";
 
@@ -25,6 +28,9 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        BottomNavigationView navBottom = (BottomNavigationView) findViewById(R.id.nav_bottom);
+        navBottom.setOnNavigationItemSelectedListener(this);
+
         if (savedInstanceState != null)
             mMenuId = savedInstanceState.getInt(KEY_MENUID);
         else mMenuId = R.id.menu_home;
@@ -36,6 +42,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(KEY_MENUID, mMenuId);
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        this.setMenu(item.getItemId());
+        return true;
     }
 
     private void setMenu(int menuId) {

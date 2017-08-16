@@ -1,10 +1,15 @@
 package com.wehud.fragment;
 
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,15 +23,25 @@ import android.widget.EditText;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.google.gson.reflect.TypeToken;
 import com.wehud.R;
+import com.wehud.adapter.UsersAdapter;
+import com.wehud.dialog.ListDialogFragment;
+import com.wehud.model.Game;
+import com.wehud.model.User;
 import com.wehud.network.APICall;
 import com.wehud.util.Constants;
 import com.wehud.util.GsonUtils;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-public class SendFragment extends Fragment implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+public class SendFragment extends Fragment
+        implements View.OnClickListener, CompoundButton.OnCheckedChangeListener,
+        ListDialogFragment.OnDismissOkListener {
 
     private static final String PARAM_TEXT = "text";
     private static final String PARAM_VIDEO_URI = "videoUri";
@@ -44,6 +59,22 @@ public class SendFragment extends Fragment implements View.OnClickListener, Comp
     private TextView mNewPostGame;
     private TextView mNewPostFollower;
     private RatingBar mNewPostGameRating;
+
+    private List<Game> mGames;
+    private ArrayList<User> mFollowers;
+
+    private boolean mPaused;
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String payload = intent.getStringExtra(Constants.EXTRA_API_RESPONSE);
+
+            if (intent.getAction().equals(Constants.INTENT_USERS_LIST) && !mPaused) {
+                Type userListType = new TypeToken<List<User>>(){}.getType();
+                mFollowers = GsonUtils.getInstance().fromJson(payload, userListType);
+            }
+        }
+    };
 
     public static SendFragment newInstance() {
         return new SendFragment();
@@ -78,7 +109,31 @@ public class SendFragment extends Fragment implements View.OnClickListener, Comp
         mNewPostGameLayout.setVisibility(View.GONE);
         mNewPostFollowerLayout.setVisibility(View.GONE);
 
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Constants.INTENT_USERS_LIST);
+        mContext.registerReceiver(mReceiver, filter);
+
         return view;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mPaused = true;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (!mPaused) this.getFollowers();
+
+        mPaused = false;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mContext.unregisterReceiver(mReceiver);
     }
 
     @Override
@@ -105,6 +160,8 @@ public class SendFragment extends Fragment implements View.OnClickListener, Comp
             case R.id.newPost_btnAddGame:
                 break;
             case R.id.newPost_btnAddFollower:
+                UsersAdapter adapter = new UsersAdapter(mFollowers);
+                ListDialogFragment.generate(getFragmentManager(), this, "Choose a follower", mFollowers, adapter);
                 break;
             default:
                 break;
@@ -123,6 +180,26 @@ public class SendFragment extends Fragment implements View.OnClickListener, Comp
             default:
                 break;
         }
+    }
+
+    @Override
+    public void onDismissOk(Parcelable p) {
+        Log.d("MAIN", p.toString());
+    }
+
+    private void getFollowers() {
+        Map<String, String> headers = new HashMap<>();
+        headers.put(Constants.HEADER_CONTENT_TYPE, Constants.APPLICATION_JSON);
+        headers.put(Constants.HEADER_ACCEPT, Constants.APPLICATION_JSON);
+
+        APICall call = new APICall(
+                mContext,
+                Constants.INTENT_USERS_LIST,
+                Constants.GET,
+                Constants.API_USERS + "/all",
+                headers
+        );
+        if (!call.isLoading()) call.execute();
     }
 
     private void createPost() {

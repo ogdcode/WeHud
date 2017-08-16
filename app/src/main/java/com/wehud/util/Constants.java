@@ -7,7 +7,7 @@ package com.wehud.util;
  */
 
 public final class Constants {
-    public static final String API_URL = "http://192.168.1.41:3000";
+    public static final String API_URL = "http://192.168.0.167:3000";
 
     public static final String API_AUTH = API_URL + "/auth";
     public static final String API_USERS = API_URL + "/users";
@@ -51,5 +51,7 @@ public final class Constants {
     public static final String INTENT_PAGES_ADD = "intent_pages_add";
     public static final String INTENT_PAGES_REMOVE = "intent_pages_remove";
     public static final String INTENT_PAGES_LIST = "intent_pages_list";
+    public static final String INTENT_USERS_LIST = "intent_users_list";
+
     public static final String EXTRA_API_RESPONSE = "extra_APIResponse";
 }

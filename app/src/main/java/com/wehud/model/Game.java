@@ -123,4 +123,27 @@ public final class Game implements Parcelable {
         parcel.writeString(mEsrb);
         parcel.writeString(mWebsite);
     }
+
+    @Override
+    public String toString() {
+        return "Game{" +
+                "id='" + mId + '\'' +
+                ", name='" + mName + '\'' +
+                ", synopsis='" + mSynopsis + '\'' +
+                ", franchise='" + mFranchise + '\'' +
+                ", followers=" + mFollowers +
+                ", game='" + mGame + '\'' +
+                ", developers=" + mDevelopers +
+                ", publishers=" + mPublishers +
+                ", isDlcOrExpansion=" + mIsDlcOrExpansion +
+                ", modes=" + mModes +
+                ", genres=" + mGenres +
+                ", firstReleaseDate=" + mFirstReleaseDate +
+                ", status=" + mStatus +
+                ", cover='" + mCover + '\'' +
+                ", pegi='" + mPegi + '\'' +
+                ", esrb='" + mEsrb + '\'' +
+                ", website='" + mWebsite + '\'' +
+                '}';
+    }
 }

@@ -20,6 +20,7 @@ import com.google.gson.reflect.TypeToken;
 import com.wehud.R;
 import com.wehud.adapter.VPAdapter;
 import com.wehud.dialog.EditDialogFragment;
+import com.wehud.dialog.ListDialogFragment;
 import com.wehud.dialog.TextDialogFragment;
 import com.wehud.model.Page;
 import com.wehud.network.APICall;
