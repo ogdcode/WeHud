@@ -7,44 +7,43 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.wehud.R;
-import com.wehud.model.User;
+import com.wehud.model.Game;
 
 import java.util.List;
 
-public final class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UsersVH> {
+public final class GamesAdapter extends RecyclerView.Adapter<GamesAdapter.GamesVH> {
 
-    private List<User> mUsers;
+    private List<Game> mGames;
 
     private View mSelectedView;
     private static int mSelectedPosition = -1;
 
-    public UsersAdapter(List<User> users) {
-        mUsers = users;
-        setHasStableIds(true);
+    public GamesAdapter(List<Game> games) {
+        mGames = games;
     }
 
     @Override
-    public UsersVH onCreateViewHolder(ViewGroup parent, int viewType) {
+    public GamesVH onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(android.R.layout.simple_list_item_1, parent, false);
-        return new UsersVH(view);
+        return new GamesVH(view);
     }
 
     @Override
-    public void onBindViewHolder(UsersVH holder, int position) {
+    public void onBindViewHolder(GamesVH holder, int position) {
         if (position == mSelectedPosition) {
             holder.itemView.setSelected(true);
             mSelectedView = holder.itemView;
         } else holder.itemView.setSelected(false);
 
-        User user = mUsers.get(position);
-        String username = user.getUsername();
-        holder.username.setText(username);
+        Game game = mGames.get(position);
+        String name = game.getName();
+        holder.name.setText(name);
     }
 
     @Override
     public int getItemCount() {
-        return mUsers.size();
+        return mGames.size();
     }
 
     @Override
@@ -53,17 +52,17 @@ public final class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UsersV
         return super.getItemId(position);
     }
 
-    class UsersVH extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class GamesVH extends RecyclerView.ViewHolder implements View.OnClickListener {
         private View itemView;
-        private TextView username;
+        private TextView name;
 
-        UsersVH(View view) {
+        GamesVH(View view) {
             super(view);
             view.setClickable(true);
             view.setOnClickListener(this);
             itemView = view;
-            username = (TextView) view.findViewById(android.R.id.text1);
-            username.setBackgroundResource(R.drawable.list_item_selector);
+            name = (TextView) view.findViewById(android.R.id.text1);
+            name.setBackgroundResource(R.drawable.list_item_selector);
         }
 
         @Override

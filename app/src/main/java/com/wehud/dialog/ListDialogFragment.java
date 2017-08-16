@@ -92,7 +92,7 @@ public final class ListDialogFragment extends DialogFragment {
                         mListener.onDismissOk(p);
                         dismiss();
                     } else
-                        Utils.toast(context, "Please choose an element in the list.");
+                        Utils.toast(context, getString(R.string.message_chooseElementInList));
                 }
             }
         });

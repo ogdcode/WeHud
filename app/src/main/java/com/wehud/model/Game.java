@@ -66,6 +66,10 @@ public final class Game implements Parcelable {
     @SerializedName("website")
     private String mWebsite;
 
+    public String getName() {
+        return mName;
+    }
+
     protected Game(Parcel in) {
         mId = in.readString();
         mName = in.readString();

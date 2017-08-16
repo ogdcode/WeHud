@@ -8,6 +8,8 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,6 +27,7 @@ import android.widget.TextView;
 
 import com.google.gson.reflect.TypeToken;
 import com.wehud.R;
+import com.wehud.adapter.GamesAdapter;
 import com.wehud.adapter.UsersAdapter;
 import com.wehud.dialog.ListDialogFragment;
 import com.wehud.model.Game;
@@ -53,15 +56,13 @@ public class SendFragment extends Fragment
     private Context mContext;
     private EditText mNewPostText;
     private EditText mNewPostVideo;
-    private CheckBox mNewPostIsOpinion;
-    private CheckBox mNewPostIsMessage;
     private ViewGroup mNewPostGameLayout;
     private ViewGroup mNewPostFollowerLayout;
     private TextView mNewPostGame;
     private TextView mNewPostFollower;
     private RatingBar mNewPostGameRating;
 
-    private List<Game> mGames;
+    private ArrayList<Game> mGames;
     private ArrayList<User> mFollowers;
 
     private boolean mPaused;
@@ -76,8 +77,13 @@ public class SendFragment extends Fragment
                 mFollowers = GsonUtils.getInstance().fromJson(payload, userListType);
             }
 
+            if (intent.getAction().equals(Constants.INTENT_GAMES_LIST) && !mPaused) {
+                Type gameListType = new TypeToken<List<Game>>(){}.getType();
+                mGames = GsonUtils.getInstance().fromJson(payload, gameListType);
+            }
+
             if (intent.getAction().equals(Constants.INTENT_POSTS_ADD) && !mPaused) {
-                Utils.toast(mContext, "You published a post!");
+                Utils.toast(mContext, getString(R.string.message_newPost));
             }
         }
     };
@@ -96,16 +102,16 @@ public class SendFragment extends Fragment
 
         mNewPostText = (EditText) view.findViewById(R.id.newPost_text);
         mNewPostVideo = (EditText) view.findViewById(R.id.newPost_video);
-        mNewPostIsOpinion = (CheckBox) view.findViewById(R.id.newPost_isOpinion);
-        mNewPostIsMessage = (CheckBox) view.findViewById(R.id.newPost_isMessage);
         mNewPostGameLayout = (ViewGroup) view.findViewById(R.id.newPost_gameLayout);
         mNewPostFollowerLayout = (ViewGroup) view.findViewById(R.id.newPost_followerLayout);
         mNewPostGame = (TextView) view.findViewById(R.id.newPost_game);
         mNewPostFollower = (TextView) view.findViewById(R.id.newPost_follower);
         mNewPostGameRating = (RatingBar) view.findViewById(R.id.newPost_gameRating);
 
-        mNewPostIsOpinion.setOnCheckedChangeListener(this);
-        mNewPostIsMessage.setOnCheckedChangeListener(this);
+        CheckBox newPostIsOpinion = (CheckBox) view.findViewById(R.id.newPost_isOpinion);
+        CheckBox newPostIsMessage = (CheckBox) view.findViewById(R.id.newPost_isMessage);
+        newPostIsOpinion.setOnCheckedChangeListener(this);
+        newPostIsMessage.setOnCheckedChangeListener(this);
 
         Button addGameButton = (Button) view.findViewById(R.id.newPost_btnAddGame);
         Button addFollowerButton = (Button) view.findViewById(R.id.newPost_btnAddFollower);
@@ -117,6 +123,7 @@ public class SendFragment extends Fragment
 
         IntentFilter filter = new IntentFilter();
         filter.addAction(Constants.INTENT_USERS_LIST);
+        filter.addAction(Constants.INTENT_GAMES_LIST);
         filter.addAction(Constants.INTENT_POSTS_ADD);
         mContext.registerReceiver(mReceiver, filter);
 
@@ -132,7 +139,10 @@ public class SendFragment extends Fragment
     @Override
     public void onResume() {
         super.onResume();
-        if (!mPaused) this.getFollowers();
+        if (!mPaused) {
+            this.getFollowers();
+            this.getGames();
+        }
 
         mPaused = false;
     }
@@ -163,22 +173,27 @@ public class SendFragment extends Fragment
 
     @Override
     public void onClick(View view) {
+        FragmentManager manager = getFragmentManager();
+        String dialogTitle;
+        ArrayList<? extends Parcelable> list;
+        RecyclerView.Adapter adapter;
+
         switch (view.getId()) {
             case R.id.newPost_btnAddGame:
+                dialogTitle = getString(R.string.dialogTitle_addGame);
+                list = mGames;
+                adapter = new GamesAdapter(mGames);
                 break;
             case R.id.newPost_btnAddFollower:
-                UsersAdapter adapter = new UsersAdapter(mFollowers);
-                ListDialogFragment.generate(
-                        getFragmentManager(),
-                        this,
-                        "Choose a follower",
-                        mFollowers,
-                        adapter
-                );
+                dialogTitle = getString(R.string.dialogTitle_addFollower);
+                list = mFollowers;
+                adapter = new UsersAdapter(mFollowers);
                 break;
             default:
-                break;
+                return;
         }
+
+        ListDialogFragment.generate(manager, this, dialogTitle, list, adapter);
     }
 
     @Override
@@ -210,6 +225,21 @@ public class SendFragment extends Fragment
                 Constants.INTENT_USERS_LIST,
                 Constants.GET,
                 Constants.API_USERS + "/all",
+                headers
+        );
+        if (!call.isLoading()) call.execute();
+    }
+
+    private void getGames() {
+        Map<String, String> headers = new HashMap<>();
+        headers.put(Constants.HEADER_CONTENT_TYPE, Constants.APPLICATION_JSON);
+        headers.put(Constants.HEADER_ACCEPT, Constants.APPLICATION_JSON);
+
+        APICall call = new APICall(
+                mContext,
+                Constants.INTENT_GAMES_LIST,
+                Constants.GET,
+                Constants.API_GAMES,
                 headers
         );
         if (!call.isLoading()) call.execute();
