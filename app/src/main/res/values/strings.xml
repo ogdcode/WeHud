@@ -36,4 +36,5 @@
     <string name="message_chooseElementInList">Please choose an element in the list.</string>
     <string name="dialogTitle_addFollower">Choose a follower</string>
     <string name="dialogTitle_addGame">Choose a game</string>
+    <string name="title_games">Games</string>
 </resources>

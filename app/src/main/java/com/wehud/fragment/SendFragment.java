@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
@@ -121,13 +122,18 @@ public class SendFragment extends Fragment
         mNewPostGameLayout.setVisibility(View.GONE);
         mNewPostFollowerLayout.setVisibility(View.GONE);
 
+        return view;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
         IntentFilter filter = new IntentFilter();
         filter.addAction(Constants.INTENT_USERS_LIST);
         filter.addAction(Constants.INTENT_GAMES_LIST);
         filter.addAction(Constants.INTENT_POSTS_ADD);
         mContext.registerReceiver(mReceiver, filter);
-
-        return view;
     }
 
     @Override
@@ -212,7 +218,10 @@ public class SendFragment extends Fragment
 
     @Override
     public void onDismissOk(Parcelable p) {
-        Log.d("MAIN", p.toString());
+        if (p instanceof User)
+            mNewPostFollower.setText(((User) p).getUsername());
+        if (p instanceof Game)
+            mNewPostGame.setText(((Game) p).getName());
     }
 
     private void getFollowers() {

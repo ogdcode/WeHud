@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.wehud.R;
+import com.wehud.fragment.GamesFragment;
 import com.wehud.fragment.HomeFragment;
 import com.wehud.fragment.SendFragment;
 
@@ -62,6 +63,10 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             case R.id.menu_send:
                 fragment = SendFragment.newInstance();
                 titleResourceId = R.string.title_send;
+                break;
+            case R.id.menu_games:
+                fragment = GamesFragment.newInstance();
+                titleResourceId = R.string.title_games;
                 break;
             default:
                 return;

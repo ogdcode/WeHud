@@ -70,6 +70,10 @@ public final class Game implements Parcelable {
         return mName;
     }
 
+    public String getCover() {
+        return mCover;
+    }
+
     protected Game(Parcel in) {
         mId = in.readString();
         mName = in.readString();
