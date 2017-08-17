@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import com.wehud.R;
 import com.wehud.fragment.GamesFragment;
 import com.wehud.fragment.HomeFragment;
+import com.wehud.fragment.ProfileFragment;
 import com.wehud.fragment.SendFragment;
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
@@ -67,6 +68,10 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             case R.id.menu_games:
                 fragment = GamesFragment.newInstance();
                 titleResourceId = R.string.title_games;
+                break;
+            case R.id.menu_profile:
+                fragment = ProfileFragment.newInstance();
+                titleResourceId = R.string.title_profile;
                 break;
             default:
                 return;
