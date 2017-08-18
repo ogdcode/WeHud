@@ -7,16 +7,7 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/post_receiver"
-        style="@style/TextAppearance.AppCompat.Medium"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/postMedia_marginBottom"
-        android:textColor="@android:color/holo_red_dark"
-        tools:text="@string/game" />
-
-    <TextView
-        android:id="@+id/post_game"
+        android:id="@+id/message_game"
         style="@style/TextAppearance.AppCompat.Medium"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -25,7 +16,7 @@
         tools:text="@string/game" />
 
     <RatingBar
-        android:id="@+id/post_gameRating"
+        android:id="@+id/message_gameRating"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/postMedia_marginBottom"
@@ -33,7 +24,7 @@
         android:numStars="@integer/newPost_gameRating_limit" />
 
     <ImageView
-        android:id="@+id/post_video"
+        android:id="@+id/message_video"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/postMedia_marginBottom"

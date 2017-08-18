@@ -1,6 +1,7 @@
 package com.wehud.fragment;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 
 import com.wehud.R;
 import com.wehud.activity.ContactsActivity;
+import com.wehud.activity.MessagesActivity;
 import com.wehud.dialog.TextDialogFragment;
 
 public class ProfileFragment extends Fragment
@@ -52,9 +54,13 @@ public class ProfileFragment extends Fragment
     @Override
     public void onClick(View view) {
         Intent intent;
+        Context context = getContext();
         switch (view.getId()) {
+            case R.id.profile_messages:
+                intent = new Intent(context, MessagesActivity.class);
+                break;
             case R.id.profile_contacts:
-                intent = new Intent(getContext(), ContactsActivity.class);
+                intent = new Intent(context, ContactsActivity.class);
                 break;
             case R.id.profile_signOut:
                 this.attemptSignOut();

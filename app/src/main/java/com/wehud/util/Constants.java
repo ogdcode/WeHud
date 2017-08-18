@@ -20,6 +20,8 @@ public final class Constants {
     public static final String API_AUTH_LOGIN = API_AUTH + "/login";
     public static final String API_AUTH_LOGOUT = API_AUTH + "/logout";
 
+    public static final String API_MESSAGES = API_POSTS + "/messages/all";
+
     public static final String HEADER_CONTENT_TYPE = "Content-Type";
     public static final String HEADER_ACCEPT = "Accept";
 
@@ -50,9 +52,9 @@ public final class Constants {
     public static final String INTENT_PAGES_ADD = "intent_pages_add";
     public static final String INTENT_PAGES_REMOVE = "intent_pages_remove";
     public static final String INTENT_PAGES_LIST = "intent_pages_list";
-    public static final String INTENT_USERS_LIST = "intent_users_list";
     public static final String INTENT_GAMES_LIST = "intent_games_list";
     public static final String INTENT_FOLLOWERS_LIST = "intent_followers_list";
+    public static final String INTENT_MESSAGES_LIST = "intent_messages_list";
 
     public static final String EXTRA_API_RESPONSE = "extra_APIResponse";
 }

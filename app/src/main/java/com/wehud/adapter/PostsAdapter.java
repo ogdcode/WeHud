@@ -1,10 +1,8 @@
 package com.wehud.adapter;
 
 import android.content.Context;
-import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
 import com.wehud.R;
 import com.wehud.model.Game;
 import com.wehud.model.Post;
@@ -126,7 +123,7 @@ public final class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsV
             context = view.getContext();
             postAvatar = (ImageView) view.findViewById(R.id.post_avatar);
             postUsername = (TextView) view.findViewById(R.id.post_username);
-            postCreatedAt = (TextView) view.findViewById(R.id.post_createdAt);
+            postCreatedAt = (TextView) view.findViewById(R.id.post_datetimeCreated);
             postText = (TextView) view.findViewById(R.id.post_text);
             postMedia = (ViewGroup) view.findViewById(R.id.post_media);
             postLikes = (TextView) view.findViewById(R.id.post_likes);
