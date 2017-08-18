@@ -80,15 +80,9 @@
     <dimen name="settings_verticalSpacing">16dp</dimen>
     <dimen name="settings_btnVerticalSpacing">32dp</dimen>
     <dimen name="editDialog_marginTop">8dp</dimen>
-    <dimen name="contact_marginLeftStart">8dp</dimen>
-    <dimen name="contact_marginTop">16dp</dimen>
-    <dimen name="contact_txtMarginTop">4dp</dimen>
-    <dimen name="contact_txtMarginLeftStart">16dp</dimen>
-    <dimen name="contact_icMarginTop">24dp</dimen>
-    <dimen name="contact_txtMarginRightEnd">16dp</dimen>
-    <dimen name="contact_marginRightEnd">8dp</dimen>
-    <dimen name="contact_paddingBottom">16dp</dimen>
     <dimen name="newPost_btnAddFollower_marginTop">16dp</dimen>
     <dimen name="newPost_isOpinion_marginTop">16dp</dimen>
     <dimen name="newPost_isMessage_marginTop">16dp</dimen>
+    <dimen name="contact_padding">8dp</dimen>
+    <dimen name="contact_marginLeftStart">8dp</dimen>
 </resources>

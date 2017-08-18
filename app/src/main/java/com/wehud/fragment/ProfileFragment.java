@@ -1,6 +1,7 @@
 package com.wehud.fragment;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.wehud.R;
+import com.wehud.activity.ContactsActivity;
 import com.wehud.dialog.TextDialogFragment;
 
 public class ProfileFragment extends Fragment
@@ -49,13 +51,19 @@ public class ProfileFragment extends Fragment
 
     @Override
     public void onClick(View view) {
+        Intent intent;
         switch (view.getId()) {
+            case R.id.profile_contacts:
+                intent = new Intent(getContext(), ContactsActivity.class);
+                break;
             case R.id.profile_signOut:
-                this.signOut();
-                break;
+                this.attemptSignOut();
+                return;
             default:
-                break;
+                return;
         }
+
+        startActivity(intent);
     }
 
     @Override
@@ -63,7 +71,7 @@ public class ProfileFragment extends Fragment
         getActivity().finish();
     }
 
-    private void signOut() {
+    private void attemptSignOut() {
         TextDialogFragment.generate(
                 getFragmentManager(),
                 this,

@@ -45,4 +45,5 @@
     <string name="dialogTitle_signingOut">Signing Out</string>
     <string name="message_exitApp">Exit the application?</string>
     <string name="title_profile">Profile</string>
+    <string name="title_contacts">Contacts</string>
 </resources>

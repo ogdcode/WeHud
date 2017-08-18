@@ -1,45 +1,85 @@
 package com.wehud.adapter;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
 import com.wehud.R;
 import com.wehud.model.User;
 
 import java.util.List;
 
-public final class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UsersVH> {
+public final class UsersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private List<User> mUsers;
 
     private View mSelectedView;
     private static int mSelectedPosition = -1;
 
+    private int mViewResourceId;
+
     public UsersAdapter(List<User> users) {
         mUsers = users;
         setHasStableIds(true);
     }
 
-    @Override
-    public UsersVH onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(android.R.layout.simple_list_item_1, parent, false);
-        return new UsersVH(view);
+    public void setViewResourceId(int viewResourceId) {
+        mViewResourceId = viewResourceId;
     }
 
     @Override
-    public void onBindViewHolder(UsersVH holder, int position) {
-        if (position == mSelectedPosition) {
-            holder.itemView.setSelected(true);
-            mSelectedView = holder.itemView;
-        } else holder.itemView.setSelected(false);
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view;
+        if (mViewResourceId == 0) {
+            view = LayoutInflater.from(parent.getContext())
+                    .inflate(android.R.layout.simple_list_item_1, parent, false);
+            return new UsersVH(view);
+        }
 
+        if (mViewResourceId == 1) {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.contact, parent, false);
+            return new ContactsVH(view);
+        }
+
+        return null;
+    }
+
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         User user = mUsers.get(position);
-        String username = user.getUsername();
-        holder.username.setText(username);
+
+        if (holder instanceof UsersVH) {
+            UsersVH usersHolder = (UsersVH) holder;
+            if (position == mSelectedPosition) {
+                holder.itemView.setSelected(true);
+                mSelectedView = holder.itemView;
+            } else holder.itemView.setSelected(false);
+
+            String username = user.getUsername();
+            usersHolder.username.setText(username);
+        }
+
+        if (holder instanceof ContactsVH) {
+            ContactsVH contactsHolder = (ContactsVH) holder;
+
+            String avatar = user.getAvatar();
+            String username = user.getUsername();
+            boolean connected = user.isConnected();
+
+            if (!TextUtils.isEmpty(avatar)) Picasso.with(contactsHolder.context).load(avatar).into(contactsHolder.avatar);
+            else contactsHolder.avatar.setImageResource(R.mipmap.ic_launcher_round);
+
+            contactsHolder.username.setText(username);
+
+            if (connected) contactsHolder.status.setImageResource(R.drawable.ic_connected);
+            else contactsHolder.status.setImageResource(R.drawable.ic_not_connected);
+        }
     }
 
     @Override
@@ -53,15 +93,13 @@ public final class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UsersV
         return super.getItemId(position);
     }
 
-    class UsersVH extends RecyclerView.ViewHolder implements View.OnClickListener {
-        private View itemView;
+    private class UsersVH extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView username;
 
         UsersVH(View view) {
             super(view);
             view.setClickable(true);
             view.setOnClickListener(this);
-            itemView = view;
             username = (TextView) view.findViewById(android.R.id.text1);
             username.setBackgroundResource(R.drawable.list_item_selector);
         }
@@ -80,6 +118,21 @@ public final class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UsersV
             }
 
             view.setSelected(!view.isSelected());
+        }
+    }
+
+    private class ContactsVH extends RecyclerView.ViewHolder {
+        private Context context;
+        private ImageView avatar;
+        private TextView username;
+        private ImageView status;
+
+        ContactsVH(View view) {
+            super(view);
+            context = view.getContext();
+            avatar = (ImageView) view.findViewById(R.id.contact_avatar);
+            username = (TextView) view.findViewById(R.id.contact_username);
+            status = (ImageView) view.findViewById(R.id.contact_status);
         }
     }
 }

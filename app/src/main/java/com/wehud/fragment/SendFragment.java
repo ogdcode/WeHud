@@ -73,7 +73,7 @@ public class SendFragment extends Fragment
             String payload = intent.getStringExtra(Constants.EXTRA_API_RESPONSE);
             Log.d("MAIN", payload);
 
-            if (intent.getAction().equals(Constants.INTENT_USERS_LIST) && !mPaused) {
+            if (intent.getAction().equals(Constants.INTENT_FOLLOWERS_LIST) && !mPaused) {
                 Type userListType = new TypeToken<List<User>>(){}.getType();
                 mFollowers = GsonUtils.getInstance().fromJson(payload, userListType);
             }
@@ -130,7 +130,7 @@ public class SendFragment extends Fragment
         super.onActivityCreated(savedInstanceState);
 
         IntentFilter filter = new IntentFilter();
-        filter.addAction(Constants.INTENT_USERS_LIST);
+        filter.addAction(Constants.INTENT_FOLLOWERS_LIST);
         filter.addAction(Constants.INTENT_GAMES_LIST);
         filter.addAction(Constants.INTENT_POSTS_ADD);
         mContext.registerReceiver(mReceiver, filter);
@@ -231,7 +231,7 @@ public class SendFragment extends Fragment
 
         APICall call = new APICall(
                 mContext,
-                Constants.INTENT_USERS_LIST,
+                Constants.INTENT_FOLLOWERS_LIST,
                 Constants.GET,
                 Constants.API_USERS + "/all",
                 headers

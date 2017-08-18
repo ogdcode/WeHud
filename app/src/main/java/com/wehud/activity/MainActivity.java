@@ -11,12 +11,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.wehud.R;
+import com.wehud.dialog.TextDialogFragment;
 import com.wehud.fragment.GamesFragment;
 import com.wehud.fragment.HomeFragment;
 import com.wehud.fragment.ProfileFragment;
 import com.wehud.fragment.SendFragment;
 
-public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity
+        implements BottomNavigationView.OnNavigationItemSelectedListener, TextDialogFragment.OnDismissOkListener {
 
     private static final String KEY_MENUID = "key_menuId";
 
@@ -41,6 +43,12 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        this.attemptSignOut();
+    }
+
+    @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(KEY_MENUID, mMenuId);
@@ -50,6 +58,11 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         this.setMenu(item.getItemId());
         return true;
+    }
+
+    @Override
+    public void onDismissOk() {
+        finish();
     }
 
     private void setMenu(int menuId) {
@@ -82,5 +95,14 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.replace(R.id.container, fragment);
         transaction.commit();
+    }
+
+    private void attemptSignOut() {
+        TextDialogFragment.generate(
+                getSupportFragmentManager(),
+                this,
+                getString(R.string.dialogTitle_signingOut),
+                getString(R.string.message_exitApp)
+        );
     }
 }

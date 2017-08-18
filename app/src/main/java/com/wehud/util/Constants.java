@@ -52,6 +52,7 @@ public final class Constants {
     public static final String INTENT_PAGES_LIST = "intent_pages_list";
     public static final String INTENT_USERS_LIST = "intent_users_list";
     public static final String INTENT_GAMES_LIST = "intent_games_list";
+    public static final String INTENT_FOLLOWERS_LIST = "intent_followers_list";
 
     public static final String EXTRA_API_RESPONSE = "extra_APIResponse";
 }
