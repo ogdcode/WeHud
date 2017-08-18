@@ -17,16 +17,6 @@ public final class YouTubeUtils {
     private static final String IMG_URL_FOOT = "/0.jpg";
 
     /**
-     * Makes a full YouTube video URL.
-     *
-     * @param id the video ID of the YouTube video
-     * @return the full YouTube URL of the video
-     */
-    private static String buildVideoUrl(String id) {
-        return VID_URL_HEAD + id;
-    }
-
-    /**
      * Build up a YouTube thumbnail URL from a video ID.
      *
      * @param id the unique identifier of the YouTube video

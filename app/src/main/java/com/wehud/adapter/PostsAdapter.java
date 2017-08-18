@@ -25,7 +25,6 @@ import java.util.List;
 public final class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsVH> {
 
     private List<Post> mPosts;
-    private static int mSelectedItem = -1;
 
     public PostsAdapter(List<Post> posts) {
         mPosts = posts;
@@ -66,13 +65,7 @@ public final class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsV
         return mPosts.size();
     }
 
-    @Override
-    public long getItemId(int position) {
-        if (position == -1) return mSelectedItem;
-        return super.getItemId(position);
-    }
-
-    private void setPostMedia(final PostsVH holder, Post post) {
+    private void setPostMedia(final PostsVH holder, final Post post) {
         holder.postMedia.setVisibility(View.GONE);
 
         String videoUrl = post.getVideoUrl();
@@ -119,7 +112,7 @@ public final class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsV
         }
     }
 
-    static class PostsVH extends RecyclerView.ViewHolder implements View.OnClickListener {
+    static class PostsVH extends RecyclerView.ViewHolder {
         private Context context;
         private ImageView postAvatar;
         private TextView postUsername;
@@ -130,7 +123,6 @@ public final class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsV
 
         PostsVH(View view) {
             super(view);
-            view.setOnClickListener(this);
             context = view.getContext();
             postAvatar = (ImageView) view.findViewById(R.id.post_avatar);
             postUsername = (TextView) view.findViewById(R.id.post_username);
@@ -138,11 +130,6 @@ public final class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsV
             postText = (TextView) view.findViewById(R.id.post_text);
             postMedia = (ViewGroup) view.findViewById(R.id.post_media);
             postLikes = (TextView) view.findViewById(R.id.post_likes);
-        }
-
-        @Override
-        public void onClick(View view) {
-            mSelectedItem = getAdapterPosition();
         }
     }
 }
