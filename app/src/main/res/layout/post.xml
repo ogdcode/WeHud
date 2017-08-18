@@ -41,11 +41,9 @@
             android:layout_marginBottom="@dimen/post_mediaMargin"
             android:layout_marginTop="@dimen/post_mediaMargin" />
 
-        <LinearLayout
-            android:id="@+id/content_media"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" />
+        <include
+            android:id="@+id/post_media"
+            layout="@layout/post_media" />
 
         <android.support.v4.widget.Space
             android:layout_width="0dp"

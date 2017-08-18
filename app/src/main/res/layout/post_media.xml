@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/post_receiver"
+        style="@style/TextAppearance.AppCompat.Medium"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/postMedia_marginBottom"
+        android:textColor="@android:color/holo_red_dark"
+        tools:text="@string/game" />
+
+    <TextView
+        android:id="@+id/post_game"
+        style="@style/TextAppearance.AppCompat.Medium"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/postMedia_marginBottom"
+        android:textColor="@android:color/holo_blue_dark"
+        tools:text="@string/game" />
+
+    <RatingBar
+        android:id="@+id/post_gameRating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/postMedia_marginBottom"
+        android:isIndicator="true"
+        android:numStars="@integer/newPost_gameRating_limit" />
+
+    <ImageView
+        android:id="@+id/post_video"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/postMedia_marginBottom"
+        android:clickable="true"
+        android:contentDescription="@string/app_name"
+        android:scaleType="centerCrop"
+        tools:src="@mipmap/ic_launcher" />
+
+</LinearLayout>

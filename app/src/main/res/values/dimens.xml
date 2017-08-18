@@ -85,4 +85,5 @@
     <dimen name="newPost_isMessage_marginTop">16dp</dimen>
     <dimen name="contact_padding">8dp</dimen>
     <dimen name="contact_marginLeftStart">8dp</dimen>
+    <dimen name="postMedia_marginBottom">8dp</dimen>
 </resources>

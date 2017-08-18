@@ -32,10 +32,10 @@ public final class Post implements Parcelable {
     private boolean mIsMessage;
 
     @SerializedName("rating")
-    private int mRating;
+    private double mRating;
 
     @SerializedName("videoUri")
-    private String mVideoUri;
+    private String mVideoUrl;
 
     @SerializedName("likes")
     private List<String> mLikes;
@@ -71,12 +71,12 @@ public final class Post implements Parcelable {
         return mIsMessage;
     }
 
-    public int getRating() {
+    public double getRating() {
         return mRating;
     }
 
-    public String getVideoUri() {
-        return mVideoUri;
+    public String getVideoUrl() {
+        return mVideoUrl;
     }
 
     public List<String> getLikes() {
@@ -95,8 +95,8 @@ public final class Post implements Parcelable {
         mText = in.readString();
         mIsOpinion = in.readByte() != 0;
         mIsMessage = in.readByte() != 0;
-        mRating = in.readInt();
-        mVideoUri = in.readString();
+        mRating = in.readDouble();
+        mVideoUrl = in.readString();
         mLikes = in.createStringArrayList();
         mDatetimeCreated = in.readString();
     }
@@ -127,8 +127,8 @@ public final class Post implements Parcelable {
         parcel.writeString(mText);
         parcel.writeByte((byte) (mIsOpinion ? 1 : 0));
         parcel.writeByte((byte) (mIsMessage ? 1 : 0));
-        parcel.writeInt(mRating);
-        parcel.writeString(mVideoUri);
+        parcel.writeDouble(mRating);
+        parcel.writeString(mVideoUrl);
         parcel.writeStringList(mLikes);
         parcel.writeString(mDatetimeCreated);
     }
@@ -144,7 +144,7 @@ public final class Post implements Parcelable {
                 ", isOpinion=" + mIsOpinion +
                 ", isMessage=" + mIsMessage +
                 ", rating=" + mRating +
-                ", videoUri='" + mVideoUri + '\'' +
+                ", videoUri='" + mVideoUrl + '\'' +
                 ", likes=" + mLikes +
                 ", datetimeCreated='" + mDatetimeCreated + '\'' +
                 '}';

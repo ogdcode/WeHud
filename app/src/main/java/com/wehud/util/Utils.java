@@ -16,8 +16,6 @@ public final class Utils {
     private static final String ISO_8601_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
     private static final String LOCAL_PATTERN = "dd/MM/yyyy HH:mm";
 
-    private static final String YOUTUBE_VID_URL_HEAD = "https://youtube.com/watch?v=";
-
     /**
      * Displays a {@link Toast} on the screen.
      *
@@ -60,16 +58,6 @@ public final class Utils {
      */
     public static void loadImage(Context context, String imgUrl, ImageView iv) {
         Picasso.with(context).load(imgUrl).into(iv);
-    }
-
-    /**
-     * Makes a full YouTube video URL.
-     *
-     * @param id the video ID of the YouTube video
-     * @return the full YouTube URL of the video
-     */
-    public static String buildYouTubeVideoURL(String id) {
-        return YOUTUBE_VID_URL_HEAD + id;
     }
 
 }

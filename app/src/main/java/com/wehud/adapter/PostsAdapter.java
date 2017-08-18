@@ -1,19 +1,24 @@
 package com.wehud.adapter;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.wehud.R;
+import com.wehud.model.Game;
 import com.wehud.model.Post;
 import com.wehud.model.User;
 import com.wehud.util.Utils;
+import com.wehud.util.YouTubeUtils;
 
 import java.util.List;
 
@@ -52,6 +57,8 @@ public final class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsV
         holder.postCreatedAt.setText(datetimeCreated);
         holder.postText.setText(text);
         holder.postLikes.setText(likes);
+
+        this.setPostMedia(holder, post);
     }
 
     @Override
@@ -65,13 +72,60 @@ public final class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsV
         return super.getItemId(position);
     }
 
+    private void setPostMedia(final PostsVH holder, Post post) {
+        holder.postMedia.setVisibility(View.GONE);
+
+        String videoUrl = post.getVideoUrl();
+
+        if (post.isMessage() || post.isOpinion() || !TextUtils.isEmpty(videoUrl)) {
+            TextView postReceiver = (TextView) holder.postMedia.findViewById(R.id.post_receiver);
+            TextView postGame = (TextView) holder.postMedia.findViewById(R.id.post_game);
+            RatingBar postGameRating = (RatingBar) holder.postMedia.findViewById(R.id.post_gameRating);
+            ImageView postVideo = (ImageView) holder.postMedia.findViewById(R.id.post_video);
+
+            postReceiver.setVisibility(View.GONE);
+            postGame.setVisibility(View.GONE);
+            postGameRating.setVisibility(View.GONE);
+            postVideo.setVisibility(View.GONE);
+
+            if (post.isMessage()) {
+                User receiver = post.getReceiver();
+                String receiverUsername = receiver.getUsername();
+
+                postReceiver.setText(receiverUsername);
+
+                postReceiver.setVisibility(View.VISIBLE);
+            }
+
+            if (post.isOpinion()) {
+                Game game = post.getGame();
+                String gameName = game.getName();
+                double gameRating = post.getRating();
+
+                postGame.setText(gameName);
+                postGameRating.setRating(Double.valueOf(gameRating).floatValue());
+
+                postGame.setVisibility(View.VISIBLE);
+                postGameRating.setVisibility(View.VISIBLE);
+            }
+
+            if (!TextUtils.isEmpty(videoUrl)) {
+                YouTubeUtils.configureVideo(holder.context, videoUrl, postVideo);
+
+                postVideo.setVisibility(View.VISIBLE);
+            }
+
+            holder.postMedia.setVisibility(View.VISIBLE);
+        }
+    }
+
     static class PostsVH extends RecyclerView.ViewHolder implements View.OnClickListener {
         private Context context;
         private ImageView postAvatar;
         private TextView postUsername;
         private TextView postCreatedAt;
         private TextView postText;
-        private ViewGroup mediaContent;
+        private ViewGroup postMedia;
         private TextView postLikes;
 
         PostsVH(View view) {
@@ -82,7 +136,7 @@ public final class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsV
             postUsername = (TextView) view.findViewById(R.id.post_username);
             postCreatedAt = (TextView) view.findViewById(R.id.post_createdAt);
             postText = (TextView) view.findViewById(R.id.post_text);
-            mediaContent = (ViewGroup) view.findViewById(R.id.content_media);
+            postMedia = (ViewGroup) view.findViewById(R.id.post_media);
             postLikes = (TextView) view.findViewById(R.id.post_likes);
         }
 

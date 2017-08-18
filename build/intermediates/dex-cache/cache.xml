@@ -19,5 +19,14 @@
         sha1="c65f2e49bf01857e3d8db2ebecc1ee3251c49bd4">
         <dex dex="/Users/ogoncalves/Desktop/Programmes/Android/WeHud/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run-bootstrap_07ba01009d25afc2882d0859be72b8ed160aca0e/classes.dex" />
     </item>
+    <item
+        is-multidex="true"
+        jar="/Users/ogoncalves/Desktop/Programmes/Android/WeHud/app/libs/YouTubeAndroidPlayerApi.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.0"
+        sha1="3c4f96ff493456651cc7bdb0b47e10eb25545a16">
+        <dex dex="/Users/ogoncalves/Desktop/Programmes/Android/WeHud/app/build/intermediates/transforms/dex/debug/folders/1000/2/YouTubeAndroidPlayerApi_a383c7f8866cf80673ddef6089efa9a8df13f38f/classes.dex" />
+    </item>
 
 </items>
