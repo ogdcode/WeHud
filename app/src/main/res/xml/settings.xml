@@ -1,10 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <EditTextPreference android:key="username" />
+    <EditTextPreference
+        android:key="pref_username"
+        android:summary="%s"
+        android:title="@string/preference_username" />
 
-    <EditTextPreference android:key="pref_email" />
+    <EditTextPreference
+        android:key="pref_email"
+        android:summary="%s"
+        android:title="@string/preference_email" />
 
-    <ListPreference android:key="pref_avatar" />
+    <ListPreference
+        android:key="pref_avatar"
+        android:summary="%s"
+        android:title="@string/preference_avatar" />
 
 </PreferenceScreen>

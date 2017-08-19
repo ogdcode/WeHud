@@ -23,19 +23,26 @@ public final class PreferencesUtils {
         return mInstance;
     }
 
-    public static void putSharedPreference(Context context, String key, String value) {
+    public static String getPreference(Context context, String key) {
+        return getInstance(context).getString(key, null);
+    }
+
+    public static void putPreference(Context context, String key, String value) {
         SharedPreferences.Editor editor = getInstance(context).edit();
         editor.putString(key, value);
         editor.apply();
     }
 
-    public static String getSharedPreferenceByKey(Context context, String key) {
-        return getInstance(context).getString(key, "");
+    public static void removePreference(Context context, String key) {
+        SharedPreferences.Editor editor = getInstance(context).edit();
+        editor.remove(key);
+        editor.apply();
     }
 
-    public static void clearPreferences(Context context) {
+    public static void resetDefaultValues(Context context, int resId) {
         SharedPreferences.Editor editor = getInstance(context).edit();
         editor.clear();
         editor.apply();
+        PreferenceManager.setDefaultValues(context, resId, true);
     }
 }
