@@ -12,75 +12,16 @@
         android:layout_marginLeft="@dimen/profile_marginLeftStart"
         android:layout_marginRight="@dimen/profile_marginRightEnd"
         android:layout_marginStart="@dimen/profile_marginLeftStart"
-        android:layout_marginTop="@dimen/profile_marginTop"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent">
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:id="@+id/profile_userAvatar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/profile_marginLeftStart"
-                    android:layout_marginStart="@dimen/profile_marginLeftStart"
-                    android:adjustViewBounds="true"
-                    android:contentDescription="@string/app_name"
-                    android:scaleType="fitCenter"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    tools:layout_editor_absoluteY="63dp"
-                    tools:src="@mipmap/ic_launcher" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/profile_username"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/profile_userMarginRightEnd"
-                        android:layout_marginLeft="@dimen/profile_userMarginLeftStart"
-                        android:layout_marginRight="@dimen/profile_userMarginRightEnd"
-                        android:layout_marginStart="@dimen/profile_userMarginLeftStart"
-                        android:clickable="true"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                        tools:text="@string/username" />
-
-                    <TextView
-                        android:id="@+id/profile_goToUser"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/profile_userMarginRightEnd"
-                        android:layout_marginLeft="@dimen/profile_userMarginLeftStart"
-                        android:layout_marginRight="@dimen/profile_userMarginRightEnd"
-                        android:layout_marginStart="@dimen/profile_userMarginLeftStart"
-                        android:layout_marginTop="@dimen/profile_userMarginTop"
-                        android:text="@string/profile_toWall" />
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginEnd="@dimen/profile_marginRightEnd"
-                android:layout_marginLeft="@dimen/profile_marginLeftStart"
-                android:layout_marginRight="@dimen/profile_marginRightEnd"
-                android:layout_marginStart="@dimen/profile_marginLeftStart"
-                android:layout_marginTop="@dimen/profile_verticalSpacing"
-                android:background="@android:color/black" />
 
             <LinearLayout
                 android:layout_width="match_parent"
