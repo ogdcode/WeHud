@@ -219,10 +219,6 @@ public class SettingsActivity extends AppCompatActivity
                 String dotPassword = text.replaceAll("(?s).", "*");
                 textView.setTag(text);
                 textView.setText(dotPassword);
-            } else if (textId == R.id.settings_username) {
-                String reply = '@' + text;
-                textView.setTag(reply);
-                textView.setText(text);
             } else {
                 textView.setText(text);
             }
