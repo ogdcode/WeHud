@@ -11,7 +11,6 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -29,15 +28,19 @@ public final class ListDialogFragment extends DialogFragment {
     private static final String KEY_TITLE = "key_title";
     private static final String KEY_LIST = "key_list";
 
-    private static OnDismissOkListener mListener;
+    private static OnListDialogDismissOkListener mListener;
 
     private static RecyclerView.Adapter mAdapter;
+
+    private static RecyclerView.LayoutManager mLayoutManager;
+
+    private static DividerItemDecoration mDivider;
 
     private static ListDialogFragment newInstance() {
         return new ListDialogFragment();
     }
 
-    private void setOnDismissOkListener(OnDismissOkListener listener) {
+    private void setOnListDialogDismissOkListener(OnListDialogDismissOkListener listener) {
         mListener = listener;
     }
 
@@ -45,16 +48,29 @@ public final class ListDialogFragment extends DialogFragment {
         mAdapter = adapter;
     }
 
-    public static void generate(FragmentManager manager, OnDismissOkListener listener, String title,
-                                ArrayList<? extends Parcelable> list, RecyclerView.Adapter adapter) {
+    private void setListLayoutManager(RecyclerView.LayoutManager layoutManager) {
+        mLayoutManager = layoutManager;
+    }
+
+    private void setListDividerItemDecoration(DividerItemDecoration divider) {
+        mDivider = divider;
+    }
+
+    public static void generate(FragmentManager manager, OnListDialogDismissOkListener listener,
+                                String title, ArrayList<? extends Parcelable> list,
+                                RecyclerView.Adapter adapter,
+                                RecyclerView.LayoutManager layoutManager,
+                                DividerItemDecoration divider) {
         Bundle bundle = new Bundle();
         bundle.putString(KEY_TITLE, title);
         bundle.putParcelableArrayList(KEY_LIST, list);
 
         ListDialogFragment dialog = ListDialogFragment.newInstance();
         dialog.setArguments(bundle);
-        dialog.setOnDismissOkListener(listener);
+        dialog.setOnListDialogDismissOkListener(listener);
         dialog.setListAdapter(adapter);
+        dialog.setListLayoutManager(layoutManager);
+        dialog.setListDividerItemDecoration(divider);
         dialog.show(manager, title);
     }
 
@@ -75,8 +91,8 @@ public final class ListDialogFragment extends DialogFragment {
 
         final RecyclerView listView = (RecyclerView) bodyView.findViewById(android.R.id.list);
 
-        listView.setLayoutManager(new LinearLayoutManager(context));
-        listView.addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.HORIZONTAL));
+        if (mDivider != null) listView.addItemDecoration(mDivider);
+        listView.setLayoutManager(mLayoutManager);
         listView.setAdapter(mAdapter);
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -89,7 +105,7 @@ public final class ListDialogFragment extends DialogFragment {
                     int selectedParcelable = Long.valueOf(mAdapter.getItemId(-1)).intValue();
                     if (selectedParcelable != -1) {
                         Parcelable p = list.get(selectedParcelable);
-                        mListener.onDismissOk(p);
+                        mListener.onListDialogDismissOk(p);
                         dismiss();
                     } else
                         Utils.toast(context, getString(R.string.message_chooseElementInList));
@@ -106,7 +122,7 @@ public final class ListDialogFragment extends DialogFragment {
         return builder.create();
     }
 
-    public interface OnDismissOkListener {
-        void onDismissOk(Parcelable p);
+    public interface OnListDialogDismissOkListener {
+        void onListDialogDismissOk(Parcelable p);
     }
 }

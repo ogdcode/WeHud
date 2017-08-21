@@ -86,4 +86,5 @@
     <dimen name="contact_padding">8dp</dimen>
     <dimen name="contact_marginLeftStart">8dp</dimen>
     <dimen name="postMedia_marginBottom">8dp</dimen>
+    <dimen name="avatar_padding">8dp</dimen>
 </resources>

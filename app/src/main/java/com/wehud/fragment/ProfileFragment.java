@@ -14,10 +14,11 @@ import android.widget.TextView;
 import com.wehud.R;
 import com.wehud.activity.ContactsActivity;
 import com.wehud.activity.MessagesActivity;
+import com.wehud.activity.SettingsActivity;
 import com.wehud.dialog.TextDialogFragment;
 
 public class ProfileFragment extends Fragment
-        implements View.OnClickListener, TextDialogFragment.OnDismissOkListener {
+        implements View.OnClickListener, TextDialogFragment.OnTextDialogDismissOkListener {
 
     private ImageView mProfileUserAvatar;
     private TextView mProfileUsername;
@@ -35,14 +36,11 @@ public class ProfileFragment extends Fragment
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        mProfileUserAvatar = (ImageView) view.findViewById(R.id.profile_userAvatar);
-        mProfileUsername = (TextView) view.findViewById(R.id.profile_username);
         mProfileMessages = (TextView) view.findViewById(R.id.profile_messages);
         mProfileContacts = (TextView) view.findViewById(R.id.profile_contacts);
         mProfileSettings = (TextView) view.findViewById(R.id.profile_settings);
         mProfileSignOut = (TextView) view.findViewById(R.id.profile_signOut);
 
-        mProfileUsername.setOnClickListener(this);
         mProfileMessages.setOnClickListener(this);
         mProfileContacts.setOnClickListener(this);
         mProfileSettings.setOnClickListener(this);
@@ -62,6 +60,9 @@ public class ProfileFragment extends Fragment
             case R.id.profile_contacts:
                 intent = new Intent(context, ContactsActivity.class);
                 break;
+            case R.id.profile_settings:
+                intent = new Intent(context, SettingsActivity.class);
+                break;
             case R.id.profile_signOut:
                 this.attemptSignOut();
                 return;
@@ -73,7 +74,7 @@ public class ProfileFragment extends Fragment
     }
 
     @Override
-    public void onDismissOk() {
+    public void onTextDialogDismissOk() {
         getActivity().finish();
     }
 

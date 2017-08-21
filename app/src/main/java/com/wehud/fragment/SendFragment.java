@@ -10,6 +10,8 @@ import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
@@ -46,7 +48,7 @@ import java.util.Map;
 
 public class SendFragment extends Fragment
         implements View.OnClickListener, CompoundButton.OnCheckedChangeListener,
-        ListDialogFragment.OnDismissOkListener {
+        ListDialogFragment.OnListDialogDismissOkListener {
 
     private static final String PARAM_TEXT = "text";
     private static final String PARAM_VIDEO_URI = "videoUri";
@@ -183,6 +185,8 @@ public class SendFragment extends Fragment
         String dialogTitle;
         ArrayList<? extends Parcelable> list;
         RecyclerView.Adapter adapter;
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(mContext);
+        DividerItemDecoration divider = new DividerItemDecoration(mContext, DividerItemDecoration.HORIZONTAL);
 
         switch (view.getId()) {
             case R.id.newPost_btnAddGame:
@@ -199,7 +203,7 @@ public class SendFragment extends Fragment
                 return;
         }
 
-        ListDialogFragment.generate(manager, this, dialogTitle, list, adapter);
+        ListDialogFragment.generate(manager, this, dialogTitle, list, adapter, layoutManager, divider);
     }
 
     @Override
@@ -217,7 +221,7 @@ public class SendFragment extends Fragment
     }
 
     @Override
-    public void onDismissOk(Parcelable p) {
+    public void onListDialogDismissOk(Parcelable p) {
         if (p instanceof User)
             mNewPostFollower.setText(((User) p).getUsername());
         if (p instanceof Game)

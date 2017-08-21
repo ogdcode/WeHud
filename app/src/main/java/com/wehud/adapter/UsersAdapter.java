@@ -72,7 +72,8 @@ public final class UsersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             String username = user.getUsername();
             boolean connected = user.isConnected();
 
-            if (!TextUtils.isEmpty(avatar)) Picasso.with(contactsHolder.context).load(avatar).into(contactsHolder.avatar);
+            if (!TextUtils.isEmpty(avatar))
+                Picasso.with(contactsHolder.context).load(avatar).into(contactsHolder.avatar);
             else contactsHolder.avatar.setImageResource(R.mipmap.ic_launcher_round);
 
             contactsHolder.username.setText(username);

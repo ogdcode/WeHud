@@ -20,7 +20,6 @@ import com.google.gson.reflect.TypeToken;
 import com.wehud.R;
 import com.wehud.adapter.VPAdapter;
 import com.wehud.dialog.EditDialogFragment;
-import com.wehud.dialog.ListDialogFragment;
 import com.wehud.dialog.TextDialogFragment;
 import com.wehud.model.Page;
 import com.wehud.network.APICall;
@@ -34,7 +33,7 @@ import java.util.List;
 import java.util.Map;
 
 public class HomeFragment extends Fragment implements ViewPager.OnPageChangeListener,
-        EditDialogFragment.OnEditListener, TextDialogFragment.OnDismissOkListener {
+        EditDialogFragment.OnEditDialogDismissOkListener, TextDialogFragment.OnTextDialogDismissOkListener {
 
     private static final String KEY_CURRENT_PAGE = "key_currentPage";
 
@@ -199,12 +198,12 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
     }
 
     @Override
-    public void onEdit(int id, String text) {
+    public void onEditDialogDismissOk(int id, String text) {
         if (mReceiver != null) this.createPage(text);
     }
 
     @Override
-    public void onDismissOk() {
+    public void onTextDialogDismissOk() {
         if (mReceiver != null) this.removePage();
     }
 

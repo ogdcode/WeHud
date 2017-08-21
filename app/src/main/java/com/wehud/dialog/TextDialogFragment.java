@@ -21,17 +21,17 @@ public final class TextDialogFragment extends DialogFragment {
     private static final String KEY_TITLE = "key_title";
     private static final String KEY_MESSAGE = "key_message";
 
-    private static OnDismissOkListener mListener;
+    private static OnTextDialogDismissOkListener mListener;
 
     private static TextDialogFragment newInstance() {
         return new TextDialogFragment();
     }
 
-    private void setOnDismissListener(OnDismissOkListener listener) {
+    private void setOnTextDialogDismissOkListener(OnTextDialogDismissOkListener listener) {
         mListener = listener;
     }
 
-    public static void generate(FragmentManager manager, OnDismissOkListener listener,
+    public static void generate(FragmentManager manager, OnTextDialogDismissOkListener listener,
                                 String title, String message) {
         Bundle bundle = new Bundle();
         bundle.putString(KEY_TITLE, title);
@@ -39,7 +39,7 @@ public final class TextDialogFragment extends DialogFragment {
 
         TextDialogFragment textDialog = TextDialogFragment.newInstance();
         textDialog.setArguments(bundle);
-        textDialog.setOnDismissListener(listener);
+        textDialog.setOnTextDialogDismissOkListener(listener);
         textDialog.show(manager, title);
     }
 
@@ -67,7 +67,7 @@ public final class TextDialogFragment extends DialogFragment {
         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {
-                if (mListener != null) mListener.onDismissOk();
+                if (mListener != null) mListener.onTextDialogDismissOk();
                 dismiss();
             }
         });
@@ -81,8 +81,8 @@ public final class TextDialogFragment extends DialogFragment {
         return builder.create();
     }
 
-    public interface OnDismissOkListener {
-        void onDismissOk();
+    public interface OnTextDialogDismissOkListener {
+        void onTextDialogDismissOk();
     }
 
 }

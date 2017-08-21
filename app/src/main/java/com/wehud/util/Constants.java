@@ -29,7 +29,7 @@ public final class Constants {
 
     public static final String APPLICATION_JSON = "application/json";
 
-    public static final String TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1OThmMWQ2NTQ5M2E2MjBhYTkxOGJlNDIiLCJpYXQiOjE1MDMwNTgwMjIsImV4cCI6MTUwMzE0NDQyMn0.eRRq4WUSy47Fw7WPIjgF0W5El4-ubVs9IR5nbGuhoFQ";
+    public static final String TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1OThmMWQ2NTQ5M2E2MjBhYTkxOGJlNDIiLCJpYXQiOjE1MDMzMzI0MzUsImV4cCI6MTUwMzQxODgzNX0.ggK6hJ_xWiTJzWasE9DGTLg3x1ZBsyg0BDaRBzv-8ZQ";
 
     public static final String GET = "GET";
     public static final String POST = "POST";
@@ -53,6 +53,9 @@ public final class Constants {
     public static final String INTENT_PAGES_REMOVE = "intent_pages_remove";
     public static final String INTENT_PAGES_LIST = "intent_pages_list";
     public static final String INTENT_GAMES_LIST = "intent_games_list";
+    public static final String INTENT_USER_GET = "intent_user_get";
+    public static final String INTENT_USER_UPDATE = "intent_user_update";
+    public static final String INTENT_USER_DELETE = "intent_user_delete";
     public static final String INTENT_FOLLOWERS_LIST = "intent_followers_list";
     public static final String INTENT_MESSAGES_LIST = "intent_messages_list";
 

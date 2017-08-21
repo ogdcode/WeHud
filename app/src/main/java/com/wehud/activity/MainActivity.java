@@ -18,7 +18,7 @@ import com.wehud.fragment.ProfileFragment;
 import com.wehud.fragment.SendFragment;
 
 public class MainActivity extends AppCompatActivity
-        implements BottomNavigationView.OnNavigationItemSelectedListener, TextDialogFragment.OnDismissOkListener {
+        implements BottomNavigationView.OnNavigationItemSelectedListener, TextDialogFragment.OnTextDialogDismissOkListener {
 
     private static final String KEY_MENUID = "key_menuId";
 
@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onDismissOk() {
+    public void onTextDialogDismissOk() {
         finish();
     }
 

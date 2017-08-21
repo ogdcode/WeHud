@@ -33,17 +33,17 @@ public final class EditDialogFragment extends DialogFragment {
     private static final int PASSWORD_INVISIBLE = InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD;
     private static final int PASSWORD_VISIBLE = InputType.TYPE_CLASS_TEXT;
 
-    private static OnEditListener mListener;
+    private static OnEditDialogDismissOkListener mListener;
 
     private static EditDialogFragment newInstance() {
         return new EditDialogFragment();
     }
 
-    private void setOnEditListener(OnEditListener listener) {
+    private void setOnEditDialogDismissOkListener(OnEditDialogDismissOkListener listener) {
         mListener = listener;
     }
 
-    public static void generate(FragmentManager manager, OnEditListener listener,
+    public static void generate(FragmentManager manager, OnEditDialogDismissOkListener listener,
                                 int id, String title, String text, String hint, boolean password) {
         Bundle bundle = new Bundle();
         bundle.putInt(KEY_VIEW_ID, id);
@@ -54,7 +54,7 @@ public final class EditDialogFragment extends DialogFragment {
 
         EditDialogFragment editDialog = EditDialogFragment.newInstance();
         editDialog.setArguments(bundle);
-        editDialog.setOnEditListener(listener);
+        editDialog.setOnEditDialogDismissOkListener(listener);
         editDialog.show(manager, title);
     }
 
@@ -78,7 +78,7 @@ public final class EditDialogFragment extends DialogFragment {
 
 
         final EditText bodyField = (EditText) bodyView.findViewById(R.id.dialog_editField);
-        if (!TextUtils.isEmpty(text[0])) bodyField.setText(text[0]);
+        if (!TextUtils.isEmpty(text[0]) && !isPassword) bodyField.setText(text[0]);
         if (!TextUtils.isEmpty(hint)) bodyField.setHint(hint);
         bodyField.addTextChangedListener(new TextWatcher() {
             @Override
@@ -93,7 +93,8 @@ public final class EditDialogFragment extends DialogFragment {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                text[0] = bodyField.getText().toString();
+                String newText = bodyField.getText().toString();
+                if (!TextUtils.isEmpty(newText)) text[0] = newText;
             }
         });
 
@@ -133,7 +134,7 @@ public final class EditDialogFragment extends DialogFragment {
                         }
                         text[0] = newPassword.getText().toString();
                     }
-                    mListener.onEdit(viewId, text[0]);
+                    mListener.onEditDialogDismissOk(viewId, text[0]);
                 }
                 dismiss();
             }
@@ -147,7 +148,7 @@ public final class EditDialogFragment extends DialogFragment {
         return builder.create();
     }
 
-    public interface OnEditListener {
-        void onEdit(int i, String s);
+    public interface OnEditDialogDismissOkListener {
+        void onEditDialogDismissOk(int i, String s);
     }
 }
