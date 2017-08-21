@@ -13,11 +13,14 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
 import com.wehud.R;
 import com.wehud.adapter.ImagesAdapter;
 import com.wehud.dialog.EditDialogFragment;
@@ -44,7 +47,9 @@ public class SettingsActivity extends AppCompatActivity
     private static final String PARAM_EMAIL = "email";
     private static final String PARAM_PASSWORD = "password";
 
-    private Image mAvatar;
+    private Image mImage;
+
+    private ImageView mAvatar;
     private TextView mUsername;
     private TextView mEmail;
     private TextView mPassword;
@@ -59,11 +64,17 @@ public class SettingsActivity extends AppCompatActivity
 
             if (intent.getAction().equals(Constants.INTENT_USER_GET) && !mPaused) {
                 mCurrentUser = GsonUtils.getInstance().fromJson(payload, User.class);
+
+                String avatar = mCurrentUser.getAvatar();
                 String currentPassword = mCurrentUser.getPassword();
 
-                mAvatar = new Image(mCurrentUser.getAvatar(), 0);
+                mImage = new Image(avatar, 0);
+
+                Picasso.with(SettingsActivity.this).load(avatar).resize(256, 256).into(mAvatar);
                 mUsername.setText(mCurrentUser.getUsername());
                 mEmail.setText(mCurrentUser.getEmail());
+
+                mPassword.setTag(currentPassword);
                 mPassword.setText(currentPassword.replaceAll("(?s).", "*"));
             }
 
@@ -91,6 +102,7 @@ public class SettingsActivity extends AppCompatActivity
             ab.setDisplayHomeAsUpEnabled(true);
         }
 
+        mAvatar = (ImageView) findViewById(R.id.settings_avatar);
         mUsername = (TextView) findViewById(R.id.settings_username);
         mEmail = (TextView) findViewById(R.id.settings_email);
         mPassword = (TextView) findViewById(R.id.settings_password);
@@ -219,7 +231,14 @@ public class SettingsActivity extends AppCompatActivity
 
     @Override
     public void onListDialogDismissOk(Parcelable p) {
-        if (p instanceof Image) mAvatar = (Image) p;
+        if (p instanceof Image) {
+            mImage = (Image) p;
+
+            String url = mImage.getUrl();
+            if (!TextUtils.isEmpty(url))
+                Picasso.with(this).load(url).resize(256, 256).into(mAvatar);
+            else mAvatar.setImageResource(mImage.getResId());
+        }
     }
 
     @Override
@@ -286,12 +305,13 @@ public class SettingsActivity extends AppCompatActivity
     }
 
     private void updateAccount() {
-        String avatar = mAvatar.getUrl();
+        String avatar = mImage.getUrl();
         String username = mUsername.getText().toString();
         String email = mEmail.getText().toString();
         String password = mPassword.getTag().toString(); // Because text is replaced with dots.
 
-        if (!username.equals(mCurrentUser.getUsername()) ||
+        if (!avatar.equals(mCurrentUser.getAvatar()) ||
+                !username.equals(mCurrentUser.getUsername()) ||
                 !email.equals(mCurrentUser.getEmail()) ||
                 !password.equals(mCurrentUser.getPassword())) {
             Map<String, String> headers = new HashMap<>();
