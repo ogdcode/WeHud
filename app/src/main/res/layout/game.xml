@@ -1,15 +1,321 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    <ImageView
-        android:id="@+id/game_cover"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:adjustViewBounds="true"
-        android:clickable="true"
-        android:contentDescription="@string/app_name"
-        android:scaleType="centerCrop" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/game_padding">
 
-</FrameLayout>
+        <LinearLayout
+            android:id="@+id/layout_genres"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/TextAppearance.AppCompat.Small"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/title_genres"
+                android:textColor="@android:color/darker_gray" />
+
+            <TextView
+                android:id="@+id/genres"
+                style="@style/TextAppearance.AppCompat.Medium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/game_marginTop"
+                android:textColor="@android:color/black"
+                tools:text="@string/genres" />
+
+            <android.support.v4.widget.Space
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/game_verticalSpacing" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_developers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/TextAppearance.AppCompat.Small"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/title_developers"
+                android:textColor="@android:color/darker_gray" />
+
+            <TextView
+                android:id="@+id/developers"
+                style="@style/TextAppearance.AppCompat.Medium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/game_marginTop"
+                android:textColor="@android:color/black"
+                tools:text="@string/developers" />
+
+            <android.support.v4.widget.Space
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/game_verticalSpacing" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_publishers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/TextAppearance.AppCompat.Small"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/title_publishers"
+                android:textColor="@android:color/darker_gray" />
+
+            <TextView
+                android:id="@+id/publishers"
+                style="@style/TextAppearance.AppCompat.Medium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/game_marginTop"
+                android:textColor="@android:color/black"
+                tools:text="@string/publishers" />
+
+            <android.support.v4.widget.Space
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/game_verticalSpacing" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_franchise"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/TextAppearance.AppCompat.Small"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/title_franchise"
+                android:textColor="@android:color/darker_gray" />
+
+            <TextView
+                android:id="@+id/franchise"
+                style="@style/TextAppearance.AppCompat.Medium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/game_marginTop"
+                android:textColor="@android:color/black"
+                tools:text="@string/franchise" />
+
+            <android.support.v4.widget.Space
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/game_verticalSpacing" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_mainGame"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/TextAppearance.AppCompat.Small"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/title_mainGame"
+                android:textColor="@android:color/darker_gray" />
+
+            <TextView
+                android:id="@+id/mainGame"
+                style="@style/TextAppearance.AppCompat.Medium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/game_marginTop"
+                android:textColor="@android:color/black"
+                tools:text="@string/mainGame" />
+
+            <android.support.v4.widget.Space
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/game_verticalSpacing" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_modes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/TextAppearance.AppCompat.Small"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/title_modes"
+                android:textColor="@android:color/darker_gray" />
+
+            <TextView
+                android:id="@+id/modes"
+                style="@style/TextAppearance.AppCompat.Medium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/game_marginTop"
+                android:textColor="@android:color/black"
+                tools:text="@string/modes" />
+
+            <android.support.v4.widget.Space
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/game_verticalSpacing" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_firstReleaseDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/TextAppearance.AppCompat.Small"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/title_firstReleaseDate"
+                android:textColor="@android:color/darker_gray" />
+
+            <TextView
+                android:id="@+id/firstReleaseDate"
+                style="@style/TextAppearance.AppCompat.Medium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/game_marginTop"
+                android:textColor="@android:color/black"
+                tools:text="@string/firstReleaseDate" />
+
+            <android.support.v4.widget.Space
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/game_verticalSpacing" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_synopsis"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/TextAppearance.AppCompat.Small"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/title_synopsis"
+                android:textColor="@android:color/darker_gray" />
+
+            <TextView
+                android:id="@+id/synopsis"
+                style="@style/TextAppearance.AppCompat.Medium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/game_marginTop"
+                android:textColor="@android:color/black"
+                tools:text="@string/synopsis" />
+
+            <android.support.v4.widget.Space
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/game_verticalSpacing" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_website"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/TextAppearance.AppCompat.Small"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/title_website"
+                android:textColor="@android:color/darker_gray" />
+
+            <TextView
+                android:id="@+id/website"
+                style="@style/TextAppearance.AppCompat.Medium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/game_marginTop"
+                android:textColor="@android:color/holo_blue_dark"
+                tools:text="@string/website" />
+
+            <android.support.v4.widget.Space
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/game_verticalSpacing" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_esrb"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/TextAppearance.AppCompat.Small"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/title_esrb"
+                android:textColor="@android:color/darker_gray" />
+
+            <TextView
+                android:id="@+id/esrb"
+                style="@style/TextAppearance.AppCompat.Medium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/game_marginTop"
+                android:textColor="@android:color/black"
+                tools:text="@string/esrb" />
+
+            <android.support.v4.widget.Space
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/game_verticalSpacing" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_pegi"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/TextAppearance.AppCompat.Small"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/title_pegi"
+                android:textColor="@android:color/darker_gray" />
+
+            <TextView
+                android:id="@+id/pegi"
+                style="@style/TextAppearance.AppCompat.Medium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/game_marginTop"
+                android:textColor="@android:color/black"
+                tools:text="@string/pegi" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</android.support.v4.widget.NestedScrollView>

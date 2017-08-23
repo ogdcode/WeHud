@@ -2,19 +2,27 @@ package com.wehud.util;
 
 import android.content.Context;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
+import com.wehud.R;
+import com.wehud.model.Status;
 
+import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public final class Utils {
 
     private static final String ISO_8601_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
-    private static final String LOCAL_PATTERN = "dd/MM/yyyy HH:mm";
+    private static final String LOCAL_PATTERN_DATETIME = "dd/MM/yyyy HH:mm";
+    private static final String LOCAL_PATTERN_DATE = "dd/MM/yyyy";
+
 
     /**
      * Displays a {@link Toast} on the screen.
@@ -34,9 +42,15 @@ public final class Utils {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        sdf.applyPattern(LOCAL_PATTERN);
+        sdf.applyPattern(LOCAL_PATTERN_DATETIME);
 
         return sdf.format(d);
+    }
+
+    public static String timestampToLocalDateString(long timestamp) {
+        Timestamp tstp = new Timestamp(timestamp);
+        DateFormat df = new SimpleDateFormat(LOCAL_PATTERN_DATE, Locale.getDefault());
+        return df.format(new Date(tstp.getTime()));
     }
 
     /**
@@ -58,6 +72,52 @@ public final class Utils {
      */
     public static void loadImage(Context context, String imgUrl, ImageView iv) {
         Picasso.with(context).load(imgUrl).into(iv);
+    }
+
+    public static Status getStatus(Context context, int status) {
+        StringBuilder sb = new StringBuilder();
+        int resId;
+
+        switch (status) {
+            case 0:
+                resId = R.drawable.ic_status_released;
+                sb.append(context.getString(R.string.status_released));
+                break;
+            case 2:
+                resId = R.drawable.ic_status_alpha;
+                sb.append(context.getString(R.string.status_alpha));
+                break;
+            case 3:
+                resId = R.drawable.ic_status_beta;
+                sb.append(context.getString(R.string.status_beta));
+                break;
+            case 4:
+                resId = R.drawable.ic_status_early_access;
+                sb.append(context.getString(R.string.status_earlyAccess));
+                break;
+            case 5:
+                resId = R.drawable.ic_status_offline;
+                sb.append(context.getString(R.string.status_offline));
+                break;
+            case 6:
+                resId = R.drawable.ic_status_cancelled;
+                sb.append(context.getString(R.string.status_cancelled));
+                break;
+            default:
+                resId = R.drawable.ic_status_unknown;
+                sb.append(context.getString(R.string.status_unknown));
+                break;
+        }
+
+        return new Status(resId, sb.toString());
+    }
+
+    public static void putStringListIntoTextView(TextView txt, List<String> strings) {
+        int len = strings.size();
+        for (int i = 0; i < len; ++i) {
+            if (i < len - 1) txt.append(strings.get(i) + ", ");
+            else txt.append(strings.get(i));
+        }
     }
 
 }

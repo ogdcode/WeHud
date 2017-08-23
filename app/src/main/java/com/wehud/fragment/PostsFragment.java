@@ -42,7 +42,7 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            String payload = intent.getStringExtra(Constants.EXTRA_API_RESPONSE);
+            String payload = intent.getStringExtra(Constants.EXTRA_BROADCAST);
 
             if (intent.getAction().equals(Constants.INTENT_POSTS_LIST) && !mPaused) {
                 Type postListType = new TypeToken<List<Post>>(){}.getType();

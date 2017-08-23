@@ -22,6 +22,9 @@ public final class Constants {
 
     public static final String API_MESSAGES = API_POSTS + "/messages/all";
 
+    public static final String API_FOLLOW_GAME = API_USERS + "/follow/game";
+    public static final String API_UNFOLLOW_GAME = API_USERS + "/unfollow/game";
+
     public static final String HEADER_CONTENT_TYPE = "Content-Type";
     public static final String HEADER_ACCEPT = "Accept";
 
@@ -29,7 +32,7 @@ public final class Constants {
 
     public static final String APPLICATION_JSON = "application/json";
 
-    public static final String TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1OThmMWQ2NTQ5M2E2MjBhYTkxOGJlNDIiLCJpYXQiOjE1MDMzMzI0MzUsImV4cCI6MTUwMzQxODgzNX0.ggK6hJ_xWiTJzWasE9DGTLg3x1ZBsyg0BDaRBzv-8ZQ";
+    public static final String TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1OThmMWQ2NTQ5M2E2MjBhYTkxOGJlNDIiLCJpYXQiOjE1MDM0OTAzNzcsImV4cCI6MTUwMzU3Njc3N30.Wy7t-sbgkajuv_KdUNEZueXQx6Lj_3wbZeKhojpK97c";
 
     public static final String GET = "GET";
     public static final String POST = "POST";
@@ -56,8 +59,12 @@ public final class Constants {
     public static final String INTENT_USER_GET = "intent_user_get";
     public static final String INTENT_USER_UPDATE = "intent_user_update";
     public static final String INTENT_USER_DELETE = "intent_user_delete";
+    public static final String INTENT_GAME_ID = "intent_game_id";
+    public static final String INTENT_GAME_GET = "intent_game_get";
+    public static final String INTENT_GAME_FOLLOW = "intent_game_follow";
+    public static final String INTENT_GAME_UNFOLLOW = "intent_game_unfollow";
     public static final String INTENT_FOLLOWERS_LIST = "intent_followers_list";
     public static final String INTENT_MESSAGES_LIST = "intent_messages_list";
 
-    public static final String EXTRA_API_RESPONSE = "extra_APIResponse";
+    public static final String EXTRA_BROADCAST = "extra_broadcast";
 }

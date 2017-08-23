@@ -24,14 +24,15 @@ import com.wehud.R;
 
 public final class EditDialogFragment extends DialogFragment {
 
-    private static final String KEY_VIEW_ID = "dialog_id";
-    private static final String KEY_HINT = "dialog_hint";
-    private static final String KEY_TITLE = "dialog_title";
-    private static final String KEY_TEXT = "dialog_text";
-    private static final String KEY_PASSWORD = "dialog_password";
+    private static final String KEY_VIEW_ID = "key_view_id";
+    private static final String KEY_HINT = "key_hint";
+    private static final String KEY_TITLE = "key_title";
+    private static final String KEY_TEXT = "key_text";
+    private static final String KEY_PASSWORD = "key_password";
 
-    private static final int PASSWORD_INVISIBLE = InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD;
     private static final int PASSWORD_VISIBLE = InputType.TYPE_CLASS_TEXT;
+    private static final int PASSWORD_INVISIBLE = InputType.TYPE_CLASS_TEXT |
+            InputType.TYPE_TEXT_VARIATION_PASSWORD;
 
     private static OnEditDialogDismissOkListener mListener;
 
@@ -130,9 +131,7 @@ public final class EditDialogFragment extends DialogFragment {
                         if (!newPassword.getText().toString().equals(confirmNewPassword.getText().toString())) {
                             newPassword.setError(getString(R.string.error_passwords_no_match));
                             confirmNewPassword.setError(getString(R.string.error_passwords_no_match));
-                            return;
-                        }
-                        text[0] = newPassword.getText().toString();
+                        } else text[0] = newPassword.getText().toString();
                     }
                     mListener.onEditDialogDismissOk(viewId, text[0]);
                 }

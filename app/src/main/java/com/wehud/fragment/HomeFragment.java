@@ -51,7 +51,7 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            String payload = intent.getStringExtra(Constants.EXTRA_API_RESPONSE);
+            String payload = intent.getStringExtra(Constants.EXTRA_BROADCAST);
 
             if (intent.getAction().equals(Constants.INTENT_PAGES_ADD) && !mPaused) {
                 Page page = GsonUtils.getInstance().fromJson(payload, Page.class);
@@ -166,7 +166,8 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
                 String pageTitle = mPages.get(mCurrentPage - 1).getTitle();
                 TextDialogFragment.generate(
                         getFragmentManager(), this,
-                        pageTitle, getString(R.string.dialogMessage_removePage)
+                        pageTitle, getString(R.string.dialogMessage_removePage),
+                        0
                 );
                 break;
             default:
@@ -203,7 +204,7 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
     }
 
     @Override
-    public void onTextDialogDismissOk() {
+    public void onTextDialogDismissOk(int id) {
         if (mReceiver != null) this.removePage();
     }
 

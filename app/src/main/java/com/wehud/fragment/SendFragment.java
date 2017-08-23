@@ -72,7 +72,7 @@ public class SendFragment extends Fragment
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            String payload = intent.getStringExtra(Constants.EXTRA_API_RESPONSE);
+            String payload = intent.getStringExtra(Constants.EXTRA_BROADCAST);
             Log.d("MAIN", payload);
 
             if (intent.getAction().equals(Constants.INTENT_FOLLOWERS_LIST) && !mPaused) {

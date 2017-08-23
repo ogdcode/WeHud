@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onTextDialogDismissOk() {
+    public void onTextDialogDismissOk(int id) {
         finish();
     }
 
@@ -101,7 +101,8 @@ public class MainActivity extends AppCompatActivity
                 getSupportFragmentManager(),
                 this,
                 getString(R.string.dialogTitle_signingOut),
-                getString(R.string.message_exitApp)
+                getString(R.string.message_exitApp),
+                0
         );
     }
 }

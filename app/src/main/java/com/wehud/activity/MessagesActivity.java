@@ -41,7 +41,7 @@ public class MessagesActivity extends AppCompatActivity implements SwipeRefreshL
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            String payload = intent.getStringExtra(Constants.EXTRA_API_RESPONSE);
+            String payload = intent.getStringExtra(Constants.EXTRA_BROADCAST);
 
             if (intent.getAction().equals(Constants.INTENT_MESSAGES_LIST) && !mPaused) {
                 Type postListType = new TypeToken<List<Post>>(){}.getType();

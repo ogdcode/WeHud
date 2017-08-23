@@ -60,7 +60,7 @@ public class SettingsActivity extends AppCompatActivity
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            String payload = intent.getStringExtra(Constants.EXTRA_API_RESPONSE);
+            String payload = intent.getStringExtra(Constants.EXTRA_BROADCAST);
 
             if (intent.getAction().equals(Constants.INTENT_USER_GET) && !mPaused) {
                 mCurrentUser = GsonUtils.getInstance().fromJson(payload, User.class);
@@ -75,7 +75,7 @@ public class SettingsActivity extends AppCompatActivity
                 mEmail.setText(mCurrentUser.getEmail());
 
                 mPassword.setTag(currentPassword);
-                mPassword.setText(currentPassword.replaceAll("(?s).", "*"));
+                mPassword.setText(getString(R.string.sample_password));
             }
 
             if (intent.getAction().equals(Constants.INTENT_USER_UPDATE) && !mPaused) {
@@ -238,7 +238,7 @@ public class SettingsActivity extends AppCompatActivity
     }
 
     @Override
-    public void onTextDialogDismissOk() {
+    public void onTextDialogDismissOk(int id) {
         Map<String, String> headers = new HashMap<>();
         headers.put(Constants.HEADER_CONTENT_TYPE, Constants.APPLICATION_JSON);
         headers.put(Constants.HEADER_ACCEPT, Constants.APPLICATION_JSON);
@@ -308,8 +308,7 @@ public class SettingsActivity extends AppCompatActivity
 
         if (!avatar.equals(mCurrentUser.getAvatar()) ||
                 !username.equals(mCurrentUser.getUsername()) ||
-                !email.equals(mCurrentUser.getEmail()) ||
-                !password.equals(mCurrentUser.getPassword())) {
+                !email.equals(mCurrentUser.getEmail())) {
             Map<String, String> headers = new HashMap<>();
             headers.put(Constants.HEADER_CONTENT_TYPE, Constants.APPLICATION_JSON);
             headers.put(Constants.HEADER_ACCEPT, Constants.APPLICATION_JSON);
@@ -321,7 +320,8 @@ public class SettingsActivity extends AppCompatActivity
             newSettings.put(PARAM_AVATAR, avatar);
             newSettings.put(PARAM_USERNAME, username);
             newSettings.put(PARAM_EMAIL, email);
-            newSettings.put(PARAM_PASSWORD, password);
+            if (!password.equals(mCurrentUser.getPassword()))
+                newSettings.put(PARAM_PASSWORD, password);
 
             String body = GsonUtils.getInstance().toJson(newSettings);
 
@@ -345,7 +345,8 @@ public class SettingsActivity extends AppCompatActivity
                 getSupportFragmentManager(),
                 this,
                 getString(R.string.dialogTitle_deleteAccount),
-                getString(R.string.message_deleteAccount)
+                getString(R.string.message_deleteAccount),
+                0
         );
     }
 }

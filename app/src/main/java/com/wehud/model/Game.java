@@ -52,7 +52,7 @@ public final class Game implements Parcelable {
     private long mFirstReleaseDate;
 
     @SerializedName("status")
-    private int mStatus;
+    private int mStatus = -1;
 
     @SerializedName("cover")
     private String mCover;
@@ -70,8 +70,68 @@ public final class Game implements Parcelable {
         return mName;
     }
 
+    public String getId() {
+        return mId;
+    }
+
+    public String getSynopsis() {
+        return mSynopsis;
+    }
+
+    public String getFranchise() {
+        return mFranchise;
+    }
+
+    public List<User> getFollowers() {
+        return mFollowers;
+    }
+
+    public String getGame() {
+        return mGame;
+    }
+
+    public List<String> getDevelopers() {
+        return mDevelopers;
+    }
+
+    public List<String> getPublishers() {
+        return mPublishers;
+    }
+
+    public boolean isDlcOrExpansion() {
+        return mIsDlcOrExpansion;
+    }
+
+    public List<String> getModes() {
+        return mModes;
+    }
+
+    public List<String> getGenres() {
+        return mGenres;
+    }
+
+    public long getFirstReleaseDate() {
+        return mFirstReleaseDate;
+    }
+
+    public int getStatus() {
+        return mStatus;
+    }
+
     public String getCover() {
         return mCover;
+    }
+
+    public String getPegi() {
+        return mPegi;
+    }
+
+    public String getEsrb() {
+        return mEsrb;
+    }
+
+    public String getWebsite() {
+        return mWebsite;
     }
 
     protected Game(Parcel in) {

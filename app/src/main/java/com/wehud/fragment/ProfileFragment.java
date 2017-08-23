@@ -74,7 +74,7 @@ public class ProfileFragment extends Fragment
     }
 
     @Override
-    public void onTextDialogDismissOk() {
+    public void onTextDialogDismissOk(int id) {
         getActivity().finish();
     }
 
@@ -83,7 +83,8 @@ public class ProfileFragment extends Fragment
                 getFragmentManager(),
                 this,
                 getString(R.string.dialogTitle_signingOut),
-                getString(R.string.message_exitApp)
+                getString(R.string.message_exitApp),
+                0
         );
     }
 }

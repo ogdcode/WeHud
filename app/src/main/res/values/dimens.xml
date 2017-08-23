@@ -50,10 +50,10 @@
     <dimen name="gameInfo_txtMarginBottom">24dp</dimen>
     <dimen name="gameInfo_marginLeftStart">8dp</dimen>
     <dimen name="gameInfo_marginRightEnd">8dp</dimen>
-    <dimen name="gameInfo_marginTop">8dp</dimen>
+    <dimen name="game_marginTop">8dp</dimen>
     <dimen name="gameInfo_paddingBottom">16dp</dimen>
     <dimen name="gameInfo_padding">16dp</dimen>
-    <dimen name="gameInfo_verticalSpacing">16dp</dimen>
+    <dimen name="game_verticalSpacing">16dp</dimen>
     <dimen name="game_padding">8dp</dimen>
     <dimen name="profile_marginLeftStart">16dp</dimen>
     <dimen name="profile_marginRightEnd">16dp</dimen>
@@ -87,4 +87,10 @@
     <dimen name="contact_marginLeftStart">8dp</dimen>
     <dimen name="postMedia_marginBottom">8dp</dimen>
     <dimen name="avatar_padding">8dp</dimen>
+    <dimen name="gameHeader_marginTop">16dp</dimen>
+    <dimen name="gameHeader_paddingLeftStart">8dp</dimen>
+    <dimen name="gameHeader_marginRightEnd">8dp</dimen>
+    <dimen name="gameHeader_paddingBottom">16dp</dimen>
+    <dimen name="gameHeader_paddingRightEnd">8dp</dimen>
+    <dimen name="gameHeader_paddingTop">1dp</dimen>
 </resources>

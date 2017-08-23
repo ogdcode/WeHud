@@ -1,6 +1,8 @@
 package com.wehud.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -11,11 +13,15 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.wehud.R;
+import com.wehud.activity.GameActivity;
 import com.wehud.model.Game;
+import com.wehud.util.Constants;
 
 import java.util.List;
 
 public final class GamesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+    private static final String KEY_GAME_ID = "key_game_id";
 
     private List<Game> mGames;
 
@@ -42,7 +48,7 @@ public final class GamesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
 
         if (mViewResourceId == 1) {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.game, parent, false);
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.game_image, parent, false);
             return new GameCoversVH(view);
         }
 
@@ -51,7 +57,7 @@ public final class GamesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        Game game = mGames.get(position);
+        final Game game = mGames.get(position);
 
         if (holder instanceof GameTextsVH) {
             GameTextsVH textsHolder = (GameTextsVH) holder;
@@ -65,11 +71,22 @@ public final class GamesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
 
         if (holder instanceof GameCoversVH) {
-            GameCoversVH coversHolder = (GameCoversVH) holder;
+            final GameCoversVH coversHolder = (GameCoversVH) holder;
 
             String cover = "https://" + game.getCover();
             if (!TextUtils.isEmpty(cover)) Picasso.with(coversHolder.context).load(cover).resize(512, 512).into(coversHolder.cover);
             else coversHolder.cover.setImageResource(R.mipmap.ic_launcher);
+
+            coversHolder.cover.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(coversHolder.context, GameActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString(KEY_GAME_ID, game.getId());
+                    intent.putExtras(bundle);
+                    coversHolder.context.startActivity(intent);
+                }
+            });
         }
     }
 
@@ -84,20 +101,14 @@ public final class GamesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         return super.getItemId(position);
     }
 
-    private class GameCoversVH extends RecyclerView.ViewHolder implements View.OnClickListener {
+    private class GameCoversVH extends RecyclerView.ViewHolder {
         private Context context;
         private ImageView cover;
 
         GameCoversVH(View view) {
             super(view);
             context = view.getContext();
-            cover = (ImageView) view.findViewById(R.id.game_cover);
-            cover.setOnClickListener(this);
-        }
-
-        @Override
-        public void onClick(View view) {
-
+            cover = (ImageView) view.findViewById(R.id.cover);
         }
     }
 

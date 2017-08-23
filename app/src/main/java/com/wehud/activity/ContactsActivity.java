@@ -15,8 +15,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.google.gson.reflect.TypeToken;
 import com.wehud.R;
@@ -43,7 +41,7 @@ public class ContactsActivity extends AppCompatActivity implements SwipeRefreshL
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            String payload = intent.getStringExtra(Constants.EXTRA_API_RESPONSE);
+            String payload = intent.getStringExtra(Constants.EXTRA_BROADCAST);
 
             if (intent.getAction().equals(Constants.INTENT_FOLLOWERS_LIST) && !mPaused) {
                 Type userListType = new TypeToken<List<User>>(){}.getType();

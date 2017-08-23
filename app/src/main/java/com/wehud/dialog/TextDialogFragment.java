@@ -18,6 +18,7 @@ import com.wehud.R;
 
 public final class TextDialogFragment extends DialogFragment {
 
+    private static final String KEY_ID = "key_id";
     private static final String KEY_TITLE = "key_title";
     private static final String KEY_MESSAGE = "key_message";
 
@@ -32,8 +33,9 @@ public final class TextDialogFragment extends DialogFragment {
     }
 
     public static void generate(FragmentManager manager, OnTextDialogDismissOkListener listener,
-                                String title, String message) {
+                                String title, String message, int id) {
         Bundle bundle = new Bundle();
+        bundle.putInt(KEY_ID, id);
         bundle.putString(KEY_TITLE, title);
         bundle.putString(KEY_MESSAGE, message);
 
@@ -49,6 +51,7 @@ public final class TextDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         final Context context = getActivity();
         final Bundle bundle = getArguments();
+        final int dialogId = bundle.getInt(KEY_ID);
         final String title = bundle.getString(KEY_TITLE);
         final String message = bundle.getString(KEY_MESSAGE);
 
@@ -67,7 +70,7 @@ public final class TextDialogFragment extends DialogFragment {
         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {
-                if (mListener != null) mListener.onTextDialogDismissOk();
+                if (mListener != null) mListener.onTextDialogDismissOk(dialogId);
                 dismiss();
             }
         });
@@ -82,7 +85,7 @@ public final class TextDialogFragment extends DialogFragment {
     }
 
     public interface OnTextDialogDismissOkListener {
-        void onTextDialogDismissOk();
+        void onTextDialogDismissOk(int i);
     }
 
 }
