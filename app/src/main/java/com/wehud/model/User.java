@@ -43,6 +43,8 @@ public final class User implements Parcelable {
     @SerializedName("createdAt")
     private String mDatetimeCreated;
 
+    public User() {}
+
     public String getId() {
         return mId;
     }
@@ -77,6 +79,18 @@ public final class User implements Parcelable {
 
     public String getDatetimeCreated() {
         return Utils.isoDateStringToLocalDateString(mDatetimeCreated);
+    }
+
+    public void setId(String id) {
+        mId = id;
+    }
+
+    public void setUsername(String username) {
+        mUsername = username;
+    }
+
+    public void setEmail(String email) {
+        mEmail = email;
     }
 
     protected User(Parcel in) {

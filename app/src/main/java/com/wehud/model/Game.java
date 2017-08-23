@@ -134,6 +134,14 @@ public final class Game implements Parcelable {
         return mWebsite;
     }
 
+    public void follow(User user) {
+        mFollowers.add(user);
+    }
+
+    public void unfollow(User user) {
+        mFollowers.remove(user);
+    }
+
     protected Game(Parcel in) {
         mId = in.readString();
         mName = in.readString();

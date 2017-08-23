@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.wehud.R;
 import com.wehud.model.Page;
 
 import java.util.List;
@@ -54,6 +55,7 @@ public final class PagesAdapter extends RecyclerView.Adapter<PagesAdapter.PagesV
             view.setClickable(true);
             view.setOnClickListener(this);
             title = (TextView) view.findViewById(android.R.id.text1);
+            title.setBackgroundResource(R.drawable.list_item_selector);
         }
 
         @Override

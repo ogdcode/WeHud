@@ -181,11 +181,15 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             if (intent.getAction().equals(Constants.INTENT_GAME_FOLLOW) && !mPaused) {
                 mFollowButton.setText(getString(R.string.btnUnfollow));
                 Utils.toast(GameActivity.this, getString(R.string.message_followingGame));
+
+                // Set up new follower.
             }
 
             if (intent.getAction().equals(Constants.INTENT_GAME_UNFOLLOW) && !mPaused) {
                 mFollowButton.setText(getString(R.string.btnFollow));
                 Utils.toast(GameActivity.this, getString(R.string.message_unfollowingGame));
+
+                // Remove current user from followers.
             }
         }
     };
@@ -230,6 +234,9 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
         IntentFilter filter = new IntentFilter();
         filter.addAction(Constants.INTENT_GAME_GET);
+        filter.addAction(Constants.INTENT_PAGES_LIST);
+        filter.addAction(Constants.INTENT_GAME_FOLLOW);
+        filter.addAction(Constants.INTENT_GAME_UNFOLLOW);
 
         registerReceiver(mReceiver, filter);
     }
@@ -294,7 +301,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                     this,
                     Constants.INTENT_GAME_FOLLOW,
                     Constants.PATCH,
-                    Constants.API_GAMES + '/' + mCurrentGame.getId(),
+                    Constants.API_FOLLOW_GAME + '/' + mCurrentGame.getId(),
                     body,
                     headers,
                     parameters
@@ -387,7 +394,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 this,
                 Constants.INTENT_GAME_UNFOLLOW,
                 Constants.PATCH,
-                Constants.API_GAMES + '/' + mCurrentGame.getId(),
+                Constants.API_UNFOLLOW_GAME + '/' + mCurrentGame.getId(),
                 headers,
                 parameters
         );
