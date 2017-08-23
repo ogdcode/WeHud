@@ -26,6 +26,7 @@ import com.squareup.picasso.Picasso;
 import com.wehud.R;
 import com.wehud.adapter.PagesAdapter;
 import com.wehud.dialog.ListDialogFragment;
+import com.wehud.model.Follower;
 import com.wehud.model.Game;
 import com.wehud.model.Page;
 import com.wehud.model.Status;
@@ -84,7 +85,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         @Override
         public void onReceive(Context context, Intent intent) {
             String payload = intent.getStringExtra(Constants.EXTRA_BROADCAST);
-            Log.d("GAME", payload);
 
             if (intent.getAction().equals(Constants.INTENT_GAME_GET) && !mPaused) {
                 mCurrentGame = GsonUtils.getInstance().fromJson(payload, Game.class);
@@ -106,7 +106,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 String esrb = mCurrentGame.getEsrb();
                 String pegi = mCurrentGame.getPegi();
 
-                Picasso.with(GameActivity.this).load(cover).into(mCover);
+                Utils.loadImage(GameActivity.this, cover, mCover);
                 mName.setText(name);
 
                 boolean found = false;
@@ -180,16 +180,26 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
             if (intent.getAction().equals(Constants.INTENT_GAME_FOLLOW) && !mPaused) {
                 mFollowButton.setText(getString(R.string.btnUnfollow));
-                Utils.toast(GameActivity.this, getString(R.string.message_followingGame));
+                Follower newFollower = GsonUtils.getInstance().fromJson(payload, Follower.class);
 
-                // Set up new follower.
+                mCurrentGame.follow(newFollower.getUser());
+                String newNbrFollowers = mCurrentGame.getFollowers().size() + " FOLLOWER(S)";
+
+                mFollowers.setText(newNbrFollowers);
+
+                Utils.toast(GameActivity.this, getString(R.string.message_followingGame));
             }
 
             if (intent.getAction().equals(Constants.INTENT_GAME_UNFOLLOW) && !mPaused) {
                 mFollowButton.setText(getString(R.string.btnFollow));
-                Utils.toast(GameActivity.this, getString(R.string.message_unfollowingGame));
+                Follower oldFollower = GsonUtils.getInstance().fromJson(payload, Follower.class);
 
-                // Remove current user from followers.
+                mCurrentGame.unfollow(oldFollower.getUser());
+                String newNbrFollowers = mCurrentGame.getFollowers().size() + " FOLLOWER(S)";
+
+                mFollowers.setText(newNbrFollowers);
+
+                Utils.toast(GameActivity.this, getString(R.string.message_unfollowingGame));
             }
         }
     };
