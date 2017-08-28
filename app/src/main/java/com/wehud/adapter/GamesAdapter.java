@@ -16,6 +16,7 @@ import com.wehud.R;
 import com.wehud.activity.GameActivity;
 import com.wehud.model.Game;
 import com.wehud.util.Constants;
+import com.wehud.util.Utils;
 
 import java.util.List;
 
@@ -74,7 +75,8 @@ public final class GamesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             final GameCoversVH coversHolder = (GameCoversVH) holder;
 
             String cover = "https://" + game.getCover();
-            if (!TextUtils.isEmpty(cover)) Picasso.with(coversHolder.context).load(cover).resize(512, 512).into(coversHolder.cover);
+            if (!TextUtils.isEmpty(cover))
+                Utils.loadImage(coversHolder.context, cover, coversHolder.cover, 512);
             else coversHolder.cover.setImageResource(R.mipmap.ic_launcher);
 
             coversHolder.cover.setOnClickListener(new View.OnClickListener() {

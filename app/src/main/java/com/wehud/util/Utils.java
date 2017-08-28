@@ -58,10 +58,22 @@ public final class Utils {
      * @param context the {@link Context} of the application
      * @param imgUrl a {@link String} object representing the URL of the image
      * @param iv an {@link ImageView} in which to load the image
-     * @param s a value in pixels used to resize the image
+     * @param i a value in pixels used as the width of the image
+     * @param i2 a value in pixels used as the height of the image
      */
-    public static void loadImageWithResizing(Context context, String imgUrl, ImageView iv, int s) {
-        Picasso.with(context).load(imgUrl).resize(s, s).into(iv);
+    public static void loadImage(Context context, String imgUrl, ImageView iv, int i, int i2) {
+        Picasso.with(context).load(imgUrl).resize(i, i2).into(iv);
+    }
+
+    /**
+     * Helper method to call a Picasso static instance to load images and resize them.
+     * @param context the {@link Context} of the application
+     * @param imgUrl a {@link String} object representing the URL of the image
+     * @param iv an {@link ImageView} in which to load the image
+     * @param i a value in pixels used to resize the image
+     */
+    public static void loadImage(Context context, String imgUrl, ImageView iv, int i) {
+        loadImage(context, imgUrl, iv, i, i);
     }
 
     /**

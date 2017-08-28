@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.wehud.R;
 import com.wehud.model.User;
+import com.wehud.util.Utils;
 
 import java.util.List;
 
@@ -73,7 +74,7 @@ public final class UsersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             boolean connected = user.isConnected();
 
             if (!TextUtils.isEmpty(avatar))
-                Picasso.with(contactsHolder.context).load(avatar).into(contactsHolder.avatar);
+                Utils.loadImage(contactsHolder.context, avatar, contactsHolder.avatar);
             else contactsHolder.avatar.setImageResource(R.mipmap.ic_launcher_round);
 
             contactsHolder.username.setText(username);

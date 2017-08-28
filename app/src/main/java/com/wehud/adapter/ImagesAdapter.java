@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import com.squareup.picasso.Picasso;
 import com.wehud.R;
 import com.wehud.model.Image;
+import com.wehud.util.Utils;
 
 import java.util.List;
 
@@ -20,8 +21,6 @@ public final class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.Imag
 
     private View mSelectedView;
     private static int mSelectedPosition = -1;
-
-    private int mViewResourceId;
 
     public ImagesAdapter(List<Image> images) {
         mImages = images;
@@ -40,8 +39,7 @@ public final class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.Imag
         String url = image.getUrl();
         int resId = image.getResId();
 
-        if (!TextUtils.isEmpty(url))
-            Picasso.with(holder.context).load(url).resize(256, 256).into(holder.image);
+        if (!TextUtils.isEmpty(url)) Utils.loadImage(holder.context, url, holder.image, 256);
         else holder.image.setImageResource(resId);
     }
 

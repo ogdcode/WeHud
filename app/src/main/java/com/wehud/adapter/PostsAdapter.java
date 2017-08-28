@@ -46,8 +46,7 @@ public final class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsV
 
         if (TextUtils.isEmpty(avatar))
             holder.postAvatar.setImageResource(R.mipmap.ic_launcher_round);
-        else
-            Utils.loadImage(holder.context, avatar, holder.postAvatar);
+        else Utils.loadImage(holder.context, avatar, holder.postAvatar);
 
         holder.postUsername.setText(username);
         holder.postCreatedAt.setText(datetimeCreated);

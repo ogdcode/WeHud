@@ -70,7 +70,7 @@ public class SettingsActivity extends AppCompatActivity
 
                 mImage = new Image(avatar, 0);
 
-                Picasso.with(SettingsActivity.this).load(avatar).resize(256, 256).into(mAvatar);
+                Utils.loadImage(SettingsActivity.this, avatar, mAvatar, 256);
                 mUsername.setText(mCurrentUser.getUsername());
                 mEmail.setText(mCurrentUser.getEmail());
 
@@ -231,8 +231,7 @@ public class SettingsActivity extends AppCompatActivity
             mImage = (Image) p;
 
             String url = mImage.getUrl();
-            if (!TextUtils.isEmpty(url))
-                Picasso.with(this).load(url).resize(256, 256).into(mAvatar);
+            if (!TextUtils.isEmpty(url)) Utils.loadImage(this, url, mAvatar, 256);
             else mAvatar.setImageResource(mImage.getResId());
         }
     }

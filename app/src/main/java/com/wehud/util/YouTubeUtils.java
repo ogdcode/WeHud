@@ -7,12 +7,10 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.google.android.youtube.player.YouTubeStandalonePlayer;
-import com.squareup.picasso.Picasso;
 
 public final class YouTubeUtils {
     private static final String API_KEY = "AIzaSyBXI_qrIr0gRD0xuGfIj7Q03yRz0g2ReHk";
 
-    private static final String VID_URL_HEAD = "https://youtube.com/watch?v=";
     private static final String IMG_URL_HEAD = "https://img.youtube.com/vi/";
     private static final String IMG_URL_FOOT = "/0.jpg";
 
@@ -35,7 +33,7 @@ public final class YouTubeUtils {
      */
     public static void configureVideo(final Context context, final String id, final ImageView iv) {
         final String thumbnailUrl = buildThumbnailUrl(id);
-        Picasso.with(context).load(thumbnailUrl).resize(1280, 720).into(iv);
+        Utils.loadImage(context, thumbnailUrl, iv, 1280, 720);
         iv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
