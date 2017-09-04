@@ -48,7 +48,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.MainActivity" />
         </activity>
-        <activity android:name=".activity.GameActivity"></activity>
+        <activity android:name=".activity.GameActivity" />
+        <activity android:name=".activity.UserActivity"></activity>
     </application>
 
 </manifest>

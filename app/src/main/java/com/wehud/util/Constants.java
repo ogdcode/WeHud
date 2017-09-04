@@ -22,8 +22,11 @@ public final class Constants {
 
     public static final String API_MESSAGES = API_POSTS + "/messages/all";
 
-    public static final String API_FOLLOW_GAME = API_USERS + "/follow/game";
-    public static final String API_UNFOLLOW_GAME = API_USERS + "/unfollow/game";
+    public static final String API_USER_FOLLOW = API_USERS + "/follow";
+    public static final String API_USER_UNFOLLOW = API_USERS + "/unfollow";
+
+    public static final String API_GAME_FOLLOW = API_USERS + "/follow/game";
+    public static final String API_GAME_UNFOLLOW = API_USERS + "/unfollow/game";
 
     public static final String HEADER_CONTENT_TYPE = "Content-Type";
     public static final String HEADER_ACCEPT = "Accept";
@@ -59,7 +62,8 @@ public final class Constants {
     public static final String INTENT_USER_GET = "intent_user_get";
     public static final String INTENT_USER_UPDATE = "intent_user_update";
     public static final String INTENT_USER_DELETE = "intent_user_delete";
-    public static final String INTENT_GAME_ID = "intent_game_id";
+    public static final String INTENT_USER_FOLLOW = "intent_user_follow";
+    public static final String INTENT_USER_UNFOLLOW = "intent_user_unfollow";
     public static final String INTENT_GAME_GET = "intent_game_get";
     public static final String INTENT_GAME_FOLLOW = "intent_game_follow";
     public static final String INTENT_GAME_UNFOLLOW = "intent_game_unfollow";

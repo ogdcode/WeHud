@@ -11,11 +11,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
 import com.wehud.R;
 import com.wehud.activity.GameActivity;
 import com.wehud.model.Game;
-import com.wehud.util.Constants;
 import com.wehud.util.Utils;
 
 import java.util.List;
@@ -110,7 +108,7 @@ public final class GamesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         GameCoversVH(View view) {
             super(view);
             context = view.getContext();
-            cover = (ImageView) view.findViewById(R.id.cover);
+            cover = (ImageView) view.findViewById(R.id.avatar);
         }
     }
 

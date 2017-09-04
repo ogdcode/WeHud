@@ -5,16 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Parcelable;
-import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -22,7 +18,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.gson.reflect.TypeToken;
-import com.squareup.picasso.Picasso;
 import com.wehud.R;
 import com.wehud.adapter.PagesAdapter;
 import com.wehud.dialog.ListDialogFragment;
@@ -120,7 +115,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 if (found) mFollowButton.setText(getString(R.string.btnUnfollow));
                 else mFollowButton.setText(getString(R.string.btnFollow));
 
-                String numFollowers = followers.size() + " FOLLOWER(S)";
+                String numFollowers = followers.size() + ' ' + getString(R.string.followerCount);
                 mFollowers.setText(numFollowers);
 
                 mStatus.setCompoundDrawablesWithIntrinsicBounds(status.getIcon(), 0, 0, 0);
@@ -172,7 +167,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             }
 
             if (intent.getAction().equals(Constants.INTENT_PAGES_LIST) && !mPaused) {
-                Type pageListType = new TypeToken<List<Page>>(){}.getType();
+                Type pageListType = new TypeToken<List<Page>>() {
+                }.getType();
                 ArrayList<Page> pages = GsonUtils.getInstance().fromJson(payload, pageListType);
 
                 GameActivity.this.follow(pages);
@@ -183,7 +179,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 Follower newFollower = GsonUtils.getInstance().fromJson(payload, Follower.class);
 
                 mCurrentGame.follow(newFollower.getUser());
-                String newNbrFollowers = mCurrentGame.getFollowers().size() + " FOLLOWER(S)";
+                String newNbrFollowers = mCurrentGame.getFollowers().size()
+                        + ' ' + getString(R.string.followerCount);
 
                 mFollowers.setText(newNbrFollowers);
 
@@ -195,7 +192,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 Follower oldFollower = GsonUtils.getInstance().fromJson(payload, Follower.class);
 
                 mCurrentGame.unfollow(oldFollower.getUser());
-                String newNbrFollowers = mCurrentGame.getFollowers().size() + " FOLLOWER(S)";
+                String newNbrFollowers = mCurrentGame.getFollowers().size()
+                        + ' ' + getString(R.string.followerCount);
 
                 mFollowers.setText(newNbrFollowers);
 
@@ -221,7 +219,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         mEsrbLayout = (ViewGroup) findViewById(R.id.layout_esrb);
         mPegiLayout = (ViewGroup) findViewById(R.id.layout_pegi);
 
-        mCover = (ImageView) findViewById(R.id.cover);
+        mCover = (ImageView) findViewById(R.id.avatar);
         mName = (TextView) findViewById(R.id.name);
         mStatus = (TextView) findViewById(R.id.status);
         mFollowers = (TextView) findViewById(R.id.followers);
@@ -311,7 +309,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                     this,
                     Constants.INTENT_GAME_FOLLOW,
                     Constants.PATCH,
-                    Constants.API_FOLLOW_GAME + '/' + mCurrentGame.getId(),
+                    Constants.API_GAME_FOLLOW + '/' + mCurrentGame.getId(),
                     body,
                     headers,
                     parameters
@@ -404,7 +402,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 this,
                 Constants.INTENT_GAME_UNFOLLOW,
                 Constants.PATCH,
-                Constants.API_UNFOLLOW_GAME + '/' + mCurrentGame.getId(),
+                Constants.API_GAME_UNFOLLOW + '/' + mCurrentGame.getId(),
                 headers,
                 parameters
         );

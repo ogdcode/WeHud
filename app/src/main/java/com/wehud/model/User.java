@@ -93,6 +93,14 @@ public final class User implements Parcelable {
         mEmail = email;
     }
 
+    public void follow(User user) {
+        mFollowers.add(user);
+    }
+
+    public void unfollow(User user) {
+        mFollowers.remove(user);
+    }
+
     protected User(Parcel in) {
         mId = in.readString();
         mAvatar = in.readString();

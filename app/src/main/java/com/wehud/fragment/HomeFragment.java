@@ -62,7 +62,8 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
             }
 
             if (intent.getAction().equals(Constants.INTENT_PAGES_LIST) && !mPaused) {
-                Type pageListType = new TypeToken<List<Page>>(){}.getType();
+                Type pageListType = new TypeToken<List<Page>>() {
+                }.getType();
                 mPages = GsonUtils.getInstance().fromJson(payload, pageListType);
 
                 if (!mPages.isEmpty()) {
@@ -98,8 +99,7 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         mContext = view.getContext();
 
-        if (savedInstanceState != null)
-            mCurrentPage = savedInstanceState.getInt(KEY_CURRENT_PAGE);
+        if (savedInstanceState != null) mCurrentPage = savedInstanceState.getInt(KEY_CURRENT_PAGE);
         else mCurrentPage = 0;
 
         TabLayout tabs = (TabLayout) view.findViewById(android.R.id.tabs);

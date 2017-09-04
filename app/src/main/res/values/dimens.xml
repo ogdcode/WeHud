@@ -93,4 +93,17 @@
     <dimen name="gameHeader_paddingBottom">16dp</dimen>
     <dimen name="gameHeader_paddingRightEnd">8dp</dimen>
     <dimen name="gameHeader_paddingTop">1dp</dimen>
+    <dimen name="gameHeader_imageHeight">230dp</dimen>
+    <dimen name="gameHeader_namePadding">8dp</dimen>
+    <dimen name="userHeader_usernamePadding">8dp</dimen>
+    <dimen name="userHeader_paddingLeftStart">8dp</dimen>
+    <dimen name="userHeader_frameHeight">50dp</dimen>
+    <dimen name="gameHeader_frameHeight">50dp</dimen>
+    <dimen name="event_marginLeftStart">8dp</dimen>
+    <dimen name="event_marginTop">8dp</dimen>
+    <dimen name="event_marginRightEnd">8dp</dimen>
+    <dimen name="event_tagMarginTop">10dp</dimen>
+    <dimen name="event_descriptionMarginTop">16dp</dimen>
+    <dimen name="event_timePaddingLeftStart">8dp</dimen>
+    <dimen name="event_paddingBottom">8dp</dimen>
 </resources>

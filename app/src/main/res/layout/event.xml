@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/event_paddingBottom">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/event_marginRightEnd"
+        android:layout_marginLeft="@dimen/event_marginLeftStart"
+        android:layout_marginRight="@dimen/event_marginRightEnd"
+        android:layout_marginStart="@dimen/event_marginLeftStart"
+        android:layout_marginTop="@dimen/event_marginTop"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/tag"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="@string/title" />
+
+    <TextView
+        android:id="@+id/tag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/event_marginRightEnd"
+        android:layout_marginRight="@dimen/event_marginRightEnd"
+        android:layout_marginTop="@dimen/event_tagMarginTop"
+        android:textAllCaps="true"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="@string/tag" />
+
+    <TextView
+        android:id="@+id/description"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/event_marginRightEnd"
+        android:layout_marginLeft="@dimen/event_marginLeftStart"
+        android:layout_marginRight="@dimen/event_marginRightEnd"
+        android:layout_marginStart="@dimen/event_marginLeftStart"
+        android:layout_marginTop="@dimen/event_descriptionMarginTop"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title"
+        tools:text="@string/description" />
+
+    <TextView
+        android:id="@+id/startTime"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/event_marginLeftStart"
+        android:layout_marginStart="@dimen/event_marginLeftStart"
+        android:layout_marginTop="@dimen/event_marginTop"
+        android:drawableLeft="@drawable/ic_time_start"
+        android:drawablePadding="@dimen/event_timePaddingLeftStart"
+        android:drawableStart="@drawable/ic_time_start"
+        android:gravity="center_vertical"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/description"
+        tools:text="@string/datetime" />
+
+    <TextView
+        android:id="@+id/endTime"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/event_marginRightEnd"
+        android:layout_marginRight="@dimen/event_marginRightEnd"
+        android:layout_marginTop="@dimen/event_marginTop"
+        android:drawableLeft="@drawable/ic_time_end"
+        android:drawablePadding="@dimen/event_timePaddingLeftStart"
+        android:drawableStart="@drawable/ic_time_end"
+        android:gravity="center_vertical"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/description"
+        tools:text="@string/datetime" />
+
+</android.support.constraint.ConstraintLayout>

@@ -9,7 +9,6 @@
         android:id="@+id/avatar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:adjustViewBounds="false"
         android:contentDescription="@string/app_name"
         android:cropToPadding="false"
         android:scaleType="fitXY"
@@ -20,7 +19,7 @@
         app:srcCompat="@mipmap/ic_launcher" />
 
     <include
-        layout="@layout/game_header_frame"
+        layout="@layout/user_header_frame"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="0dp"

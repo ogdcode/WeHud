@@ -9,7 +9,7 @@
     <string name="menu_profile">Profile</string>
     <string name="empty_list">This list does not contain any posts. How sad! : (</string>
     <string name="username">Username</string>
-    <string name="createdAt">dd/MM/yyyy HH:mm</string>
+    <string name="datetime">dd/MM/yyyy HH:mm</string>
     <string name="text">Text</string>
     <string name="likes">1</string>
     <string name="tab_myFeeds">My Feeds</string>
@@ -67,6 +67,7 @@
     <string name="hint_username">Username</string>
     <string name="hint_password">Password</string>
     <string name="followers">1 FOLLOWER(S)</string>
+    <string name="followerCount">FOLLOWER(S)</string>
     <string name="btnFollow">Follow</string>
     <string name="btnUnfollow">Unfollow</string>
     <string name="title_publishers">Publisher(s)</string>
@@ -102,4 +103,12 @@
     <string name="message_followingGame">You now follow this game.</string>
     <string name="message_unfollowingGame">You no longer follow this game.</string>
     <string name="dialogTitle_choosePage">Choose a page</string>
+    <string name="score">1 POINT(S)</string>
+    <string name="title">Title</string>
+    <string name="tag">Tag</string>
+    <string name="description">Description</string>
+    <string name="tab_posts">Posts</string>
+    <string name="tab_events">Events</string>
+    <string name="message_followingUser">You now follow this user.</string>
+    <string name="message_unfollowingUser">You no longer follow this user.</string>
 </resources>
