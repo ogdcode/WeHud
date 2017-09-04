@@ -44,6 +44,7 @@ public class UserActivity extends AppCompatActivity
         ListDialogFragment.OnListDialogDismissOkListener {
 
     private static final String KEY_CURRENT_PAGE = "key_currentPage";
+    private static final String KEY_USER_ID = "key_user_id";
 
     private int mCurrentPage;
 
@@ -165,6 +166,13 @@ public class UserActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
+        if (!mPaused) {
+            Bundle bundle = getIntent().getExtras();
+            if (bundle != null) {
+                this.getUser(bundle.getString(KEY_USER_ID));
+            }
+        }
+
         mPaused = false;
     }
 

@@ -1,6 +1,8 @@
 package com.wehud.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -11,6 +13,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.wehud.R;
+import com.wehud.activity.UserActivity;
 import com.wehud.model.Game;
 import com.wehud.model.Post;
 import com.wehud.model.User;
@@ -20,6 +23,8 @@ import com.wehud.util.YouTubeUtils;
 import java.util.List;
 
 public final class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsVH> {
+
+    private static final String KEY_USER_ID = "key_user_id";
 
     private List<Post> mPosts;
 
@@ -34,9 +39,9 @@ public final class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsV
     }
 
     @Override
-    public void onBindViewHolder(PostsVH holder, int position) {
+    public void onBindViewHolder(final PostsVH holder, int position) {
         Post post = mPosts.get(position);
-        User publisher = post.getPublisher();
+        final User publisher = post.getPublisher();
 
         String avatar = publisher.getAvatar();
         String username = publisher.getUsername();
@@ -52,6 +57,17 @@ public final class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsV
         holder.postCreatedAt.setText(datetimeCreated);
         holder.postText.setText(text);
         holder.postLikes.setText(likes);
+
+        holder.postUsername.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(holder.context, UserActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString(KEY_USER_ID, publisher.getId());
+                intent.putExtras(bundle);
+                holder.context.startActivity(intent);
+            }
+        });
 
         this.setPostMedia(holder, post);
     }

@@ -1,6 +1,8 @@
 package com.wehud.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -11,12 +13,15 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.wehud.R;
+import com.wehud.activity.UserActivity;
 import com.wehud.model.User;
 import com.wehud.util.Utils;
 
 import java.util.List;
 
 public final class UsersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+    private static final String KEY_USER_ID = "key_user_id";
 
     private List<User> mUsers;
 
@@ -53,7 +58,7 @@ public final class UsersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        User user = mUsers.get(position);
+        final User user = mUsers.get(position);
 
         if (holder instanceof UsersVH) {
             UsersVH usersHolder = (UsersVH) holder;
@@ -67,7 +72,7 @@ public final class UsersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
 
         if (holder instanceof ContactsVH) {
-            ContactsVH contactsHolder = (ContactsVH) holder;
+            final ContactsVH contactsHolder = (ContactsVH) holder;
 
             String avatar = user.getAvatar();
             String username = user.getUsername();
@@ -78,6 +83,16 @@ public final class UsersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             else contactsHolder.avatar.setImageResource(R.mipmap.ic_launcher_round);
 
             contactsHolder.username.setText(username);
+            contactsHolder.username.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(contactsHolder.context, UserActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString(KEY_USER_ID, user.getId());
+                    intent.putExtras(bundle);
+                    contactsHolder.context.startActivity(intent);
+                }
+            });
 
             if (connected) contactsHolder.status.setImageResource(R.drawable.ic_connected);
             else contactsHolder.status.setImageResource(R.drawable.ic_not_connected);
