@@ -27,9 +27,11 @@ public final class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsV
     private static final String KEY_USER_ID = "key_user_id";
 
     private List<Post> mPosts;
+    private boolean mItemsClickable;
 
-    public PostsAdapter(List<Post> posts) {
+    public PostsAdapter(List<Post> posts, boolean itemsClickable) {
         mPosts = posts;
+        mItemsClickable = itemsClickable;
     }
 
     @Override
@@ -58,16 +60,17 @@ public final class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsV
         holder.postText.setText(text);
         holder.postLikes.setText(likes);
 
-        holder.postUsername.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(holder.context, UserActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putString(KEY_USER_ID, publisher.getId());
-                intent.putExtras(bundle);
-                holder.context.startActivity(intent);
-            }
-        });
+        if (mItemsClickable)
+            holder.postUsername.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(holder.context, UserActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString(KEY_USER_ID, publisher.getId());
+                    intent.putExtras(bundle);
+                    holder.context.startActivity(intent);
+                }
+            });
 
         this.setPostMedia(holder, post);
     }

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.wehud.fragment.UserPlanningsFragment">
+    tools:context="com.wehud.activity.EventsActivity">
 
     <FrameLayout
         android:id="@+id/layout_empty"

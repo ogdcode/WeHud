@@ -106,4 +106,6 @@
     <dimen name="event_descriptionMarginTop">16dp</dimen>
     <dimen name="event_timePaddingLeftStart">8dp</dimen>
     <dimen name="event_paddingBottom">8dp</dimen>
+    <dimen name="planning_padding">8dp</dimen>
+    <dimen name="planning_verticalSpacing">16dp</dimen>
 </resources>

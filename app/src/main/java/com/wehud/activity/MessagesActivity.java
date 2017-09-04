@@ -48,7 +48,7 @@ public class MessagesActivity extends AppCompatActivity implements SwipeRefreshL
                 mMessages = GsonUtils.getInstance().fromJson(payload, postListType);
 
                 if (!mMessages.isEmpty()) {
-                    PostsAdapter adapter = new PostsAdapter(mMessages);
+                    PostsAdapter adapter = new PostsAdapter(mMessages, false);
                     mMessageListView.setAdapter(adapter);
 
                     mEmptyLayout.setVisibility(View.GONE);

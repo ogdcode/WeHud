@@ -23,7 +23,7 @@ import com.wehud.R;
 import com.wehud.adapter.PagesAdapter;
 import com.wehud.adapter.VPAdapter;
 import com.wehud.dialog.ListDialogFragment;
-import com.wehud.fragment.UserEventsFragment;
+import com.wehud.fragment.UserPlanningsFragment;
 import com.wehud.fragment.UserPostsFragment;
 import com.wehud.model.Follower;
 import com.wehud.model.Page;
@@ -45,6 +45,7 @@ public class UserActivity extends AppCompatActivity
 
     private static final String KEY_CURRENT_PAGE = "key_currentPage";
     private static final String KEY_USER_ID = "key_user_id";
+    private String mUserId;
 
     private int mCurrentPage;
 
@@ -91,8 +92,7 @@ public class UserActivity extends AppCompatActivity
             }
 
             if (intent.getAction().equals(Constants.INTENT_PAGES_LIST) && !mPaused) {
-                Type pageListType = new TypeToken<List<Page>>() {
-                }.getType();
+                Type pageListType = new TypeToken<List<Page>>(){}.getType();
                 ArrayList<Page> pages = GsonUtils.getInstance().fromJson(payload, pageListType);
 
                 UserActivity.this.follow(pages);
@@ -131,7 +131,10 @@ public class UserActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user);
 
-        if (savedInstanceState != null) mCurrentPage = savedInstanceState.getInt(KEY_CURRENT_PAGE);
+        if (savedInstanceState != null) {
+            mCurrentPage = savedInstanceState.getInt(KEY_CURRENT_PAGE);
+            mUserId = savedInstanceState.getString(KEY_USER_ID);
+        }
         else mCurrentPage = 0;
 
         mAvatar = (ImageView) findViewById(R.id.avatar);
@@ -146,8 +149,8 @@ public class UserActivity extends AppCompatActivity
         ViewPager pager = (ViewPager) findViewById(R.id.pager);
 
         VPAdapter adapter = new VPAdapter(getSupportFragmentManager());
-        adapter.add(UserPostsFragment.newInstance(), getString(R.string.tab_posts));
-        adapter.add(UserEventsFragment.newInstance(), getString(R.string.tab_events));
+        adapter.add(UserPostsFragment.newInstance("598f1d65493a620aa918be42"), getString(R.string.tab_posts));
+        adapter.add(UserPlanningsFragment.newInstance("598f1d65493a620aa918be42"), getString(R.string.tab_plannings));
 
         pager.setAdapter(adapter);
         pager.setCurrentItem(mCurrentPage);
@@ -169,7 +172,8 @@ public class UserActivity extends AppCompatActivity
         if (!mPaused) {
             Bundle bundle = getIntent().getExtras();
             if (bundle != null) {
-                this.getUser(bundle.getString(KEY_USER_ID));
+                mUserId = bundle.getString(KEY_USER_ID);
+                if (!TextUtils.isEmpty(mUserId)) this.getUser();
             }
         }
 
@@ -192,6 +196,7 @@ public class UserActivity extends AppCompatActivity
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(KEY_CURRENT_PAGE, mCurrentPage);
+        outState.putString(KEY_USER_ID, mUserId);
     }
 
     @Override
@@ -202,6 +207,10 @@ public class UserActivity extends AppCompatActivity
                     this.getPages();
                 if (mFollowButton.getText().equals(getString(R.string.btnUnfollow)))
                     this.unfollow();
+                if (mFollowButton.getText().toString().contains(getString(R.string.numEvents))) {
+                    Intent intent = new Intent(this, EventsActivity.class);
+                    startActivity(intent);
+                }
                 break;
             default:
                 break;
@@ -228,7 +237,7 @@ public class UserActivity extends AppCompatActivity
 
     }
 
-    private void getUser(String id) {
+    private void getUser() {
         Map<String, String> headers = new HashMap<>();
         headers.put(Constants.HEADER_CONTENT_TYPE, Constants.APPLICATION_JSON);
         headers.put(Constants.HEADER_ACCEPT, Constants.APPLICATION_JSON);
@@ -240,7 +249,7 @@ public class UserActivity extends AppCompatActivity
                 this,
                 Constants.INTENT_USER_GET,
                 Constants.GET,
-                Constants.API_USERS + '/' + id,
+                Constants.API_USERS + '/' + mUserId,
                 headers,
                 parameters
         );

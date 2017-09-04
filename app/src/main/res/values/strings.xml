@@ -108,7 +108,8 @@
     <string name="tag">Tag</string>
     <string name="description">Description</string>
     <string name="tab_posts">Posts</string>
-    <string name="tab_events">Events</string>
+    <string name="tab_plannings">Plannings</string>
     <string name="message_followingUser">You now follow this user.</string>
     <string name="message_unfollowingUser">You no longer follow this user.</string>
+    <string name="numEvents">EVENT(S)</string>
 </resources>

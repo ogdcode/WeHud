@@ -22,6 +22,10 @@ public final class Constants {
 
     public static final String API_MESSAGES = API_POSTS + "/messages/all";
 
+    public static final String API_USERS_PAGES = API_USERS + "/pages";
+    public static final String API_USERS_POSTS = API_USERS + "/posts";
+    public static final String API_USERS_PLANNINGS = API_USERS + "/plannings";
+    public static final String API_USERS_EVENTS = API_USERS + "/events";
     public static final String API_USER_FOLLOW = API_USERS + "/follow";
     public static final String API_USER_UNFOLLOW = API_USERS + "/unfollow";
 
@@ -69,6 +73,8 @@ public final class Constants {
     public static final String INTENT_GAME_UNFOLLOW = "intent_game_unfollow";
     public static final String INTENT_FOLLOWERS_LIST = "intent_followers_list";
     public static final String INTENT_MESSAGES_LIST = "intent_messages_list";
+    public static final String INTENT_PLANNINGS_LIST = "intent_plannings_list";
+    public static final String INTENT_EVENTS_LIST = "intent_events_list";
 
     public static final String EXTRA_BROADCAST = "extra_broadcast";
 }

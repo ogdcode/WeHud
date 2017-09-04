@@ -18,8 +18,8 @@ import android.view.ViewGroup;
 
 import com.google.gson.reflect.TypeToken;
 import com.wehud.R;
-import com.wehud.adapter.PostsAdapter;
-import com.wehud.model.Post;
+import com.wehud.adapter.PlanningsAdapter;
+import com.wehud.model.Planning;
 import com.wehud.network.APICall;
 import com.wehud.util.Constants;
 import com.wehud.util.GsonUtils;
@@ -29,7 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class UserPostsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class UserPlanningsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private static final String KEY_USER_ID = "key_user_id";
     private String mUserId;
@@ -37,9 +37,9 @@ public class UserPostsFragment extends Fragment implements SwipeRefreshLayout.On
     private Context mContext;
     private View mEmptyLayout;
     private SwipeRefreshLayout mSwipeLayout;
-    private RecyclerView mPostListView;
+    private RecyclerView mPlanningListView;
 
-    private List<Post> mPosts;
+    private List<Planning> mPlannings;
 
     private boolean mPaused;
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
@@ -47,12 +47,13 @@ public class UserPostsFragment extends Fragment implements SwipeRefreshLayout.On
         public void onReceive(Context context, Intent intent) {
             String payload = intent.getStringExtra(Constants.EXTRA_BROADCAST);
 
-            if (intent.getAction().equals(Constants.INTENT_POSTS_LIST) && !mPaused) {
-                Type postListType = new TypeToken<List<Post>>(){}.getType();
-                mPosts = GsonUtils.getInstance().fromJson(payload, postListType);
-                if (!mPosts.isEmpty()) {
-                    PostsAdapter adapter = new PostsAdapter(mPosts, false);
-                    mPostListView.setAdapter(adapter);
+            if (intent.getAction().equals(Constants.INTENT_PLANNINGS_LIST) && !mPaused) {
+                Type planningListType = new TypeToken<List<Planning>>(){}.getType();
+                mPlannings = GsonUtils.getInstance().fromJson(payload, planningListType);
+
+                if (!mPlannings.isEmpty()) {
+                    PlanningsAdapter adapter = new PlanningsAdapter(mPlannings);
+                    mPlanningListView.setAdapter(adapter);
 
                     mEmptyLayout.setVisibility(View.GONE);
                     mSwipeLayout.setVisibility(View.VISIBLE);
@@ -63,7 +64,7 @@ public class UserPostsFragment extends Fragment implements SwipeRefreshLayout.On
     };
 
     public static Fragment newInstance(String userId) {
-        Fragment fragment = new UserPostsFragment();
+        Fragment fragment = new UserPlanningsFragment();
         Bundle args = new Bundle();
         args.putString(KEY_USER_ID, userId);
         fragment.setArguments(args);
@@ -75,22 +76,21 @@ public class UserPostsFragment extends Fragment implements SwipeRefreshLayout.On
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_user_posts, container, false);
+        View view = inflater.inflate(R.layout.fragment_user_events, container, false);
         mContext = view.getContext();
 
         mEmptyLayout = view.findViewById(R.id.layout_empty);
         mSwipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.layout_swipe);
-        mPostListView = (RecyclerView) view.findViewById(android.R.id.list);
+        mPlanningListView = (RecyclerView) view.findViewById(android.R.id.list);
 
         mEmptyLayout.setVisibility(View.VISIBLE);
         mSwipeLayout.setVisibility(View.GONE);
 
         mSwipeLayout.setOnRefreshListener(this);
         mSwipeLayout.setRefreshing(true);
-        this.getPosts();
 
-        mPostListView.setLayoutManager(new LinearLayoutManager(mContext));
-        mPostListView.addItemDecoration(new DividerItemDecoration(mContext,
+        mPlanningListView.setLayoutManager(new LinearLayoutManager(mContext));
+        mPlanningListView.addItemDecoration(new DividerItemDecoration(mContext,
                 DividerItemDecoration.HORIZONTAL));
 
         return view;
@@ -103,14 +103,9 @@ public class UserPostsFragment extends Fragment implements SwipeRefreshLayout.On
         if (savedInstanceState != null) mUserId = savedInstanceState.getString(KEY_USER_ID);
 
         IntentFilter filter = new IntentFilter();
-        filter.addAction(Constants.INTENT_POSTS_LIST);
-        mContext.registerReceiver(mReceiver, filter);
-    }
+        filter.addAction(Constants.INTENT_PLANNINGS_LIST);
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        mPaused = true;
+        mContext.registerReceiver(mReceiver, filter);
     }
 
     @Override
@@ -119,10 +114,16 @@ public class UserPostsFragment extends Fragment implements SwipeRefreshLayout.On
         Bundle args = getArguments();
         if (args != null) {
             mUserId = args.getString(KEY_USER_ID);
-            if (!TextUtils.isEmpty(mUserId) && !mPaused) this.getPosts();
+            if (!TextUtils.isEmpty(mUserId) && !mPaused) this.getPlannings();
         }
 
         mPaused = false;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mPaused = true;
     }
 
     @Override
@@ -133,7 +134,7 @@ public class UserPostsFragment extends Fragment implements SwipeRefreshLayout.On
 
     @Override
     public void onRefresh() {
-        this.getPosts();
+        if (!TextUtils.isEmpty(mUserId)) this.getPlannings();
     }
 
     @Override
@@ -142,7 +143,7 @@ public class UserPostsFragment extends Fragment implements SwipeRefreshLayout.On
         outState.putString(KEY_USER_ID, mUserId);
     }
 
-    private void getPosts() {
+    private void getPlannings() {
         if (!TextUtils.isEmpty(mUserId)) {
             Map<String, String> headers = new HashMap<>();
             headers.put(Constants.HEADER_CONTENT_TYPE, Constants.APPLICATION_JSON);
@@ -150,9 +151,9 @@ public class UserPostsFragment extends Fragment implements SwipeRefreshLayout.On
 
             APICall call = new APICall(
                     mContext,
-                    Constants.INTENT_POSTS_LIST,
+                    Constants.INTENT_PLANNINGS_LIST,
                     Constants.GET,
-                    Constants.API_USERS_POSTS + '/' + mUserId,
+                    Constants.API_USERS_PLANNINGS + '/' + mUserId,
                     headers
             );
             if (!call.isLoading()) call.execute();

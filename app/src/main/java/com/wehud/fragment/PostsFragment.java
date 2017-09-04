@@ -48,7 +48,7 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 Type postListType = new TypeToken<List<Post>>(){}.getType();
                 mPosts = GsonUtils.getInstance().fromJson(payload, postListType);
                 if (!mPosts.isEmpty()) {
-                    PostsAdapter adapter = new PostsAdapter(mPosts);
+                    PostsAdapter adapter = new PostsAdapter(mPosts, true);
                     mPostListView.setAdapter(adapter);
 
                     mEmptyLayout.setVisibility(View.GONE);
