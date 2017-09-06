@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/dialogEvent_padding">
+
+    <EditText
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/hint_title"
+        android:inputType="text"
+        android:maxLines="@integer/text_maxLines" />
+
+    <android.support.v4.widget.Space
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dialogEvent_verticalSpacing" />
+
+    <EditText
+        android:id="@+id/description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/hint_description"
+        android:inputType="text"
+        android:maxLines="@integer/text_maxLines" />
+
+    <android.support.v4.widget.Space
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dialogEvent_verticalSpacing" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <TextView
+            android:id="@+id/startDate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawableLeft="@drawable/ic_time_start"
+            android:drawablePadding="@dimen/dialogEvent_horizontalSpacing"
+            android:drawableStart="@drawable/ic_time_start"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            tools:text="@string/datetime" />
+
+        <android.support.v4.widget.Space
+            android:layout_width="@dimen/dialogEvent_horizontalSpacing"
+            android:layout_height="0dp" />
+
+        <TextView
+            android:id="@+id/endDate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawableLeft="@drawable/ic_time_end"
+            android:drawablePadding="@dimen/dialogEvent_horizontalSpacing"
+            android:drawableStart="@drawable/ic_time_end"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            tools:text="@string/datetime" />
+
+    </LinearLayout>
+
+    <android.support.v4.widget.Space
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dialogEvent_verticalSpacing" />
+
+    <Spinner
+        android:id="@+id/planning"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

@@ -1,6 +1,8 @@
 package com.wehud.util;
 
 import android.content.Context;
+import android.text.TextUtils;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -124,6 +126,19 @@ public final class Utils {
         return new Status(resId, sb.toString());
     }
 
+    public static TextView getFirstInvalidField(TextView... views) {
+        TextView focusView = null;
+        for (TextView view : views) {
+            view.setError(null);
+            if (!TextUtils.isEmpty(view.getText().toString())) {
+                focusView = view;
+                break;
+            }
+        }
+
+        return focusView;
+    }
+
     public static void putStringListIntoTextView(TextView txt, List<String> strings) {
         int len = strings.size();
         for (int i = 0; i < len; ++i) {
@@ -131,5 +146,4 @@ public final class Utils {
             else txt.append(strings.get(i));
         }
     }
-
 }

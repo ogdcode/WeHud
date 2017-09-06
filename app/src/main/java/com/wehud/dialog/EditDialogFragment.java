@@ -46,15 +46,15 @@ public final class EditDialogFragment extends DialogFragment {
 
     public static void generate(FragmentManager manager, OnEditDialogDismissOkListener listener,
                                 int id, String title, String text, String hint, boolean password) {
-        Bundle bundle = new Bundle();
-        bundle.putInt(KEY_VIEW_ID, id);
-        bundle.putString(KEY_TITLE, title);
-        bundle.putString(KEY_TEXT, text);
-        bundle.putString(KEY_HINT, hint);
-        bundle.putBoolean(KEY_PASSWORD, password);
+        Bundle args = new Bundle();
+        args.putInt(KEY_VIEW_ID, id);
+        args.putString(KEY_TITLE, title);
+        args.putString(KEY_TEXT, text);
+        args.putString(KEY_HINT, hint);
+        args.putBoolean(KEY_PASSWORD, password);
 
         EditDialogFragment editDialog = EditDialogFragment.newInstance();
-        editDialog.setArguments(bundle);
+        editDialog.setArguments(args);
         editDialog.setOnEditDialogDismissOkListener(listener);
         editDialog.show(manager, title);
     }
@@ -64,12 +64,12 @@ public final class EditDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         final Context context = getActivity();
-        final Bundle bundle = getArguments();
-        final int viewId = bundle.getInt(KEY_VIEW_ID);
-        final String[] text = {bundle.getString(KEY_TEXT)};
-        final String title = bundle.getString(KEY_TITLE);
-        final String hint = bundle.getString(KEY_HINT);
-        final boolean isPassword = bundle.getBoolean(KEY_PASSWORD);
+        final Bundle args = getArguments();
+        final int viewId = args.getInt(KEY_VIEW_ID);
+        final String[] text = {args.getString(KEY_TEXT)};
+        final String title = args.getString(KEY_TITLE);
+        final String hint = args.getString(KEY_HINT);
+        final boolean isPassword = args.getBoolean(KEY_PASSWORD);
 
         final View headerView = LayoutInflater.from(context).inflate(R.layout.dialog_header, null);
         final View bodyView = LayoutInflater.from(context).inflate(R.layout.dialog_edit, null);

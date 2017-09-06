@@ -61,12 +61,12 @@ public final class ListDialogFragment extends DialogFragment {
                                 RecyclerView.Adapter adapter,
                                 RecyclerView.LayoutManager layoutManager,
                                 DividerItemDecoration divider) {
-        Bundle bundle = new Bundle();
-        bundle.putString(KEY_TITLE, title);
-        bundle.putParcelableArrayList(KEY_LIST, list);
+        Bundle args = new Bundle();
+        args.putString(KEY_TITLE, title);
+        args.putParcelableArrayList(KEY_LIST, list);
 
         ListDialogFragment dialog = ListDialogFragment.newInstance();
-        dialog.setArguments(bundle);
+        dialog.setArguments(args);
         dialog.setOnListDialogDismissOkListener(listener);
         dialog.setListAdapter(adapter);
         dialog.setListLayoutManager(layoutManager);
@@ -79,9 +79,9 @@ public final class ListDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         final Context context = getActivity();
-        final Bundle bundle = getArguments();
-        final String title = bundle.getString(KEY_TITLE);
-        final List<? extends Parcelable> list = bundle.getParcelableArrayList(KEY_LIST);
+        final Bundle args = getArguments();
+        final String title = args.getString(KEY_TITLE);
+        final List<? extends Parcelable> list = args.getParcelableArrayList(KEY_LIST);
 
         final View headerView = LayoutInflater.from(context).inflate(R.layout.dialog_header, null);
         final View bodyView = LayoutInflater.from(context).inflate(R.layout.dialog_list, null);

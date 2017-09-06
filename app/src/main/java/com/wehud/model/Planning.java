@@ -59,4 +59,9 @@ public final class Planning implements Parcelable {
         parcel.writeParcelable(creator, i);
         parcel.writeTypedList(events);
     }
+
+    @Override
+    public String toString() {
+        return title + " [" + events.size() + " event(s)]";
+    }
 }

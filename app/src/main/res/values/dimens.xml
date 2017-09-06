@@ -108,4 +108,7 @@
     <dimen name="event_paddingBottom">8dp</dimen>
     <dimen name="planning_padding">8dp</dimen>
     <dimen name="planning_verticalSpacing">16dp</dimen>
+    <dimen name="dialogEvent_padding">8dp</dimen>
+    <dimen name="dialogEvent_verticalSpacing">8dp</dimen>
+    <dimen name="dialogEvent_horizontalSpacing">8dp</dimen>
 </resources>

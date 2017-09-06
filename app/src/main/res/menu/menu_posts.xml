@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/menu_add"
+        android:id="@+id/menu_post_add"
         android:icon="@drawable/ic_add"
-        android:title="@string/menu_add"
+        android:title="@string/menu_post_add"
         app:showAsAction="ifRoom" />
 
     <item

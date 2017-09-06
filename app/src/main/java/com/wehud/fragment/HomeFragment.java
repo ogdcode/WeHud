@@ -155,7 +155,7 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_add:
+            case R.id.menu_post_add:
                 EditDialogFragment.generate(
                         getFragmentManager(), this, 0,
                         getString(R.string.dialogTitle_addPage), null,

@@ -62,7 +62,7 @@
             tools:text="@string/followers" />
 
         <Button
-            android:id="@+id/btnFollow"
+            android:id="@+id/btnFollowOrEvents"
             style="@style/Widget.AppCompat.Button.Borderless.Colored"
             android:layout_width="0dp"
             android:layout_height="match_parent"

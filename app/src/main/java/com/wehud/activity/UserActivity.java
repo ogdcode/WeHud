@@ -53,7 +53,7 @@ public class UserActivity extends AppCompatActivity
     private TextView mUsername;
     private TextView mScore;
     private TextView mFollowers;
-    private Button mFollowButton;
+    private Button mFollowOrEventsButton;
 
     private User mCurrentUser;
 
@@ -67,20 +67,22 @@ public class UserActivity extends AppCompatActivity
                 mCurrentUser = GsonUtils.getInstance().fromJson(payload, User.class);
                 String avatar = mCurrentUser.getAvatar();
                 String username = mCurrentUser.getUsername();
-                String score = String.valueOf(mCurrentUser.getScore());
+                String score = String.valueOf(mCurrentUser.getScore())
+                        + "\t" + getString(R.string.score
+                );
                 List<User> followers = mCurrentUser.getFollowers();
-                String numFollowers = followers.size() + ' ' + getString(R.string.followerCount);
+                String numFollowers = followers.size() + "\t" + getString(R.string.followerCount);
 
                 boolean found = false;
                 for (User user : followers) {
-                    if (user.getId().equals("598f1d65493a620aa918be42")) {
+                    if (user.getId().equals(mUserId)) {
                         found = true;
                         break;
                     }
                 }
 
-                if (found) mFollowButton.setText(getString(R.string.btnUnfollow));
-                else mFollowButton.setText(getString(R.string.btnFollow));
+                if (found) mFollowOrEventsButton.setText(getString(R.string.btnUnfollow));
+                else mFollowOrEventsButton.setText(getString(R.string.btnFollow));
 
                 if (!TextUtils.isEmpty(avatar))
                     Utils.loadImage(UserActivity.this, avatar, mAvatar, 256);
@@ -99,12 +101,13 @@ public class UserActivity extends AppCompatActivity
             }
 
             if (intent.getAction().equals(Constants.API_USER_FOLLOW) && !mPaused) {
-                mFollowButton.setText(getString(R.string.btnUnfollow));
+                mFollowOrEventsButton.setText(getString(R.string.btnUnfollow));
                 Follower newFollower = GsonUtils.getInstance().fromJson(payload, Follower.class);
 
                 mCurrentUser.follow(newFollower.getUser());
                 String newNbrFollowers = mCurrentUser.getFollowers().size()
-                        + ' ' + getString(R.string.followerCount);
+                        + "\t" + getString(R.string.followerCount
+                );
 
                 mFollowers.setText(newNbrFollowers);
 
@@ -112,12 +115,13 @@ public class UserActivity extends AppCompatActivity
             }
 
             if (intent.getAction().equals(Constants.API_USER_UNFOLLOW) && !mPaused) {
-                mFollowButton.setText(getString(R.string.btnFollow));
+                mFollowOrEventsButton.setText(getString(R.string.btnFollow));
                 Follower oldFollower = GsonUtils.getInstance().fromJson(payload, Follower.class);
 
                 mCurrentUser.unfollow(oldFollower.getUser());
                 String newNbrFollowers = mCurrentUser.getFollowers().size()
-                        + ' ' + getString(R.string.followerCount);
+                        + "\t" + getString(R.string.followerCount
+                );
 
                 mFollowers.setText(newNbrFollowers);
 
@@ -134,23 +138,30 @@ public class UserActivity extends AppCompatActivity
         if (savedInstanceState != null) {
             mCurrentPage = savedInstanceState.getInt(KEY_CURRENT_PAGE);
             mUserId = savedInstanceState.getString(KEY_USER_ID);
+        } else {
+            mCurrentPage = 0;
+
+            Intent intent = getIntent();
+            if (intent != null) {
+                Bundle bundle = intent.getExtras();
+                if (bundle != null) mUserId = bundle.getString(KEY_USER_ID);
+            }
         }
-        else mCurrentPage = 0;
 
         mAvatar = (ImageView) findViewById(R.id.avatar);
         mUsername = (TextView) findViewById(R.id.username);
         mScore = (TextView) findViewById(R.id.score);
         mFollowers = (TextView) findViewById(R.id.followers);
 
-        mFollowButton = (Button) findViewById(R.id.btnFollow);
-        mFollowButton.setOnClickListener(this);
+        mFollowOrEventsButton = (Button) findViewById(R.id.btnFollowOrEvents);
+        mFollowOrEventsButton.setOnClickListener(this);
 
         TabLayout tabs = (TabLayout) findViewById(android.R.id.tabs);
         ViewPager pager = (ViewPager) findViewById(R.id.pager);
 
         VPAdapter adapter = new VPAdapter(getSupportFragmentManager());
-        adapter.add(UserPostsFragment.newInstance("598f1d65493a620aa918be42"), getString(R.string.tab_posts));
-        adapter.add(UserPlanningsFragment.newInstance("598f1d65493a620aa918be42"), getString(R.string.tab_plannings));
+        adapter.add(UserPostsFragment.newInstance(mUserId), getString(R.string.tab_posts));
+        adapter.add(UserPlanningsFragment.newInstance(mUserId), getString(R.string.tab_plannings));
 
         pager.setAdapter(adapter);
         pager.setCurrentItem(mCurrentPage);
@@ -169,13 +180,7 @@ public class UserActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        if (!mPaused) {
-            Bundle bundle = getIntent().getExtras();
-            if (bundle != null) {
-                mUserId = bundle.getString(KEY_USER_ID);
-                if (!TextUtils.isEmpty(mUserId)) this.getUser();
-            }
-        }
+        if (!TextUtils.isEmpty(mUserId) && !mPaused) this.getUser();
 
         mPaused = false;
     }
@@ -202,12 +207,12 @@ public class UserActivity extends AppCompatActivity
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.btnFollow:
-                if (mFollowButton.getText().equals(getString(R.string.btnFollow)))
+            case R.id.btnFollowOrEvents:
+                if (mFollowOrEventsButton.getText().equals(getString(R.string.btnFollow)))
                     this.getPages();
-                if (mFollowButton.getText().equals(getString(R.string.btnUnfollow)))
+                if (mFollowOrEventsButton.getText().equals(getString(R.string.btnUnfollow)))
                     this.unfollow();
-                if (mFollowButton.getText().toString().contains(getString(R.string.numEvents))) {
+                if (mFollowOrEventsButton.getText().toString().contains(getString(R.string.numEvents))) {
                     Intent intent = new Intent(this, EventsActivity.class);
                     startActivity(intent);
                 }

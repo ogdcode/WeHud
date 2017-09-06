@@ -169,7 +169,7 @@ public class SendFragment extends Fragment
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_add:
+            case R.id.menu_post_add:
                 this.createPost();
                 break;
             default:

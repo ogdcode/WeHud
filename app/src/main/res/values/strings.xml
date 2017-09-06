@@ -13,7 +13,7 @@
     <string name="text">Text</string>
     <string name="likes">1</string>
     <string name="tab_myFeeds">My Feeds</string>
-    <string name="menu_add">Add</string>
+    <string name="menu_post_add">Add</string>
     <string name="menu_delete">Delete</string>
     <string name="error_passwords_no_match">Passwords do not match</string>
     <string name="editDialog_newPassword">New Password</string>
@@ -21,6 +21,7 @@
     <string name="editDialog_show_password">Show Password</string>
     <string name="dialogTitle_addPage">New Page</string>
     <string name="hint_name">Name</string>
+    <string name="hint_title">Title</string>
     <string name="dialogMessage_removePage">Remove this page?</string>
     <string name="message_pageRemoved">Page Removed</string>
     <string name="hint_video">YouTube Video ID (Optionnal)</string>
@@ -103,7 +104,8 @@
     <string name="message_followingGame">You now follow this game.</string>
     <string name="message_unfollowingGame">You no longer follow this game.</string>
     <string name="dialogTitle_choosePage">Choose a page</string>
-    <string name="score">1 POINT(S)</string>
+    <string name="score_sample">1 POINT(S)</string>
+    <string name="score">POINT(S)</string>
     <string name="title">Title</string>
     <string name="tag">Tag</string>
     <string name="description">Description</string>
@@ -112,4 +114,12 @@
     <string name="message_followingUser">You now follow this user.</string>
     <string name="message_unfollowingUser">You no longer follow this user.</string>
     <string name="numEvents">EVENT(S)</string>
+    <string name="menu_event_add">Add Event</string>
+    <string name="dialogTitle_newEvent">New Event</string>
+    <string name="hint_description">Description</string>
+    <string name="add">Add</string>
+    <string name="error_fieldRequired">This field is required.</string>
+    <string name="message_createEventSuccess">Event was successfully created</string>
+    <string name="dialogTitle_chooseEventStartDate">Choose event start date</string>
+    <string name="dialogTitle_chooseEventEndDate">Choose event end date</string>
 </resources>

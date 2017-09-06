@@ -235,7 +235,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         mEsrb = (TextView) findViewById(R.id.esrb);
         mPegi = (TextView) findViewById(R.id.pegi);
 
-        mFollowButton = (Button) findViewById(R.id.btnFollow);
+        mFollowButton = (Button) findViewById(R.id.btnFollowOrEvents);
         mFollowButton.setOnClickListener(this);
 
         this.initializeFields();
@@ -277,7 +277,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.btnFollow:
+            case R.id.btnFollowOrEvents:
                 if (mFollowButton.getText().equals(getString(R.string.btnFollow)))
                     this.getPages();
                 if (mFollowButton.getText().equals(getString(R.string.btnUnfollow)))

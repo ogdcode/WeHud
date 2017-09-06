@@ -7,7 +7,7 @@ package com.wehud.util;
  */
 
 public final class Constants {
-    public static final String API_URL = "http://192.168.0.167:3000";
+    public static final String API_URL = "http://192.168.1.84:3000";
 
     public static final String API_AUTH = API_URL + "/auth";
     public static final String API_USERS = API_URL + "/users";
@@ -39,7 +39,7 @@ public final class Constants {
 
     public static final String APPLICATION_JSON = "application/json";
 
-    public static final String TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1OThmMWQ2NTQ5M2E2MjBhYTkxOGJlNDIiLCJpYXQiOjE1MDM0OTAzNzcsImV4cCI6MTUwMzU3Njc3N30.Wy7t-sbgkajuv_KdUNEZueXQx6Lj_3wbZeKhojpK97c";
+    public static final String TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1OThmMWQ2NTQ5M2E2MjBhYTkxOGJlNDIiLCJpYXQiOjE1MDQ2OTE2NDAsImV4cCI6MTUwNDc3ODA0MH0.yE3fzUtmBpHGiMzYGWV6LjyP2s795ErU3u6TQQGjX0Y";
 
     public static final String GET = "GET";
     public static final String POST = "POST";
@@ -75,6 +75,7 @@ public final class Constants {
     public static final String INTENT_MESSAGES_LIST = "intent_messages_list";
     public static final String INTENT_PLANNINGS_LIST = "intent_plannings_list";
     public static final String INTENT_EVENTS_LIST = "intent_events_list";
+    public static final String INTENT_EVENTS_ADD = "intent_events_add";
 
     public static final String EXTRA_BROADCAST = "extra_broadcast";
 }
