@@ -172,9 +172,10 @@ public class EventsActivity extends AppCompatActivity
         final DateTimePickerDialogFragment.OnDateTimePickListener dateTimePickListener =
                 new DateTimePickerDialogFragment.OnDateTimePickListener() {
                     @Override
-                    public void onDateTimePick(final int id, int year, int month, int dayOfMonth,
+                    public void onDateTimePick(final Object o, int year, int month, int dayOfMonth,
                                                int hourOfDay, int minute
                     ) {
+                        int id = (int) o;
                         if (id == ID_DIALOG_START_DATE_TIME || id == ID_DIALOG_END_DATE_TIME) {
                             final Calendar cal = Calendar.getInstance();
                             cal.set(year, month, dayOfMonth, hourOfDay, minute);

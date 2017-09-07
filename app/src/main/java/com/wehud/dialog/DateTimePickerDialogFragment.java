@@ -37,10 +37,18 @@ public final class DateTimePickerDialogFragment extends DialogFragment {
     }
 
     public static void generate(FragmentManager manager, OnDateTimePickListener listener,
-                                String title, int id
+                                String title, Object id
     ) {
         Bundle args = new Bundle();
-        args.putInt(KEY_ID, id);
+        if (id instanceof Long || id instanceof Integer || id instanceof Short)
+            args.putLong(KEY_ID, (long) id);
+        if (id instanceof Double || id instanceof Float)
+            args.putDouble(KEY_ID, (double) id);
+        if (id instanceof Byte)
+            args.putByte(KEY_ID, (byte) id);
+        if (id instanceof String || id instanceof Character)
+            args.putString(KEY_ID, id.toString());
+
         args.putString(KEY_TITLE, title);
 
         DateTimePickerDialogFragment datePickerDialog = DateTimePickerDialogFragment.newInstance();
@@ -62,7 +70,7 @@ public final class DateTimePickerDialogFragment extends DialogFragment {
 
         final Context context = getActivity();
         final Bundle args = getArguments();
-        final int viewId = args.getInt(KEY_ID);
+        final Object viewId = args.get(KEY_ID);
         final String title = args.getString(KEY_TITLE);
 
         final View headerView = LayoutInflater.from(context).inflate(R.layout.dialog_header, null);
@@ -119,6 +127,6 @@ public final class DateTimePickerDialogFragment extends DialogFragment {
     }
 
     public interface OnDateTimePickListener {
-        void onDateTimePick(final int id, int i, int i1, int i2, int i3, int i4);
+        void onDateTimePick(final Object o, int i, int i1, int i2, int i3, int i4);
     }
 }
