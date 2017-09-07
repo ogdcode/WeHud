@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -14,34 +15,35 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import com.wehud.R;
 
 import java.util.Calendar;
 
-public final class DatePickerDialogFragment extends DialogFragment {
+public final class DateTimePickerDialogFragment extends DialogFragment {
 
     private static final String KEY_ID = "key_id";
     private static final String KEY_TITLE = "key_title";
 
-    private static OnDatePickListener mListener;
+    private static OnDateTimePickListener mListener;
 
-    private static DatePickerDialogFragment newInstance() {
-        return new DatePickerDialogFragment();
+    private static DateTimePickerDialogFragment newInstance() {
+        return new DateTimePickerDialogFragment();
     }
 
-    public void setOnDatePickListener(OnDatePickListener listener) {
+    public void setOnDatePickListener(OnDateTimePickListener listener) {
         mListener = listener;
     }
 
-    public static void generate(FragmentManager manager, OnDatePickListener listener,
+    public static void generate(FragmentManager manager, OnDateTimePickListener listener,
                                 String title, int id
     ) {
         Bundle args = new Bundle();
         args.putInt(KEY_ID, id);
         args.putString(KEY_TITLE, title);
 
-        DatePickerDialogFragment datePickerDialog = DatePickerDialogFragment.newInstance();
+        DateTimePickerDialogFragment datePickerDialog = DateTimePickerDialogFragment.newInstance();
         datePickerDialog.setArguments(args);
         datePickerDialog.setOnDatePickListener(listener);
         datePickerDialog.show(manager, title);
@@ -55,6 +57,8 @@ public final class DatePickerDialogFragment extends DialogFragment {
         final int year = cal.get(Calendar.YEAR);
         final int month = cal.get(Calendar.MONTH);
         final int dayOfMonth = cal.get(Calendar.DAY_OF_MONTH);
+        final int hourOfDay = cal.get(Calendar.HOUR_OF_DAY);
+        final int minute = cal.get(Calendar.MINUTE);
 
         final Context context = getActivity();
         final Bundle args = getArguments();
@@ -67,8 +71,17 @@ public final class DatePickerDialogFragment extends DialogFragment {
         final TextView titleView = (TextView) headerView.findViewById(R.id.dialog_title);
         if (!TextUtils.isEmpty(title)) titleView.setText(title);
 
-        final DatePicker picker = (DatePicker) bodyView.findViewById(R.id.picker);
-        picker.init(year, month, dayOfMonth, null);
+        final DatePicker datePicker = (DatePicker) bodyView.findViewById(R.id.date_picker);
+        datePicker.init(year, month, dayOfMonth, null);
+
+        final TimePicker timePicker = (TimePicker) bodyView.findViewById(R.id.time_picker);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            timePicker.setCurrentHour(hourOfDay);
+            timePicker.setCurrentMinute(minute);
+        } else {
+            timePicker.setHour(hourOfDay);
+            timePicker.setMinute(minute);
+        }
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setCustomTitle(headerView);
@@ -77,11 +90,21 @@ public final class DatePickerDialogFragment extends DialogFragment {
             @Override
             public void onClick(DialogInterface dialog, int id) {
                 if (mListener != null) {
-                    final int year = picker.getYear();
-                    final int month = picker.getMonth();
-                    final int dayOfMonth = picker.getDayOfMonth();
+                    final int year = datePicker.getYear();
+                    final int month = datePicker.getMonth();
+                    final int dayOfMonth = datePicker.getDayOfMonth();
+                    final int hourOfDay = (
+                            Build.VERSION.SDK_INT < Build.VERSION_CODES.M ?
+                                    timePicker.getCurrentHour() :
+                                    timePicker.getHour()
+                    );
+                    final int minute = (
+                            Build.VERSION.SDK_INT < Build.VERSION_CODES.M ?
+                                    timePicker.getCurrentMinute() :
+                                    timePicker.getMinute()
+                    );
 
-                    mListener.onDatePick(viewId, year, month, dayOfMonth);
+                    mListener.onDateTimePick(viewId, year, month, dayOfMonth, hourOfDay, minute);
                 }
             }
         });
@@ -95,7 +118,7 @@ public final class DatePickerDialogFragment extends DialogFragment {
         return builder.create();
     }
 
-    public interface OnDatePickListener {
-        void onDatePick(final int id, int i, int i1, int i2);
+    public interface OnDateTimePickListener {
+        void onDateTimePick(final int id, int i, int i1, int i2, int i3, int i4);
     }
 }

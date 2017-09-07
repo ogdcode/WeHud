@@ -153,7 +153,7 @@ public class UserActivity extends AppCompatActivity
         mScore = (TextView) findViewById(R.id.score);
         mFollowers = (TextView) findViewById(R.id.followers);
 
-        mFollowOrEventsButton = (Button) findViewById(R.id.btnFollowOrEvents);
+        mFollowOrEventsButton = (Button) findViewById(R.id.btnFollow);
         mFollowOrEventsButton.setOnClickListener(this);
 
         TabLayout tabs = (TabLayout) findViewById(android.R.id.tabs);
@@ -207,7 +207,7 @@ public class UserActivity extends AppCompatActivity
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.btnFollowOrEvents:
+            case R.id.btnFollow:
                 if (mFollowOrEventsButton.getText().equals(getString(R.string.btnFollow)))
                     this.getPages();
                 if (mFollowOrEventsButton.getText().equals(getString(R.string.btnUnfollow)))

@@ -25,7 +25,6 @@ public final class Utils {
     private static final String LOCAL_PATTERN_DATETIME = "dd/MM/yyyy HH:mm";
     private static final String LOCAL_PATTERN_DATE = "dd/MM/yyyy";
 
-
     /**
      * Displays a {@link Toast} on the screen.
      *
@@ -36,7 +35,7 @@ public final class Utils {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
     }
 
-    public static String isoDateStringToLocalDateString(String iso) {
+    public static String isoDateTimeStringToLocalDateTimeString(String iso) {
         SimpleDateFormat sdf = new SimpleDateFormat(ISO_8601_PATTERN, Locale.getDefault());
         Date d = null;
         try {
@@ -45,6 +44,19 @@ public final class Utils {
             e.printStackTrace();
         }
         sdf.applyPattern(LOCAL_PATTERN_DATETIME);
+
+        return sdf.format(d);
+    }
+
+    public static String localDateTimeStringToIsoDateTimeString(String local) {
+        SimpleDateFormat sdf = new SimpleDateFormat(LOCAL_PATTERN_DATETIME, Locale.getDefault());
+        Date d = null;
+        try {
+            d = sdf.parse(local);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        sdf.applyPattern(ISO_8601_PATTERN);
 
         return sdf.format(d);
     }
@@ -145,5 +157,10 @@ public final class Utils {
             if (i < len - 1) txt.append(strings.get(i) + ", ");
             else txt.append(strings.get(i));
         }
+    }
+
+    public static boolean isConnectedUser(Context context, String userId) {
+        String connectedId = PreferencesUtils.getPreference(context, Constants.PREF_USER_ID);
+        return connectedId.equals(userId);
     }
 }

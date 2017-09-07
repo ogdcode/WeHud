@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onTextDialogDismissOk(int id) {
+    public void onTextDialogDismissOk(Object id) {
         finish();
     }
 

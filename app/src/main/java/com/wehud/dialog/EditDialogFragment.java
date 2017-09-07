@@ -45,9 +45,17 @@ public final class EditDialogFragment extends DialogFragment {
     }
 
     public static void generate(FragmentManager manager, OnEditDialogDismissOkListener listener,
-                                int id, String title, String text, String hint, boolean password) {
+                                Object id, String title, String text, String hint, boolean password) {
         Bundle args = new Bundle();
-        args.putInt(KEY_VIEW_ID, id);
+        if (id instanceof Long || id instanceof Integer || id instanceof Short)
+            args.putLong(KEY_VIEW_ID, (long) id);
+        if (id instanceof Double || id instanceof Float)
+            args.putDouble(KEY_VIEW_ID, (double) id);
+        if (id instanceof Byte)
+            args.putByte(KEY_VIEW_ID, (byte) id);
+        if (id instanceof String || id instanceof Character)
+            args.putString(KEY_VIEW_ID, id.toString());
+
         args.putString(KEY_TITLE, title);
         args.putString(KEY_TEXT, text);
         args.putString(KEY_HINT, hint);
@@ -65,7 +73,7 @@ public final class EditDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         final Context context = getActivity();
         final Bundle args = getArguments();
-        final int viewId = args.getInt(KEY_VIEW_ID);
+        final Object viewId = args.get(KEY_VIEW_ID);
         final String[] text = {args.getString(KEY_TEXT)};
         final String title = args.getString(KEY_TITLE);
         final String hint = args.getString(KEY_HINT);
@@ -148,6 +156,6 @@ public final class EditDialogFragment extends DialogFragment {
     }
 
     public interface OnEditDialogDismissOkListener {
-        void onEditDialogDismissOk(int i, String s);
+        void onEditDialogDismissOk(Object o, String s);
     }
 }

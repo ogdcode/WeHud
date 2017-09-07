@@ -106,7 +106,7 @@
                 style="@style/TextAppearance.AppCompat.Small"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/title_franchise"
+                android:text="@string/game_title_franchise"
                 android:textColor="@android:color/darker_gray" />
 
             <TextView
@@ -116,7 +116,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/game_marginTop"
                 android:textColor="@android:color/black"
-                tools:text="@string/franchise" />
+                tools:text="@string/game_franchise" />
 
             <android.support.v4.widget.Space
                 android:layout_width="match_parent"
@@ -134,7 +134,7 @@
                 style="@style/TextAppearance.AppCompat.Small"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/title_mainGame"
+                android:text="@string/game_title_mainGame"
                 android:textColor="@android:color/darker_gray" />
 
             <TextView
@@ -144,7 +144,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/game_marginTop"
                 android:textColor="@android:color/black"
-                tools:text="@string/mainGame" />
+                tools:text="@string/game_mainGame" />
 
             <android.support.v4.widget.Space
                 android:layout_width="match_parent"
@@ -162,7 +162,7 @@
                 style="@style/TextAppearance.AppCompat.Small"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/title_modes"
+                android:text="@string/game_title_modes"
                 android:textColor="@android:color/darker_gray" />
 
             <TextView
@@ -172,7 +172,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/game_marginTop"
                 android:textColor="@android:color/black"
-                tools:text="@string/modes" />
+                tools:text="@string/game_modes" />
 
             <android.support.v4.widget.Space
                 android:layout_width="match_parent"
@@ -190,7 +190,7 @@
                 style="@style/TextAppearance.AppCompat.Small"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/title_firstReleaseDate"
+                android:text="@string/game_title_firstReleaseDate"
                 android:textColor="@android:color/darker_gray" />
 
             <TextView
@@ -200,7 +200,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/game_marginTop"
                 android:textColor="@android:color/black"
-                tools:text="@string/firstReleaseDate" />
+                tools:text="@string/game_firstReleaseDate" />
 
             <android.support.v4.widget.Space
                 android:layout_width="match_parent"
@@ -218,7 +218,7 @@
                 style="@style/TextAppearance.AppCompat.Small"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/title_synopsis"
+                android:text="@string/game_title_synopsis"
                 android:textColor="@android:color/darker_gray" />
 
             <TextView
@@ -228,7 +228,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/game_marginTop"
                 android:textColor="@android:color/black"
-                tools:text="@string/synopsis" />
+                tools:text="@string/game_synopsis" />
 
             <android.support.v4.widget.Space
                 android:layout_width="match_parent"
@@ -246,7 +246,7 @@
                 style="@style/TextAppearance.AppCompat.Small"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/title_website"
+                android:text="@string/game_title_website"
                 android:textColor="@android:color/darker_gray" />
 
             <TextView
@@ -256,7 +256,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/game_marginTop"
                 android:textColor="@android:color/holo_blue_dark"
-                tools:text="@string/website" />
+                tools:text="@string/game_website" />
 
             <android.support.v4.widget.Space
                 android:layout_width="match_parent"
@@ -302,7 +302,7 @@
                 style="@style/TextAppearance.AppCompat.Small"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/title_pegi"
+                android:text="@string/game_title_pegi"
                 android:textColor="@android:color/darker_gray" />
 
             <TextView

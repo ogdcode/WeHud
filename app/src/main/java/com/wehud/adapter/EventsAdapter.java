@@ -32,8 +32,8 @@ public final class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.Even
 
         String title = event.getTitle();
         String description = event.getDescription();
-        String startDate = Utils.timestampToLocalDateString(event.getStartDate());
-        String endDate = Utils.timestampToLocalDateString(event.getEndDate());
+        String startDate = Utils.timestampToLocalDateString(event.getStartDateTime());
+        String endDate = Utils.timestampToLocalDateString(event.getEndDateTime());
 
         holder.title.setText(title);
         holder.description.setText(description);
@@ -57,8 +57,8 @@ public final class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.Even
             super(view);
             title = (TextView) view.findViewById(R.id.title);
             description = (TextView) view.findViewById(R.id.description);
-            startDate = (TextView) view.findViewById(R.id.startDate);
-            endDate = (TextView) view.findViewById(R.id.endDate);
+            startDate = (TextView) view.findViewById(R.id.startDateTime);
+            endDate = (TextView) view.findViewById(R.id.endDateTime);
             tag = (TextView) view.findViewById(R.id.tag);
         }
     }

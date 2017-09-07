@@ -33,9 +33,17 @@ public final class TextDialogFragment extends DialogFragment {
     }
 
     public static void generate(FragmentManager manager, OnTextDialogDismissOkListener listener,
-                                String title, String message, int id) {
+                                String title, String message, Object id) {
         Bundle args = new Bundle();
-        args.putInt(KEY_ID, id);
+        if (id instanceof Long || id instanceof Integer || id instanceof Short)
+            args.putLong(KEY_ID, (long) id);
+        if (id instanceof Double || id instanceof Float)
+            args.putDouble(KEY_ID, (double) id);
+        if (id instanceof Byte)
+            args.putByte(KEY_ID, (byte) id);
+        if (id instanceof String || id instanceof Character)
+            args.putString(KEY_ID, id.toString());
+
         args.putString(KEY_TITLE, title);
         args.putString(KEY_MESSAGE, message);
 
@@ -51,7 +59,7 @@ public final class TextDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         final Context context = getActivity();
         final Bundle args = getArguments();
-        final int dialogId = args.getInt(KEY_ID);
+        final Object dialogId = args.get(KEY_ID);
         final String title = args.getString(KEY_TITLE);
         final String message = args.getString(KEY_MESSAGE);
 
@@ -85,7 +93,7 @@ public final class TextDialogFragment extends DialogFragment {
     }
 
     public interface OnTextDialogDismissOkListener {
-        void onTextDialogDismissOk(int i);
+        void onTextDialogDismissOk(Object o);
     }
 
 }

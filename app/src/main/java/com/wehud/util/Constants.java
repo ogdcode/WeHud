@@ -7,7 +7,7 @@ package com.wehud.util;
  */
 
 public final class Constants {
-    public static final String API_URL = "http://192.168.1.84:3000";
+    public static final String API_URL = "http://192.168.1.41:3000";
 
     public static final String API_AUTH = API_URL + "/auth";
     public static final String API_USERS = API_URL + "/users";
@@ -39,7 +39,7 @@ public final class Constants {
 
     public static final String APPLICATION_JSON = "application/json";
 
-    public static final String TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1OThmMWQ2NTQ5M2E2MjBhYTkxOGJlNDIiLCJpYXQiOjE1MDQ2OTE2NDAsImV4cCI6MTUwNDc3ODA0MH0.yE3fzUtmBpHGiMzYGWV6LjyP2s795ErU3u6TQQGjX0Y";
+    public static final String TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1OThmMWQ2NTQ5M2E2MjBhYTkxOGJlNDIiLCJpYXQiOjE1MDQ4MTAyMDEsImV4cCI6MTUwNDg5NjYwMX0.bDKIQZvAofJzPYgPBuwljCpabGR-1lolcP-jvSSus9A";
 
     public static final String GET = "GET";
     public static final String POST = "POST";
@@ -57,10 +57,12 @@ public final class Constants {
     public static final int CONNECT_TIMEOUT = 3000;
     public static final int READ_TIMEOUT = 3000;
 
+    public static final String PREF_USER_ID = "pref_user_id";
+
     public static final String INTENT_POSTS_LIST = "intent_posts_list";
     public static final String INTENT_POSTS_ADD = "intent_posts_add";
     public static final String INTENT_PAGES_ADD = "intent_pages_add";
-    public static final String INTENT_PAGES_REMOVE = "intent_pages_remove";
+    public static final String INTENT_PAGES_DELETE = "intent_pages_delete";
     public static final String INTENT_PAGES_LIST = "intent_pages_list";
     public static final String INTENT_GAMES_LIST = "intent_games_list";
     public static final String INTENT_USER_GET = "intent_user_get";
@@ -74,6 +76,9 @@ public final class Constants {
     public static final String INTENT_FOLLOWERS_LIST = "intent_followers_list";
     public static final String INTENT_MESSAGES_LIST = "intent_messages_list";
     public static final String INTENT_PLANNINGS_LIST = "intent_plannings_list";
+    public static final String INTENT_PLANNINGS_ADD = "intent_plannings_add";
+    public static final String INTENT_PLANNINGS_DELETE = "intent_plannings_delete";
+    public static final String INTENT_PLANNINGS_UNBIND = "intent_plannings_unbind";
     public static final String INTENT_EVENTS_LIST = "intent_events_list";
     public static final String INTENT_EVENTS_ADD = "intent_events_add";
 

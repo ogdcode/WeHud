@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -28,8 +27,7 @@ import android.widget.TextView;
 import com.google.gson.reflect.TypeToken;
 import com.wehud.R;
 import com.wehud.adapter.EventsAdapter;
-import com.wehud.adapter.PlanningsAdapter;
-import com.wehud.dialog.DatePickerDialogFragment;
+import com.wehud.dialog.DateTimePickerDialogFragment;
 import com.wehud.model.Event;
 import com.wehud.model.Planning;
 import com.wehud.network.APICall;
@@ -48,13 +46,13 @@ import java.util.Map;
 public class EventsActivity extends AppCompatActivity
         implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
 
-    private static final int ID_DIALOG_START_DATE = 0;
-    private static final int ID_DIALOG_END_DATE = 1;
+    private static final int ID_DIALOG_START_DATE_TIME = 0;
+    private static final int ID_DIALOG_END_DATE_TIME = 1;
 
     private static final String PARAM_TITLE = "title";
     private static final String PARAM_DESCRIPTION = "description";
-    private static final String PARAM_START_DATE = "startDate";
-    private static final String PARAM_END_DATE = "endDate";
+    private static final String PARAM_START_DATE_TIME = "startDateTime";
+    private static final String PARAM_END_DATE_TIME = "endDateTime";
     private static final String PARAM_PLANNING = "planning";
 
     private static final String KEY_PLANNINGS = "key_plannings";
@@ -171,16 +169,20 @@ public class EventsActivity extends AppCompatActivity
 
     @Override
     public void onClick(final View view) {
-        final DatePickerDialogFragment.OnDatePickListener datePickerListener =
-                new DatePickerDialogFragment.OnDatePickListener() {
+        final DateTimePickerDialogFragment.OnDateTimePickListener dateTimePickListener =
+                new DateTimePickerDialogFragment.OnDateTimePickListener() {
                     @Override
-                    public void onDatePick(final int id, int year, int month, int dayOfMonth) {
-                        if (id == ID_DIALOG_START_DATE || id == ID_DIALOG_END_DATE) {
+                    public void onDateTimePick(final int id, int year, int month, int dayOfMonth,
+                                               int hourOfDay, int minute
+                    ) {
+                        if (id == ID_DIALOG_START_DATE_TIME || id == ID_DIALOG_END_DATE_TIME) {
                             final Calendar cal = Calendar.getInstance();
-                            cal.set(year, month, dayOfMonth);
+                            cal.set(year, month, dayOfMonth, hourOfDay, minute);
 
                             final Date date = cal.getTime();
-                            final DateFormat formatter = DateFormat.getDateInstance(DateFormat.SHORT);
+                            final DateFormat formatter = DateFormat.getDateTimeInstance(
+                                    DateFormat.SHORT, DateFormat.SHORT
+                            );
                             view.setTag(date.getTime());
                             ((TextView) view).setText(formatter.format(date));
                         }
@@ -188,20 +190,20 @@ public class EventsActivity extends AppCompatActivity
                 };
 
         switch (view.getId()) {
-            case R.id.startDate:
-                DatePickerDialogFragment.generate(
+            case R.id.startDateTime:
+                DateTimePickerDialogFragment.generate(
                         getSupportFragmentManager(),
-                        datePickerListener,
-                        getString(R.string.dialogTitle_chooseEventStartDate),
-                        ID_DIALOG_START_DATE
+                        dateTimePickListener,
+                        getString(R.string.dialogTitle_chooseEventStartDateTime),
+                        ID_DIALOG_START_DATE_TIME
                 );
                 break;
-            case R.id.endDate:
-                DatePickerDialogFragment.generate(
+            case R.id.endDateTime:
+                DateTimePickerDialogFragment.generate(
                         getSupportFragmentManager(),
-                        datePickerListener,
-                        getString(R.string.dialogTitle_chooseEventEndDate),
-                        ID_DIALOG_END_DATE
+                        dateTimePickListener,
+                        getString(R.string.dialogTitle_chooseEventEndDateTime),
+                        ID_DIALOG_END_DATE_TIME
                 );
                 break;
             default:
@@ -224,9 +226,23 @@ public class EventsActivity extends AppCompatActivity
 
         final EditText titleView = (EditText) bodyView.findViewById(R.id.title);
         final EditText descriptionView = (EditText) bodyView.findViewById(R.id.description);
-        final TextView startDateView = (TextView) bodyView.findViewById(R.id.startDate);
-        final TextView endDateView = (TextView) bodyView.findViewById(R.id.endDate);
+        final TextView startDateTimeView = (TextView) bodyView.findViewById(R.id.startDateTime);
+        final TextView endDateTimeView = (TextView) bodyView.findViewById(R.id.endDateTime);
         final Spinner planningView = (Spinner) bodyView.findViewById(R.id.planning);
+
+        final Calendar cal = Calendar.getInstance();
+        final int dayOfMonth = cal.get(Calendar.DAY_OF_MONTH);
+        final DateFormat formatter = DateFormat.getDateTimeInstance(
+                DateFormat.SHORT, DateFormat.SHORT
+        );
+        Date date = cal.getTime();
+
+        startDateTimeView.setText(formatter.format(date));
+
+        cal.set(Calendar.DAY_OF_MONTH, dayOfMonth + 1);
+        date = cal.getTime();
+
+        endDateTimeView.setText(formatter.format(date));
 
         final ArrayAdapter<Planning> adapter = new ArrayAdapter<>(
                 this,
@@ -249,17 +265,21 @@ public class EventsActivity extends AppCompatActivity
                 else {
                     final String title = titleView.getText().toString();
                     final String description = descriptionView.getText().toString();
-                    final String startDate = (startDateView.getTag() == null ?
-                            "" : startDateView.getText().toString()
+                    final String startDateTime = (startDateTimeView.getTag() == null ?
+                            "" : Utils.localDateTimeStringToIsoDateTimeString(
+                                    startDateTimeView.getText().toString()
+                                )
                     );
-                    final String endDate = (endDateView.getTag() == null ?
-                            "" : endDateView.getText().toString()
+                    final String endDateTime = (endDateTimeView.getTag() == null ?
+                            "" : Utils.localDateTimeStringToIsoDateTimeString(
+                                    endDateTimeView.getText().toString()
+                                )
                     );
                     final String planning = (planningView.getSelectedItem() == null ?
                             "" : planningView.getSelectedItem().toString()
                     );
 
-                    addEvent(title, description, startDate, endDate, planning);
+                    addEvent(title, description, startDateTime, endDateTime, planning);
                     dialog.dismiss();
                 }
 
@@ -276,8 +296,8 @@ public class EventsActivity extends AppCompatActivity
         builder.create().show();
     }
 
-    private void addEvent(String title, String description, String startDate,
-                          String endDate, String planning
+    private void addEvent(String title, String description, String startDateTime,
+                          String endDateTime, String planning
     ) {
         if (!TextUtils.isEmpty(mUserId)) {
             Map<String, String> headers = new HashMap<>();
@@ -291,8 +311,8 @@ public class EventsActivity extends AppCompatActivity
             Map<String, String> event = new HashMap<>();
             event.put(PARAM_TITLE, title);
             event.put(PARAM_DESCRIPTION, description);
-            if (!TextUtils.isEmpty(startDate)) event.put(PARAM_START_DATE, startDate);
-            if (!TextUtils.isEmpty(endDate)) event.put(PARAM_END_DATE, endDate);
+            if (!TextUtils.isEmpty(startDateTime)) event.put(PARAM_START_DATE_TIME, startDateTime);
+            if (!TextUtils.isEmpty(endDateTime)) event.put(PARAM_END_DATE_TIME, endDateTime);
             if (!TextUtils.isEmpty(planning)) event.put(PARAM_PLANNING, planning);
 
             String body = GsonUtils.getInstance().toJson(event);

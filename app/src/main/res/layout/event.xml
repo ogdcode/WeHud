@@ -16,7 +16,7 @@
         android:layout_marginRight="@dimen/event_marginRightEnd"
         android:layout_marginStart="@dimen/event_marginLeftStart"
         android:layout_marginTop="@dimen/event_marginTop"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textAppearance="@style/TextAppearance.AppCompat.Headline"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/tag"
         app:layout_constraintTop_toTopOf="parent"
@@ -51,7 +51,7 @@
         tools:text="@string/description" />
 
     <TextView
-        android:id="@+id/startDate"
+        android:id="@+id/startDateTime"
         android:layout_width="180dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/event_marginLeftStart"
@@ -66,7 +66,7 @@
         tools:text="@string/datetime" />
 
     <TextView
-        android:id="@+id/endDate"
+        android:id="@+id/endDateTime"
         android:layout_width="180dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/event_marginRightEnd"
@@ -79,5 +79,17 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/description"
         tools:text="@string/datetime" />
+
+    <Button
+        android:id="@+id/btnBindUnbind"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/event_marginRightEnd"
+        android:layout_marginRight="@dimen/event_marginRightEnd"
+        android:layout_marginTop="@dimen/event_btnMarginTop"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/endDateTime"
+        tools:text="@string/event_btnBindUnbind" />
 
 </android.support.constraint.ConstraintLayout>

@@ -84,7 +84,7 @@ public final class Post implements Parcelable {
     }
 
     public String getDatetimeCreated() {
-        return Utils.isoDateStringToLocalDateString(mDatetimeCreated);
+        return Utils.isoDateTimeStringToLocalDateTimeString(mDatetimeCreated);
     }
 
     protected Post(Parcel in) {

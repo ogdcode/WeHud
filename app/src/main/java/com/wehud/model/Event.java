@@ -7,63 +7,71 @@ import com.google.gson.annotations.SerializedName;
 
 public final class Event implements Parcelable {
 
+    @SerializedName("_id")
+    private String mId;
+
     @SerializedName("creator")
-    private User creator;
+    private User mCreator;
 
     @SerializedName("title")
-    private String title;
+    private String mTitle;
 
     @SerializedName("description")
-    private String description;
+    private String mDescription;
 
-    @SerializedName("startDate")
-    private long startDate;
+    @SerializedName("startDateTime")
+    private long mStartDateTime;
 
-    @SerializedName("endDate")
-    private long endDate;
+    @SerializedName("endDateTime")
+    private long mEndDateTime;
 
     @SerializedName("tag")
-    private int tag;
+    private int mTag;
 
     @SerializedName("planning")
-    private String planning;
+    private String mPlanning;
+
+    public String getId() {
+        return mId;
+    }
 
     public User getCreator() {
-        return creator;
+        return mCreator;
     }
 
     public String getTitle() {
-        return title;
+        return mTitle;
     }
 
     public String getDescription() {
-        return description;
+        return mDescription;
     }
 
-    public long getStartDate() {
-        return startDate;
+    public long getStartDateTime() {
+        return mStartDateTime;
     }
 
-    public long getEndDate() {
-        return endDate;
+    public long getEndDateTime() {
+        return mEndDateTime;
     }
 
     public int getTag() {
-        return tag;
+        return mTag;
     }
 
     public String getPlanning() {
-        return planning;
+        return mPlanning;
     }
 
     protected Event(Parcel in) {
-        creator = in.readParcelable(User.class.getClassLoader());
-        title = in.readString();
-        description = in.readString();
-        startDate = in.readLong();
-        endDate = in.readLong();
-        tag = in.readInt();
-        planning = in.readString();
+        mId = in.readString();
+        mCreator = in.readParcelable(User.class.getClassLoader());
+        mTitle = in.readString();
+        mDescription = in.readString();
+        mStartDateTime = in.readLong();
+        mEndDateTime = in.readLong();
+        mTag = in.readInt();
+        mPlanning = in.readString();
     }
 
     public static final Creator<Event> CREATOR = new Creator<Event>() {
@@ -85,12 +93,13 @@ public final class Event implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int flags) {
-        parcel.writeParcelable(creator, flags);
-        parcel.writeString(title);
-        parcel.writeString(description);
-        parcel.writeLong(startDate);
-        parcel.writeLong(endDate);
-        parcel.writeInt(tag);
-        parcel.writeString(planning);
+        parcel.writeString(mId);
+        parcel.writeParcelable(mCreator, flags);
+        parcel.writeString(mTitle);
+        parcel.writeString(mDescription);
+        parcel.writeLong(mStartDateTime);
+        parcel.writeLong(mEndDateTime);
+        parcel.writeInt(mTag);
+        parcel.writeString(mPlanning);
     }
 }

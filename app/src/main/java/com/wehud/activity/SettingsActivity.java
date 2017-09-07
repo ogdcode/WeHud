@@ -212,8 +212,8 @@ public class SettingsActivity extends AppCompatActivity
     }
 
     @Override
-    public void onEditDialogDismissOk(int textId, String text) {
-        TextView textView = (TextView) findViewById(textId);
+    public void onEditDialogDismissOk(Object textId, String text) {
+        TextView textView = (TextView) findViewById((int) textId);
         if (textView != null) {
             if (textId == R.id.settings_password) {
                 String dotPassword = text.replaceAll("(?s).", "*");
@@ -237,7 +237,7 @@ public class SettingsActivity extends AppCompatActivity
     }
 
     @Override
-    public void onTextDialogDismissOk(int id) {
+    public void onTextDialogDismissOk(Object id) {
         Map<String, String> headers = new HashMap<>();
         headers.put(Constants.HEADER_CONTENT_TYPE, Constants.APPLICATION_JSON);
         headers.put(Constants.HEADER_ACCEPT, Constants.APPLICATION_JSON);

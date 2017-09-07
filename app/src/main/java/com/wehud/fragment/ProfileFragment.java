@@ -74,7 +74,7 @@ public class ProfileFragment extends Fragment
     }
 
     @Override
-    public void onTextDialogDismissOk(int id) {
+    public void onTextDialogDismissOk(Object id) {
         getActivity().finish();
     }
 

@@ -78,7 +78,7 @@ public final class User implements Parcelable {
     }
 
     public String getDatetimeCreated() {
-        return Utils.isoDateStringToLocalDateString(mDatetimeCreated);
+        return Utils.isoDateTimeStringToLocalDateTimeString(mDatetimeCreated);
     }
 
     public void setId(String id) {

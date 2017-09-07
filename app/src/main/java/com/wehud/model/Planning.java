@@ -9,31 +9,39 @@ import java.util.List;
 
 public final class Planning implements Parcelable {
 
+    @SerializedName("_id")
+    private String mId;
+
     @SerializedName("title")
-    private String title;
+    private String mTitle;
 
     @SerializedName("creator")
-    private User creator;
+    private User mCreator;
 
     @SerializedName("events")
-    private List<Event> events;
+    private List<Event> mEvents;
+
+    public String getId() {
+        return mId;
+    }
 
     public String getTitle() {
-        return title;
+        return mTitle;
     }
 
     public User getCreator() {
-        return creator;
+        return mCreator;
     }
 
     public List<Event> getEvents() {
-        return events;
+        return mEvents;
     }
 
     protected Planning(Parcel in) {
-        title = in.readString();
-        creator = in.readParcelable(User.class.getClassLoader());
-        events = in.createTypedArrayList(Event.CREATOR);
+        mId = in.readString();
+        mTitle = in.readString();
+        mCreator = in.readParcelable(User.class.getClassLoader());
+        mEvents = in.createTypedArrayList(Event.CREATOR);
     }
 
     public static final Creator<Planning> CREATOR = new Creator<Planning>() {
@@ -54,14 +62,15 @@ public final class Planning implements Parcelable {
     }
 
     @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(title);
-        parcel.writeParcelable(creator, i);
-        parcel.writeTypedList(events);
+    public void writeToParcel(Parcel parcel, int flags) {
+        parcel.writeString(mId);
+        parcel.writeString(mTitle);
+        parcel.writeParcelable(mCreator, flags);
+        parcel.writeTypedList(mEvents);
     }
 
     @Override
     public String toString() {
-        return title + " [" + events.size() + " event(s)]";
+        return mTitle + " [" + mEvents.size() + " event(s)]";
     }
 }

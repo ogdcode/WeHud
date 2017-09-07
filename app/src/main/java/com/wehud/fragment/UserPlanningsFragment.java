@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,21 +16,31 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.google.gson.reflect.TypeToken;
 import com.wehud.R;
 import com.wehud.adapter.PlanningsAdapter;
+import com.wehud.dialog.EditDialogFragment;
 import com.wehud.model.Planning;
 import com.wehud.network.APICall;
 import com.wehud.util.Constants;
 import com.wehud.util.GsonUtils;
+import com.wehud.util.Utils;
 
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class UserPlanningsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class UserPlanningsFragment extends Fragment
+        implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener,
+        EditDialogFragment.OnEditDialogDismissOkListener {
+
+    private static final String PARAM_TITLE = "title";
+
+    private static final String KEY_IS_CONNECTED_USER = "key_is_connected_user";
+    private boolean mIsConnectedUser;
 
     private static final String KEY_USER_ID = "key_user_id";
     private String mUserId;
@@ -38,6 +49,7 @@ public class UserPlanningsFragment extends Fragment implements SwipeRefreshLayou
     private View mEmptyLayout;
     private SwipeRefreshLayout mSwipeLayout;
     private RecyclerView mPlanningListView;
+    private FragmentManager mManager;
 
     private List<Planning> mPlannings;
 
@@ -53,12 +65,28 @@ public class UserPlanningsFragment extends Fragment implements SwipeRefreshLayou
 
                 if (!mPlannings.isEmpty()) {
                     PlanningsAdapter adapter = new PlanningsAdapter(mPlannings);
+                    adapter.setFragmentManager(mManager);
                     mPlanningListView.setAdapter(adapter);
 
                     mEmptyLayout.setVisibility(View.GONE);
                     mSwipeLayout.setVisibility(View.VISIBLE);
-                    mSwipeLayout.setRefreshing(false);
+                } else {
+                    mEmptyLayout.setVisibility(View.VISIBLE);
+                    mSwipeLayout.setVisibility(View.GONE);
                 }
+
+                mSwipeLayout.setRefreshing(false);
+            }
+
+            if (intent.getAction().equals(Constants.INTENT_PLANNINGS_ADD) && !mPaused) {
+                Utils.toast(mContext, getString(R.string.message_addPlanningSuccess));
+                getPlannings();
+            }
+
+            if (intent.getAction().equals(Constants.INTENT_PLANNINGS_DELETE) && !mPaused) {
+                Utils.toast(mContext, getString(R.string.message_deletePlanningSuccess));
+                mPlanningListView.getAdapter().notifyDataSetChanged();
+                getPlannings();
             }
         }
     };
@@ -76,8 +104,9 @@ public class UserPlanningsFragment extends Fragment implements SwipeRefreshLayou
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_user_events, container, false);
+        View view = inflater.inflate(R.layout.fragment_user_plannings, container, false);
         mContext = view.getContext();
+        mManager = getFragmentManager();
 
         mEmptyLayout = view.findViewById(R.id.layout_empty);
         mSwipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.layout_swipe);
@@ -93,6 +122,9 @@ public class UserPlanningsFragment extends Fragment implements SwipeRefreshLayou
         mPlanningListView.addItemDecoration(new DividerItemDecoration(mContext,
                 DividerItemDecoration.HORIZONTAL));
 
+        Button createFirstPlanningButton = (Button) view.findViewById(R.id.btnCreateFirstPlanning);
+        createFirstPlanningButton.setOnClickListener(this);
+
         return view;
     }
 
@@ -104,6 +136,8 @@ public class UserPlanningsFragment extends Fragment implements SwipeRefreshLayou
 
         IntentFilter filter = new IntentFilter();
         filter.addAction(Constants.INTENT_PLANNINGS_LIST);
+        filter.addAction(Constants.INTENT_PLANNINGS_ADD);
+        filter.addAction(Constants.INTENT_PLANNINGS_DELETE);
 
         mContext.registerReceiver(mReceiver, filter);
     }
@@ -133,14 +167,38 @@ public class UserPlanningsFragment extends Fragment implements SwipeRefreshLayou
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(KEY_USER_ID, mUserId);
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.btnCreateFirstPlanning:
+                EditDialogFragment.generate(
+                        mManager,
+                        this,
+                        0,
+                        getString(R.string.dialogTitle_createPlanning),
+                        null,
+                        getString(R.string.hint_planningTitle),
+                        false
+                );
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
     public void onRefresh() {
         if (!TextUtils.isEmpty(mUserId)) this.getPlannings();
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putString(KEY_USER_ID, mUserId);
+    public void onEditDialogDismissOk(Object id, String text) {
+        if (!TextUtils.isEmpty(text)) this.createPlanning(text);
     }
 
     private void getPlannings() {
@@ -158,5 +216,30 @@ public class UserPlanningsFragment extends Fragment implements SwipeRefreshLayou
             );
             if (!call.isLoading()) call.execute();
         }
+    }
+
+    private void createPlanning(String title) {
+        Map<String, String> headers = new HashMap<>();
+        headers.put(Constants.HEADER_CONTENT_TYPE, Constants.APPLICATION_JSON);
+        headers.put(Constants.HEADER_ACCEPT, Constants.APPLICATION_JSON);
+
+        Map<String, String> parameters = new HashMap<>();
+        parameters.put(Constants.PARAM_TOKEN, Constants.TOKEN);
+
+        Map<String, String> planning = new HashMap<>();
+        planning.put(PARAM_TITLE, title);
+
+        String body = GsonUtils.getInstance().toJson(planning);
+
+        APICall call = new APICall(
+                mContext,
+                Constants.INTENT_PLANNINGS_ADD,
+                Constants.POST,
+                Constants.API_PLANNINGS,
+                body,
+                headers,
+                parameters
+        );
+        if (!call.isLoading()) call.execute();
     }
 }

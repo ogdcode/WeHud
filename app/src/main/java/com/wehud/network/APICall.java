@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.os.AsyncTask;
 
 import com.wehud.util.Constants;
+import com.wehud.util.GsonUtils;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -15,6 +17,9 @@ import java.util.Map;
  */
 
 public final class APICall extends AsyncTask<Void, Void, Response> {
+    private static final String PARAM_CODE = "code";
+    private static final String PARAM_CONTENT = "content";
+
     private Context mContext;
     private String mAction;
     private String mMethod;
@@ -73,5 +78,13 @@ public final class APICall extends AsyncTask<Void, Void, Response> {
         Intent intent = new Intent(mAction);
         intent.putExtra(Constants.EXTRA_BROADCAST, content);
         mContext.sendBroadcast(intent);
+    }
+
+    private String buildPayload(Response response) {
+        Map<String, String> payload = new HashMap<>();
+        payload.put(PARAM_CODE, String.valueOf(response.getCode()));
+        payload.put(PARAM_CONTENT, response.getContent());
+
+        return GsonUtils.getInstance().toJson(payload);
     }
 }

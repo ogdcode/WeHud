@@ -75,7 +75,7 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
                 }
             }
 
-            if (intent.getAction().equals(Constants.INTENT_PAGES_REMOVE) && !mPaused) {
+            if (intent.getAction().equals(Constants.INTENT_PAGES_DELETE) && !mPaused) {
                 mPages.remove(mCurrentPage);
                 mAdapter.remove(mAdapter.getItem(mCurrentPage), mAdapter.getPageTitle(mCurrentPage));
                 mAdapter.notifyDataSetChanged();
@@ -116,7 +116,7 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
         IntentFilter filter = new IntentFilter();
         filter.addAction(Constants.INTENT_PAGES_ADD);
         filter.addAction(Constants.INTENT_PAGES_LIST);
-        filter.addAction(Constants.INTENT_PAGES_REMOVE);
+        filter.addAction(Constants.INTENT_PAGES_DELETE);
 
         mContext.registerReceiver(mReceiver, filter);
 
@@ -199,13 +199,13 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
     }
 
     @Override
-    public void onEditDialogDismissOk(int id, String text) {
+    public void onEditDialogDismissOk(Object id, String text) {
         if (mReceiver != null) this.createPage(text);
     }
 
     @Override
-    public void onTextDialogDismissOk(int id) {
-        if (mReceiver != null) this.removePage();
+    public void onTextDialogDismissOk(Object id) {
+        if (mReceiver != null) this.deletePage();
     }
 
     private void getPages() {
@@ -223,7 +223,7 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
         if (!call.isLoading()) call.execute();
     }
 
-    private void removePage() {
+    private void deletePage() {
         Map<String, String> headers = new HashMap<>();
         headers.put(Constants.HEADER_CONTENT_TYPE, Constants.APPLICATION_JSON);
         headers.put(Constants.HEADER_ACCEPT, Constants.APPLICATION_JSON);
@@ -235,7 +235,7 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
 
         APICall call = new APICall(
                 mContext,
-                Constants.INTENT_PAGES_REMOVE,
+                Constants.INTENT_PAGES_DELETE,
                 Constants.DELETE,
                 Constants.API_PAGES + '/' + pageId,
                 headers,

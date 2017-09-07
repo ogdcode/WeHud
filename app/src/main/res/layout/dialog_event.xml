@@ -37,7 +37,7 @@
         android:weightSum="2">
 
         <TextView
-            android:id="@+id/startDate"
+            android:id="@+id/startDateTime"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -52,7 +52,7 @@
             android:layout_height="0dp" />
 
         <TextView
-            android:id="@+id/endDate"
+            android:id="@+id/endDateTime"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
