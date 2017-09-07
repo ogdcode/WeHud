@@ -85,7 +85,6 @@ public class UserPlanningsFragment extends Fragment
 
             if (intent.getAction().equals(Constants.INTENT_PLANNINGS_DELETE) && !mPaused) {
                 Utils.toast(mContext, getString(R.string.message_deletePlanningSuccess));
-                mPlanningListView.getAdapter().notifyDataSetChanged();
                 getPlannings();
             }
         }
