@@ -2,7 +2,6 @@ package com.wehud.util;
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -10,6 +9,7 @@ import android.widget.Toast;
 import com.squareup.picasso.Picasso;
 import com.wehud.R;
 import com.wehud.model.Status;
+import com.wehud.model.Tag;
 
 import java.sql.Timestamp;
 import java.text.DateFormat;
@@ -136,6 +136,35 @@ public final class Utils {
         }
 
         return new Status(resId, sb.toString());
+    }
+
+    public static Tag getTag(int tag) {
+        int code, icon;
+
+        switch (tag) {
+            case Constants.TAG_LIVE:
+                code = Constants.TAG_LIVE;
+                icon = R.drawable.ic_live;
+                break;
+            case Constants.TAG_MEETUP:
+                code = Constants.TAG_MEETUP;
+                icon = R.drawable.ic_meetup;
+                break;
+            case Constants.TAG_YOUTUBE:
+                code = Constants.TAG_YOUTUBE;
+                icon = R.drawable.ic_youtube;
+                break;
+            case Constants.TAG_BIRTHDAY:
+                code = Constants.TAG_BIRTHDAY;
+                icon = R.drawable.ic_birthday;
+                break;
+            default:
+                code = Constants.TAG_EVENT;
+                icon = R.drawable.ic_event;
+                break;
+        }
+
+        return new Tag(code, icon);
     }
 
     public static TextView getFirstInvalidField(TextView... views) {

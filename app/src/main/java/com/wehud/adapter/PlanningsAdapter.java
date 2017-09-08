@@ -32,12 +32,22 @@ public final class PlanningsAdapter extends RecyclerView.Adapter<PlanningsAdapte
 
     private FragmentManager mManager;
 
+    private View mSelectedView;
+    private static int mSelectedPosition = -1;
+
+    private int mViewResourceId;
+
     public PlanningsAdapter(List<Planning> plannings) {
         mPlannings = plannings;
+        setHasStableIds(true);
     }
 
     public void setFragmentManager(FragmentManager manager) {
         mManager = manager;
+    }
+
+    public void setViewResourceId(int viewResourceId) {
+        mViewResourceId = viewResourceId;
     }
 
     @Override
@@ -62,13 +72,13 @@ public final class PlanningsAdapter extends RecyclerView.Adapter<PlanningsAdapte
         holder.deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               TextDialogFragment.generate(
-                       mManager,
-                       holder,
-                       holder.context.getString(R.string.dialogTitle_deletePlanning),
-                       holder.context.getString(R.string.message_deletePlanning),
-                       planning.getId()
-               );
+                TextDialogFragment.generate(
+                        mManager,
+                        holder,
+                        holder.context.getString(R.string.dialogTitle_deletePlanning),
+                        holder.context.getString(R.string.message_deletePlanning),
+                        planning.getId()
+                );
             }
         });
 
@@ -100,6 +110,12 @@ public final class PlanningsAdapter extends RecyclerView.Adapter<PlanningsAdapte
         return mPlannings.size();
     }
 
+    @Override
+    public long getItemId(int position) {
+        if (position == -1) return mSelectedPosition;
+        return super.getItemId(position);
+    }
+
     private void unbindPlanning(Context context, Planning planning) {
         Map<String, String> headers = new HashMap<>();
         headers.put(Constants.HEADER_CONTENT_TYPE, Constants.APPLICATION_JSON);
@@ -117,7 +133,34 @@ public final class PlanningsAdapter extends RecyclerView.Adapter<PlanningsAdapte
         if (!call.isLoading()) call.execute();
     }
 
-    static class PlanningsVH extends RecyclerView.ViewHolder
+    private class PlanningTitlesVH extends RecyclerView.ViewHolder implements View.OnClickListener{
+        private TextView mTitle;
+
+        public PlanningTitlesVH(View view) {
+            super(view);
+            view.setClickable(true);
+            view.setOnClickListener(this);
+            mTitle = (TextView) view.findViewById(android.R.id.text1);
+        }
+
+        @Override
+        public void onClick(View view) {
+            if (!view.isSelected()) {
+                if (mSelectedView != null)
+                    mSelectedView.setSelected(false);
+
+                mSelectedPosition = getAdapterPosition();
+                mSelectedView = view;
+            } else {
+                mSelectedPosition = -1;
+                mSelectedView = null;
+            }
+
+            view.setSelected(!view.isSelected());
+        }
+    }
+
+    class PlanningsVH extends RecyclerView.ViewHolder
             implements TextDialogFragment.OnTextDialogDismissOkListener {
         private View view;
         private Context context;

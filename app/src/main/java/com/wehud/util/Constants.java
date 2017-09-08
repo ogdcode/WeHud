@@ -32,6 +32,9 @@ public final class Constants {
     public static final String API_GAME_FOLLOW = API_USERS + "/follow/game";
     public static final String API_GAME_UNFOLLOW = API_USERS + "/unfollow/game";
 
+    public static final String API_EVENT_BIND = API_EVENTS + "/bind";
+    public static final String API_EVENT_UNBIND = API_EVENTS + "/unbind";
+
     public static final String HEADER_CONTENT_TYPE = "Content-Type";
     public static final String HEADER_ACCEPT = "Accept";
 
@@ -59,6 +62,13 @@ public final class Constants {
 
     public static final String PREF_USER_ID = "pref_user_id";
 
+    public static final int
+            TAG_EVENT = 0,
+            TAG_LIVE = 1,
+            TAG_MEETUP = 2,
+            TAG_YOUTUBE = 3,
+            TAG_BIRTHDAY = 4;
+
     public static final String INTENT_POSTS_LIST = "intent_posts_list";
     public static final String INTENT_POSTS_ADD = "intent_posts_add";
     public static final String INTENT_PAGES_ADD = "intent_pages_add";
@@ -81,6 +91,8 @@ public final class Constants {
     public static final String INTENT_PLANNINGS_UNBIND = "intent_plannings_unbind";
     public static final String INTENT_EVENTS_LIST = "intent_events_list";
     public static final String INTENT_EVENTS_ADD = "intent_events_add";
+    public static final String INTENT_EVENTS_BIND = "intent_events_bind";
+    public static final String INTENT_EVENTS_UNBIND = "intent_events_unbind";
 
     public static final String EXTRA_BROADCAST = "extra_broadcast";
 }

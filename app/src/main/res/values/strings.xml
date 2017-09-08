@@ -124,11 +124,15 @@
     <string name="dialogTitle_chooseEventEndDateTime">Choose event end date and time</string>
     <string name="btnCreateFirstPlanning">Create my first planning</string>
     <string name="planning_btnUnbind">Unbind all events</string>
-    <string name="event_btnBindUnbind">Bind to a planning</string>
+    <string name="btnBind">Bind to a planning</string>
+    <string name="btnUnbind">Unbind from planning</string>
     <string name="dialogTitle_createPlanning">Create A Planning</string>
     <string name="hint_planningTitle">Title</string>
     <string name="message_addPlanningSuccess">A new planning has been created</string>
     <string name="message_deletePlanningSuccess">Planning has been deleted</string>
     <string name="dialogTitle_deletePlanning">Delete Planning</string>
     <string name="message_deletePlanning">Delete this planning?</string>
+    <string name="dialogTitle_choosePlanning">Choose a planning</string>
+    <string name="dialogTitle_eventUnbind">Unbind from planning</string>
+    <string name="message_eventUnbind">Unbind this event from planning %s?</string>
 </resources>
