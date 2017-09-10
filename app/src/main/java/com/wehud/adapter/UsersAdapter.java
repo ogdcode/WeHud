@@ -42,6 +42,7 @@ public final class UsersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view;
+
         if (mViewResourceId == 0) {
             view = LayoutInflater.from(parent.getContext())
                     .inflate(android.R.layout.simple_list_item_1, parent, false);

@@ -91,6 +91,7 @@ public final class Constants {
     public static final String INTENT_PLANNINGS_UNBIND = "intent_plannings_unbind";
     public static final String INTENT_EVENTS_LIST = "intent_events_list";
     public static final String INTENT_EVENTS_ADD = "intent_events_add";
+    public static final String INTENT_EVENTS_DELETE = "intent_events_delete";
     public static final String INTENT_EVENTS_BIND = "intent_events_bind";
     public static final String INTENT_EVENTS_UNBIND = "intent_events_unbind";
 

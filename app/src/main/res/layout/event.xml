@@ -78,6 +78,21 @@
         app:layout_constraintTop_toBottomOf="@+id/description"
         tools:text="@string/datetime" />
 
+    <ImageButton
+        android:id="@+id/btnDelete"
+        style="@style/Base.Widget.AppCompat.Button.Borderless"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/event_marginLeftStart"
+        android:layout_marginStart="@dimen/event_marginLeftStart"
+        android:layout_marginTop="@dimen/event_btnDeleteMarginTop"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/app_name"
+        android:scaleType="fitCenter"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/startDateTime"
+        app:srcCompat="@drawable/ic_planning_event_delete" />
+
     <Button
         android:id="@+id/btnBindUnbind"
         style="@style/Widget.AppCompat.Button.Colored"

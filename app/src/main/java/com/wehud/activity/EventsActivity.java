@@ -29,6 +29,7 @@ import com.wehud.R;
 import com.wehud.adapter.EventsAdapter;
 import com.wehud.dialog.DateTimePickerDialogFragment;
 import com.wehud.model.Event;
+import com.wehud.model.EventBindResponse;
 import com.wehud.model.Planning;
 import com.wehud.network.APICall;
 import com.wehud.util.Constants;
@@ -56,6 +57,7 @@ public class EventsActivity extends AppCompatActivity
     private static final String PARAM_PLANNING = "planning";
 
     private static final String KEY_PLANNINGS = "key_plannings";
+    private static final String KEY_EVENTS = "key_events";
     private static final String KEY_USER_ID = "key_user_id";
     private String mUserId;
 
@@ -79,6 +81,8 @@ public class EventsActivity extends AppCompatActivity
 
                 if (!mEvents.isEmpty()) {
                     EventsAdapter adapter = new EventsAdapter(mEvents);
+                    adapter.setFragmentManager(getSupportFragmentManager());
+                    adapter.setPlannings(mPlannings);
                     mEventListView.setAdapter(adapter);
 
                     mEmptyLayout.setVisibility(View.GONE);
@@ -90,6 +94,28 @@ public class EventsActivity extends AppCompatActivity
             if (intent.getAction().equals(Constants.INTENT_EVENTS_ADD) && !mPaused) {
                 mSwipeLayout.setRefreshing(true);
                 Utils.toast(EventsActivity.this, getString(R.string.message_createEventSuccess));
+            }
+
+            if (intent.getAction().equals(Constants.INTENT_EVENTS_BIND) && !mPaused) {
+                EventBindResponse response = GsonUtils.getInstance().fromJson(
+                        payload, EventBindResponse.class
+                );
+
+                String message = getResources().getString(
+                        R.string.message_eventBound, response.getPlanning()
+                );
+                Utils.toast(EventsActivity.this, message);
+            }
+
+            if (intent.getAction().equals(Constants.INTENT_EVENTS_UNBIND) && !mPaused) {
+                EventBindResponse response = GsonUtils.getInstance().fromJson(
+                        payload, EventBindResponse.class
+                );
+
+                String message = getResources().getString(
+                        R.string.message_eventUnbound, response.getPlanning()
+                );
+                Utils.toast(EventsActivity.this, message);
             }
         }
     };
@@ -117,6 +143,8 @@ public class EventsActivity extends AppCompatActivity
         IntentFilter filter = new IntentFilter();
         filter.addAction(Constants.INTENT_EVENTS_LIST);
         filter.addAction(Constants.INTENT_EVENTS_ADD);
+        filter.addAction(Constants.INTENT_EVENTS_BIND);
+        filter.addAction(Constants.INTENT_EVENTS_UNBIND);
 
         registerReceiver(mReceiver, filter);
     }
@@ -127,8 +155,12 @@ public class EventsActivity extends AppCompatActivity
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             mPlannings = bundle.getParcelableArrayList(KEY_PLANNINGS);
+            mEvents = bundle.getParcelableArrayList(KEY_EVENTS);
             mUserId = bundle.getString(KEY_USER_ID);
-            if (!TextUtils.isEmpty(mUserId) && !mPaused) this.getEvents();
+            if (mEvents.isEmpty()) {
+                if (!TextUtils.isEmpty(mUserId) && !mPaused) this.getEvents();
+                else mSwipeLayout.setRefreshing(false);
+            }
         }
 
         mPaused = false;

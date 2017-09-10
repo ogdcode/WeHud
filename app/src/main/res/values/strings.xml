@@ -134,5 +134,9 @@
     <string name="message_deletePlanning">Delete this planning?</string>
     <string name="dialogTitle_choosePlanning">Choose a planning</string>
     <string name="dialogTitle_eventUnbind">Unbind from planning</string>
-    <string name="message_eventUnbind">Unbind this event from planning %s?</string>
+    <string name="dialogText_eventUnbind">Remove this event from planning %s?</string>
+    <string name="message_eventBound">Event was added to planning %s</string>
+    <string name="message_eventUnbound">Event was removed from planning %s</string>
+    <string name="dialogTitle_deleteEvent">Delete Event</string>
+    <string name="dialogText_deleteEvent">Delete this event?</string>
 </resources>

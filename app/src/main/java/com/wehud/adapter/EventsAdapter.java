@@ -3,13 +3,13 @@ package com.wehud.adapter;
 import android.content.Context;
 import android.os.Parcelable;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -31,6 +31,8 @@ import java.util.Map;
 public final class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsVH> {
 
     private static final String KEY_USER_ID = "key_user_id";
+    private static final String PREFIX_DELETE = "delete";
+    private static final String PREFIX_UNBIND = "unbind";
 
     private List<Planning> mPlannings;
     private List<Event> mEvents;
@@ -71,6 +73,19 @@ public final class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.Even
         holder.endDate.setText(endDate);
         holder.tag.setImageResource(tag.getIcon());
 
+        holder.deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TextDialogFragment.generate(
+                        mManager,
+                        holder,
+                        holder.context.getString(R.string.dialogTitle_deleteEvent),
+                        holder.context.getString(R.string.dialogText_deleteEvent),
+                        PREFIX_DELETE + '_' + event.getId()
+                );
+            }
+        });
+
         holder.bindUnbindButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -78,6 +93,7 @@ public final class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.Even
                         holder.context.getString(R.string.btnBind)
                 )) {
                     PlanningsAdapter planningsAdapter = new PlanningsAdapter(mPlannings);
+                    planningsAdapter.setViewResourceId(0);
                     RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(holder.context);
                     ListDialogFragment.generate(
                             mManager,
@@ -98,12 +114,16 @@ public final class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.Even
                             holder,
                             holder.context.getString(R.string.dialogTitle_eventUnbind),
                             holder.context.getResources().getString(
-                                    R.string.message_eventUnbind,
+                                    R.string.dialogText_eventUnbind,
                                     event.getPlanning()
                             ),
-                            event.getId());
+                            PREFIX_UNBIND + '_' + event.getId()
+                    );
             }
         });
+
+        if (mPlannings.isEmpty()) holder.bindUnbindButton.setVisibility(View.GONE);
+        else holder.bindUnbindButton.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -120,7 +140,9 @@ public final class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.Even
         private TextView startDate;
         private TextView endDate;
         private ImageView tag;
+        private ImageButton deleteButton;
         private Button bindUnbindButton;
+
 
         EventsVH(View view) {
             super(view);
@@ -130,6 +152,7 @@ public final class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.Even
             startDate = (TextView) view.findViewById(R.id.startDateTime);
             endDate = (TextView) view.findViewById(R.id.endDateTime);
             tag = (ImageView) view.findViewById(R.id.tag);
+            deleteButton = (ImageButton) view.findViewById(R.id.btnDelete);
             bindUnbindButton = (Button) view.findViewById(R.id.btnBindUnbind);
         }
 
@@ -159,16 +182,32 @@ public final class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.Even
             headers.put(Constants.HEADER_CONTENT_TYPE, Constants.APPLICATION_JSON);
             headers.put(Constants.HEADER_ACCEPT, Constants.APPLICATION_JSON);
 
+            String[] info = (((String) id).split("_"));
+            String prefix = info[0];
+            String eventId = info[1];
+
+            String action = null, method = null, url = null;
+            if (prefix.equals(PREFIX_DELETE)) {
+                action = Constants.INTENT_EVENTS_DELETE;
+                method = Constants.DELETE;
+                url = Constants.API_EVENTS + '/' + eventId;
+            }
+            if (prefix.equals(PREFIX_UNBIND)) {
+                action = Constants.INTENT_EVENTS_UNBIND;
+                method = Constants.PATCH;
+                url = Constants.API_EVENT_UNBIND + '/' + eventId;
+
+                bindUnbindButton.setText(context.getString(R.string.btnBind));
+            }
+
             APICall call = new APICall(
                     context,
-                    Constants.INTENT_EVENTS_UNBIND,
-                    Constants.PATCH,
-                    Constants.API_EVENT_UNBIND + '/' + id,
+                    action,
+                    method,
+                    url,
                     headers
             );
             if (!call.isLoading()) call.execute();
-
-            bindUnbindButton.setText(context.getString(R.string.btnBind));
         }
     }
 }

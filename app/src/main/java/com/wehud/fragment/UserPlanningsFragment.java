@@ -148,6 +148,7 @@ public class UserPlanningsFragment extends Fragment
         if (args != null) {
             mUserId = args.getString(KEY_USER_ID);
             if (!TextUtils.isEmpty(mUserId) && !mPaused) this.getPlannings();
+            else mSwipeLayout.setRefreshing(false);
         }
 
         mPaused = false;

@@ -120,6 +120,7 @@ public class UserPostsFragment extends Fragment implements SwipeRefreshLayout.On
         if (args != null) {
             mUserId = args.getString(KEY_USER_ID);
             if (!TextUtils.isEmpty(mUserId) && !mPaused) this.getPosts();
+            else mSwipeLayout.setRefreshing(false);
         }
 
         mPaused = false;

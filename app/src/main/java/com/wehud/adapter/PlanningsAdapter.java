@@ -3,6 +3,7 @@ package com.wehud.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -20,13 +21,16 @@ import com.wehud.model.Planning;
 import com.wehud.network.APICall;
 import com.wehud.util.Constants;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public final class PlanningsAdapter extends RecyclerView.Adapter<PlanningsAdapter.PlanningsVH> {
+public final class PlanningsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final String KEY_USER_ID = "key_user_id";
+    private static final String KEY_PLANNINGS = "key_plannings";
+    private static final String KEY_EVENTS = "key_events";
 
     private List<Planning> mPlannings;
 
@@ -51,58 +55,90 @@ public final class PlanningsAdapter extends RecyclerView.Adapter<PlanningsAdapte
     }
 
     @Override
-    public PlanningsVH onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(
-                R.layout.planning, parent, false
-        );
-        return new PlanningsVH(view);
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view;
+
+        if (mViewResourceId == 0) {
+            view = LayoutInflater.from(parent.getContext())
+                    .inflate(android.R.layout.simple_list_item_1, parent, false);
+            return new PlanningTitlesVH(view);
+        }
+
+        if (mViewResourceId == 1) {
+            view = LayoutInflater.from(parent.getContext()).inflate(
+                    R.layout.planning, parent, false
+            );
+            return new PlanningsVH(view);
+        }
+
+        return null;
     }
 
     @Override
-    public void onBindViewHolder(final PlanningsVH holder, int position) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
         final Planning planning = mPlannings.get(position);
-        final List<Event> events = planning.getEvents();
-
         String title = planning.getTitle();
-        int numEvents = events.size();
 
-        holder.title.setText(title);
-        holder.numEvents.setText(numEvents + "\t" + holder.context.getString(R.string.numEvents));
+        if (holder instanceof PlanningTitlesVH) {
+            final PlanningTitlesVH titlesHolder = (PlanningTitlesVH) holder;
 
-        holder.deleteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                TextDialogFragment.generate(
-                        mManager,
-                        holder,
-                        holder.context.getString(R.string.dialogTitle_deletePlanning),
-                        holder.context.getString(R.string.message_deletePlanning),
-                        planning.getId()
-                );
-            }
-        });
+            if (position == mSelectedPosition) {
+                holder.itemView.setSelected(true);
+                mSelectedView = holder.itemView;
+            } else holder.itemView.setSelected(false);
 
-        holder.unbindButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                unbindPlanning(holder.context, planning);
-            }
-        });
+            titlesHolder.title.setText(title);
+        }
 
-        if (numEvents == 0) holder.unbindButton.setVisibility(View.GONE);
-        else holder.unbindButton.setVisibility(View.VISIBLE);
+        if (holder instanceof PlanningsVH) {
+            final PlanningsVH planningsHolder = (PlanningsVH) holder;
+            final List<Event> events = planning.getEvents();
 
-        final String userId = planning.getCreator().getId();
-        holder.view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(holder.context, EventsActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putString(KEY_USER_ID, userId);
-                intent.putExtras(bundle);
-                holder.context.startActivity(intent);
-            }
-        });
+            int numEvents = events.size();
+
+            planningsHolder.title.setText(title);
+            planningsHolder.numEvents.setText(numEvents + "\t" +
+                    planningsHolder.context.getString(R.string.numEvents));
+
+            planningsHolder.deleteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    TextDialogFragment.generate(
+                            mManager,
+                            planningsHolder,
+                            planningsHolder.context.getString(R.string.dialogTitle_deletePlanning),
+                            planningsHolder.context.getString(R.string.message_deletePlanning),
+                            planning.getId()
+                    );
+                }
+            });
+
+            planningsHolder.unbindButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    unbindPlanning(planningsHolder.context, planning);
+                }
+            });
+
+            if (numEvents == 0) planningsHolder.unbindButton.setVisibility(View.GONE);
+            else planningsHolder.unbindButton.setVisibility(View.VISIBLE);
+
+            final String userId = planning.getCreator().getId();
+            planningsHolder.view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(planningsHolder.context, EventsActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString(KEY_USER_ID, userId);
+                    bundle.putParcelableArrayList(KEY_PLANNINGS, (ArrayList<Planning>) mPlannings);
+                    bundle.putParcelableArrayList(
+                            KEY_EVENTS, (ArrayList<Event>) planning.getEvents()
+                    );
+                    intent.putExtras(bundle);
+                    planningsHolder.context.startActivity(intent);
+                }
+            });
+        }
     }
 
     @Override
@@ -133,14 +169,15 @@ public final class PlanningsAdapter extends RecyclerView.Adapter<PlanningsAdapte
         if (!call.isLoading()) call.execute();
     }
 
-    private class PlanningTitlesVH extends RecyclerView.ViewHolder implements View.OnClickListener{
-        private TextView mTitle;
+    private class PlanningTitlesVH extends RecyclerView.ViewHolder implements View.OnClickListener {
+        private TextView title;
 
-        public PlanningTitlesVH(View view) {
+        PlanningTitlesVH(View view) {
             super(view);
             view.setClickable(true);
             view.setOnClickListener(this);
-            mTitle = (TextView) view.findViewById(android.R.id.text1);
+            title = (TextView) view.findViewById(android.R.id.text1);
+            title.setBackgroundResource(R.drawable.list_item_selector);
         }
 
         @Override
@@ -160,7 +197,7 @@ public final class PlanningsAdapter extends RecyclerView.Adapter<PlanningsAdapte
         }
     }
 
-    class PlanningsVH extends RecyclerView.ViewHolder
+    private class PlanningsVH extends RecyclerView.ViewHolder
             implements TextDialogFragment.OnTextDialogDismissOkListener {
         private View view;
         private Context context;

@@ -113,6 +113,7 @@
     <dimen name="dialogEvent_horizontalSpacing">8dp</dimen>
     <dimen name="event_verticalSpacing">16dp</dimen>
     <dimen name="event_btnMarginTop">16dp</dimen>
+    <dimen name="event_btnDeleteMarginTop">12dp</dimen>
     <dimen name="planning_cardRadius">4dp</dimen>
     <dimen name="planning_margin">8dp</dimen>
     <dimen name="btnFollowOrEvents_textSize">16sp</dimen>
