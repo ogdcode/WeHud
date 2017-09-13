@@ -279,11 +279,7 @@ public class SettingsActivity extends AppCompatActivity
         FragmentManager manager = getSupportFragmentManager();
         String title = getString(R.string.dialogTitle_chooseAvatar);
 
-        ArrayList<Image> images = new ArrayList<>();
-        images.add(new Image("https://s3.ca-central-1.amazonaws.com/g-zone/images/profile01.png", 0));
-        images.add(new Image("https://s3.ca-central-1.amazonaws.com/g-zone/images/profile02.png", 0));
-        images.add(new Image("https://s3.ca-central-1.amazonaws.com/g-zone/images/profile03.png", 0));
-        images.add(new Image("https://s3.ca-central-1.amazonaws.com/g-zone/images/profile04.png", 0));
+        ArrayList<Image> images = Utils.getDefaultAvatars();
 
         RecyclerView.Adapter adapter = new ImagesAdapter(images);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this, 2);

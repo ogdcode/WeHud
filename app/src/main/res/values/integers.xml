@@ -2,4 +2,5 @@
 <resources>
     <integer name="text_maxLines">5</integer>
     <integer name="newPost_gameRating_limit">5</integer>
+    <integer name="single_field">1</integer>
 </resources>

@@ -23,7 +23,7 @@ public final class PreferencesUtils {
         return mInstance;
     }
 
-    public static String getPreference(Context context, String key) {
+    static String getPreference(Context context, String key) {
         return getInstance(context).getString(key, null);
     }
 
@@ -39,10 +39,9 @@ public final class PreferencesUtils {
         editor.apply();
     }
 
-    public static void resetDefaultValues(Context context, int resId) {
+    public static void clearPreferences(Context context) {
         SharedPreferences.Editor editor = getInstance(context).edit();
         editor.clear();
         editor.apply();
-        PreferenceManager.setDefaultValues(context, resId, true);
     }
 }

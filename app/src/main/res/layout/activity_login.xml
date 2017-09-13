@@ -6,4 +6,81 @@
     android:layout_height="match_parent"
     tools:context="com.wehud.activity.LoginActivity">
 
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginTop="0dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/usernameOrEmail"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/login_marginRightEnd"
+        android:layout_marginLeft="@dimen/login_marginLeftStart"
+        android:layout_marginRight="@dimen/login_marginRightEnd"
+        android:layout_marginStart="@dimen/login_marginLeftStart"
+        android:layout_marginTop="@dimen/login_marginTop"
+        android:ems="10"
+        android:hint="@string/hint_usernameOrEmail"
+        android:inputType="text"
+        android:maxLines="@integer/single_field"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        tools:ignore="TextFields" />
+
+    <EditText
+        android:id="@+id/password"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/login_marginRightEnd"
+        android:layout_marginLeft="@dimen/login_marginLeftStart"
+        android:layout_marginRight="@dimen/login_marginRightEnd"
+        android:layout_marginStart="@dimen/login_marginLeftStart"
+        android:layout_marginTop="15dp"
+        android:ems="10"
+        android:hint="@string/login_password"
+        android:inputType="textPassword"
+        android:maxLines="@integer/single_field"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/usernameOrEmail" />
+
+    <Button
+        android:id="@+id/btnSignIn"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/login_marginRightEnd"
+        android:layout_marginLeft="@dimen/login_marginLeftStart"
+        android:layout_marginRight="@dimen/login_marginRightEnd"
+        android:layout_marginStart="@dimen/login_marginLeftStart"
+        android:layout_marginTop="@dimen/login_btnMarginTop"
+        android:text="@string/sign_in"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/btnSignUp"
+        app:layout_constraintTop_toBottomOf="@+id/password" />
+
+    <Button
+        android:id="@+id/btnSignUp"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/login_marginRightEnd"
+        android:layout_marginRight="@dimen/login_marginRightEnd"
+        android:layout_marginTop="@dimen/login_btnMarginTop"
+        android:text="@string/sign_up"
+        app:layout_constraintLeft_toRightOf="@+id/btnSignIn"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/password" />
+
 </android.support.constraint.ConstraintLayout>

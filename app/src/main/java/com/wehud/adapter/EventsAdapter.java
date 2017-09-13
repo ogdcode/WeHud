@@ -5,6 +5,7 @@ import android.os.Parcelable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,11 +62,11 @@ public final class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.Even
     public void onBindViewHolder(final EventsVH holder, int position) {
         final Event event = mEvents.get(position);
 
-        String title = event.getTitle();
-        String description = event.getDescription();
-        String startDate = Utils.timestampToLocalDateString(event.getStartDateTime());
-        String endDate = Utils.timestampToLocalDateString(event.getEndDateTime());
-        Tag tag = Utils.getTag(event.getTag());
+        final String title = event.getTitle();
+        final String description = event.getDescription();
+        final String startDate = Utils.timestampToLocalDateString(event.getStartDateTime());
+        final String endDate = Utils.timestampToLocalDateString(event.getEndDateTime());
+        final Tag tag = Utils.getTag(event.getTag());
 
         holder.title.setText(title);
         holder.description.setText(description);
@@ -178,36 +179,38 @@ public final class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.Even
 
         @Override
         public void onTextDialogDismissOk(Object id) {
-            Map<String, String> headers = new HashMap<>();
-            headers.put(Constants.HEADER_CONTENT_TYPE, Constants.APPLICATION_JSON);
-            headers.put(Constants.HEADER_ACCEPT, Constants.APPLICATION_JSON);
+            if (!TextUtils.isEmpty(id.toString())) {
+                Map<String, String> headers = new HashMap<>();
+                headers.put(Constants.HEADER_CONTENT_TYPE, Constants.APPLICATION_JSON);
+                headers.put(Constants.HEADER_ACCEPT, Constants.APPLICATION_JSON);
 
-            String[] info = (((String) id).split("_"));
-            String prefix = info[0];
-            String eventId = info[1];
+                final String[] info = id.toString().split("_");
+                final String prefix = info[0];
+                final String eventId = info[1];
 
-            String action = null, method = null, url = null;
-            if (prefix.equals(PREFIX_DELETE)) {
-                action = Constants.INTENT_EVENTS_DELETE;
-                method = Constants.DELETE;
-                url = Constants.API_EVENTS + '/' + eventId;
+                String action = null, method = null, url = null;
+                if (prefix.equals(PREFIX_DELETE)) {
+                    action = Constants.INTENT_EVENTS_DELETE;
+                    method = Constants.DELETE;
+                    url = Constants.API_EVENTS + '/' + eventId;
+                }
+                if (prefix.equals(PREFIX_UNBIND)) {
+                    action = Constants.INTENT_EVENTS_UNBIND;
+                    method = Constants.PATCH;
+                    url = Constants.API_EVENT_UNBIND + '/' + eventId;
+
+                    bindUnbindButton.setText(context.getString(R.string.btnBind));
+                }
+
+                APICall call = new APICall(
+                        context,
+                        action,
+                        method,
+                        url,
+                        headers
+                );
+                if (!call.isLoading()) call.execute();
             }
-            if (prefix.equals(PREFIX_UNBIND)) {
-                action = Constants.INTENT_EVENTS_UNBIND;
-                method = Constants.PATCH;
-                url = Constants.API_EVENT_UNBIND + '/' + eventId;
-
-                bindUnbindButton.setText(context.getString(R.string.btnBind));
-            }
-
-            APICall call = new APICall(
-                    context,
-                    action,
-                    method,
-                    url,
-                    headers
-            );
-            if (!call.isLoading()) call.execute();
         }
     }
 }

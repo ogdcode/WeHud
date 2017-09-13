@@ -65,7 +65,7 @@
     <string name="message_deleteSuccess">Your account has been deleted.</string>
     <string name="dialogTitle_chooseAvatar">Choose an avatar</string>
     <string name="hint_email">Email Address</string>
-    <string name="hint_username">Username</string>
+    <string name="hint_usernameOrEmail">Username or Email Address</string>
     <string name="hint_password">Password</string>
     <string name="followers">1 FOLLOWER(S)</string>
     <string name="followerCount">FOLLOWER(S)</string>
@@ -139,4 +139,10 @@
     <string name="message_eventUnbound">Event was removed from planning %s</string>
     <string name="dialogTitle_deleteEvent">Delete Event</string>
     <string name="dialogText_deleteEvent">Delete this event?</string>
+    <string name="sign_in">Sign In</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="login_password">Password</string>
+    <string name="hint_username">Username</string>
+    <string name="error_unknown">There was an error: code %s</string>
+    <string name="error_invalidCredentials">Invalid credentials</string>
 </resources>

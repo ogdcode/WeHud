@@ -7,18 +7,19 @@ package com.wehud.util;
  */
 
 public final class Constants {
-    public static final String API_URL = "http://192.168.1.41:3000";
 
-    public static final String API_AUTH = API_URL + "/auth";
+    private Constants() {}
+
+    private static final String API_URL = "http://192.168.1.41:3000";
+
+    public static final String API_LOGIN = API_URL + "/auth/login";
+
     public static final String API_USERS = API_URL + "/users";
     public static final String API_GAMES = API_URL + "/games";
     public static final String API_POSTS = API_URL + "/posts";
     public static final String API_PAGES = API_URL + "/pages";
     public static final String API_EVENTS = API_URL + "/events";
     public static final String API_PLANNINGS = API_URL + "/plannings";
-
-    public static final String API_AUTH_LOGIN = API_AUTH + "/login";
-    public static final String API_AUTH_LOGOUT = API_AUTH + "/logout";
 
     public static final String API_MESSAGES = API_POSTS + "/messages/all";
 
@@ -50,6 +51,7 @@ public final class Constants {
     public static final String DELETE = "DELETE";
     public static final String PATCH = "PATCH";
 
+    public static final int HTTP_OK = 200;
     public static final int HTTP_CREATED = 201;
     public static final int HTTP_NO_CONTENT = 204;
     public static final int HTTP_BAD_REQUEST = 400;
@@ -60,15 +62,7 @@ public final class Constants {
     public static final int CONNECT_TIMEOUT = 3000;
     public static final int READ_TIMEOUT = 3000;
 
-    public static final String PREF_USER_ID = "pref_user_id";
-
-    public static final int
-            TAG_EVENT = 0,
-            TAG_LIVE = 1,
-            TAG_MEETUP = 2,
-            TAG_YOUTUBE = 3,
-            TAG_BIRTHDAY = 4;
-
+    public static final String INTENT_LOGIN = "intent_login";
     public static final String INTENT_POSTS_LIST = "intent_posts_list";
     public static final String INTENT_POSTS_ADD = "intent_posts_add";
     public static final String INTENT_PAGES_ADD = "intent_pages_add";
@@ -96,4 +90,26 @@ public final class Constants {
     public static final String INTENT_EVENTS_UNBIND = "intent_events_unbind";
 
     public static final String EXTRA_BROADCAST = "extra_broadcast";
+
+    public static final String PREF_USER_ID = "pref_user_id";
+    public static final String PREF_TOKEN = "pref_token";
+
+    static final int
+            TAG_EVENT = 0,
+            TAG_LIVE = 1,
+            TAG_MEETUP = 2,
+            TAG_YOUTUBE = 3,
+            TAG_BIRTHDAY = 4;
+
+    static final String[] AVATARS = {
+            "https://s3.ca-central-1.amazonaws.com/g-zone/images/profile01.png",
+            "https://s3.ca-central-1.amazonaws.com/g-zone/images/profile02.png",
+            "https://s3.ca-central-1.amazonaws.com/g-zone/images/profile03.png",
+            "https://s3.ca-central-1.amazonaws.com/g-zone/images/profile04.png",
+    };
+
+    static final String ISO_8601_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+
+    static final String LOCAL_PATTERN_DATETIME = "dd/MM/yyyy HH:mm";
+    static final String LOCAL_PATTERN_DATE = "dd/MM/yyyy";
 }
