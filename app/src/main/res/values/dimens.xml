@@ -118,4 +118,5 @@
     <dimen name="planning_margin">8dp</dimen>
     <dimen name="btnFollowOrEvents_textSize">16sp</dimen>
     <dimen name="planning_marginRightEnd">8dp</dimen>
+    <dimen name="login_paddingLeftStart">5dp</dimen>
 </resources>

@@ -23,23 +23,23 @@ public final class PreferencesUtils {
         return mInstance;
     }
 
-    static String getPreference(Context context, String key) {
+    static String get(Context context, String key) {
         return getInstance(context).getString(key, null);
     }
 
-    public static void putPreference(Context context, String key, String value) {
+    public static void put(Context context, String key, String value) {
         SharedPreferences.Editor editor = getInstance(context).edit();
         editor.putString(key, value);
         editor.apply();
     }
 
-    public static void removePreference(Context context, String key) {
+    public static void remove(Context context, String key) {
         SharedPreferences.Editor editor = getInstance(context).edit();
         editor.remove(key);
         editor.apply();
     }
 
-    public static void clearPreferences(Context context) {
+    public static void clear(Context context) {
         SharedPreferences.Editor editor = getInstance(context).edit();
         editor.clear();
         editor.apply();

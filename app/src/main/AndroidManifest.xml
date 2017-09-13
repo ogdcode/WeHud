@@ -51,7 +51,8 @@
         <activity android:name=".activity.GameActivity" />
         <activity android:name=".activity.UserActivity" />
         <activity android:name=".activity.EventsActivity" />
-        <activity android:name=".activity.RegisterActivity"></activity>
+        <activity android:name=".activity.RegisterActivity" />
+        <activity android:name=".activity.ForgotPasswordActivity"></activity>
     </application>
 
 </manifest>

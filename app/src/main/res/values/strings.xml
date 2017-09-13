@@ -145,4 +145,8 @@
     <string name="hint_username">Username</string>
     <string name="error_unknown">There was an error: code %s</string>
     <string name="error_invalidCredentials">Invalid credentials</string>
+    <string name="error_server">There was an error with the server</string>
+    <string name="btnForgotPassword">I forgot my password</string>
+    <string name="message_sendSuccess">Username or email was successfully sent. Please check your mails.</string>
+    <string name="btnSend">Send</string>
 </resources>

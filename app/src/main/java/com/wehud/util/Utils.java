@@ -184,7 +184,7 @@ public final class Utils {
     }
 
     public static boolean isConnectedUser(Context context, String userId) {
-        String connectedId = PreferencesUtils.getPreference(context, Constants.PREF_USER_ID);
+        String connectedId = PreferencesUtils.get(context, Constants.PREF_USER_ID);
         return connectedId.equals(userId);
     }
 

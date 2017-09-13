@@ -47,8 +47,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     if (Integer.valueOf(code) == Constants.HTTP_OK) {
                         Auth auth = GsonUtils.getInstance().fromJson(content, Auth.class);
 
-                        PreferencesUtils.putPreference(context, Constants.PREF_USER_ID, auth.getId());
-                        PreferencesUtils.putPreference(context, Constants.PREF_TOKEN, auth.getToken());
+                        PreferencesUtils.put(context,
+                                Constants.PREF_USER_ID, auth.getId()
+                        );
+                        PreferencesUtils.put(context,
+                                Constants.PREF_TOKEN, auth.getToken()
+                        );
 
                         context.startActivity(new Intent(context, MainActivity.class));
                     } else {
@@ -56,6 +60,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         switch (Integer.valueOf(code)) {
                             case Constants.HTTP_FORBIDDEN:
                                 messageId = R.string.error_invalidCredentials;
+                                break;
+                            case Constants.HTTP_INTERNAL_SERVER_ERROR:
+                                messageId = R.string.error_server;
                                 break;
                             default:
                                 Utils.toast(context, R.string.error_unknown, code);
@@ -80,8 +87,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mUsernameOrEmail = (EditText) findViewById(R.id.usernameOrEmail);
         mPassword = (EditText) findViewById(R.id.password);
 
-        Button signInButton = (Button) findViewById(R.id.btnSignIn);
+        Button forgotPasswordButton = (Button) findViewById(R.id.btnForgotPassword);
+        Button signInButton = (Button) findViewById(R.id.btnSend);
         Button signUpButton = (Button) findViewById(R.id.btnSignUp);
+        forgotPasswordButton.setOnClickListener(this);
         signInButton.setOnClickListener(this);
         signUpButton.setOnClickListener(this);
 
@@ -106,14 +115,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        PreferencesUtils.clearPreferences(this);
+        PreferencesUtils.clear(this);
         unregisterReceiver(mReceiver);
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.btnSignIn:
+            case R.id.btnForgotPassword:
+                break;
+            case R.id.btnSend:
                 this.signIn();
                 break;
             case R.id.btnSignUp:
