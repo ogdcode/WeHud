@@ -27,6 +27,7 @@ import com.wehud.fragment.UserPlanningsFragment;
 import com.wehud.fragment.UserPostsFragment;
 import com.wehud.model.Follower;
 import com.wehud.model.Page;
+import com.wehud.model.Payload;
 import com.wehud.model.User;
 import com.wehud.network.APICall;
 import com.wehud.util.Constants;
@@ -61,6 +62,100 @@ public class UserActivity extends AppCompatActivity
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            if (!mPaused) {
+                String response = intent.getStringExtra(Constants.EXTRA_BROADCAST);
+                Payload payload = GsonUtils.getInstance().fromJson(response, Payload.class);
+
+                String code = payload.getCode();
+
+                if (Integer.valueOf(code) == Constants.HTTP_OK) {
+                    String content = payload.getContent();
+
+                    switch (intent.getAction()) {
+                        case Constants.INTENT_USER_GET:
+                            mCurrentUser = GsonUtils.getInstance().fromJson(content, User.class);
+                            String avatar = mCurrentUser.getAvatar();
+                            String username = mCurrentUser.getUsername();
+                            String score = String.valueOf(mCurrentUser.getScore())
+                                    + "\t" + getString(R.string.score
+                            );
+                            List<User> followers = mCurrentUser.getFollowers();
+                            String numFollowers = followers.size() + "\t"
+                                    + getString(R.string.followerCount);
+
+                            boolean found = false;
+                            for (User user : followers) {
+                                if (user.getId().equals(mUserId)) {
+                                    found = true;
+                                    break;
+                                }
+                            }
+
+                            if (found) mFollowOrEventsButton.setText(
+                                    getString(R.string.btnUnfollow)
+                            );
+                            else mFollowOrEventsButton.setText(getString(R.string.btnFollow));
+
+                            if (!TextUtils.isEmpty(avatar))
+                                Utils.loadImage(UserActivity.this, avatar, mAvatar, 256);
+                            else mAvatar.setImageResource(R.mipmap.ic_launcher_round);
+
+                            mUsername.setText(username);
+                            mScore.setText(score);
+                            mFollowers.setText(numFollowers);
+                            break;
+                        case Constants.INTENT_USER_FOLLOW:
+                            mFollowOrEventsButton.setText(getString(R.string.btnUnfollow));
+                            Follower newFollower = GsonUtils.getInstance().fromJson(
+                                    content, Follower.class
+                            );
+
+                            mCurrentUser.follow(newFollower.getUser());
+                            String countAfterFollow = mCurrentUser.getFollowers().size()
+                                    + "\t" + getString(R.string.followerCount
+                            );
+
+                            mFollowers.setText(countAfterFollow);
+
+                            Utils.toast(
+                                    UserActivity.this,
+                                    R.string.message_followingUser,
+                                    mCurrentUser.getUsername()
+                            );
+                            break;
+                        case Constants.INTENT_USER_UNFOLLOW:
+                            mFollowOrEventsButton.setText(getString(R.string.btnFollow));
+                            Follower oldFollower = GsonUtils.getInstance().fromJson(content, Follower.class);
+
+                            mCurrentUser.unfollow(oldFollower.getUser());
+                            String countAfterUnfollow = mCurrentUser.getFollowers().size()
+                                    + "\t" + getString(R.string.followerCount
+                            );
+
+                            mFollowers.setText(countAfterUnfollow);
+
+                            Utils.toast(
+                                    UserActivity.this,
+                                    getString(R.string.message_unfollowingUser)
+                            );
+                            break;
+                        case Constants.INTENT_PAGES_LIST:
+                            Type pageListType = new TypeToken<List<Page>>(){}.getType();
+                            List<Page> pages = GsonUtils.getInstance().fromJson(
+                                    content, pageListType
+                            );
+
+                            UserActivity.this.follow(pages);
+                            break;
+                        default:
+                            break;
+                    }
+                } else if (Integer.valueOf(code) == Constants.HTTP_INTERNAL_SERVER_ERROR)
+                    Utils.toast(UserActivity.this, getString(R.string.error_server));
+                else Utils.toast(UserActivity.this, R.string.error_general, code);
+            }
+
+            /*
             String payload = intent.getStringExtra(Constants.EXTRA_BROADCAST);
 
             if (intent.getAction().equals(Constants.INTENT_USER_GET) && !mPaused) {
@@ -100,7 +195,7 @@ public class UserActivity extends AppCompatActivity
                 UserActivity.this.follow(pages);
             }
 
-            if (intent.getAction().equals(Constants.API_USER_FOLLOW) && !mPaused) {
+            if (intent.getAction().equals(Constants.INTENT_USER_FOLLOW) && !mPaused) {
                 mFollowOrEventsButton.setText(getString(R.string.btnUnfollow));
                 Follower newFollower = GsonUtils.getInstance().fromJson(payload, Follower.class);
 
@@ -114,7 +209,7 @@ public class UserActivity extends AppCompatActivity
                 Utils.toast(UserActivity.this, getString(R.string.message_followingUser));
             }
 
-            if (intent.getAction().equals(Constants.API_USER_UNFOLLOW) && !mPaused) {
+            if (intent.getAction().equals(Constants.INTENT_USER_UNFOLLOW) && !mPaused) {
                 mFollowOrEventsButton.setText(getString(R.string.btnFollow));
                 Follower oldFollower = GsonUtils.getInstance().fromJson(payload, Follower.class);
 
@@ -127,6 +222,7 @@ public class UserActivity extends AppCompatActivity
 
                 Utils.toast(UserActivity.this, getString(R.string.message_unfollowingUser));
             }
+            */
         }
     };
 
@@ -280,7 +376,7 @@ public class UserActivity extends AppCompatActivity
         if (!call.isLoading()) call.execute();
     }
 
-    private void follow(ArrayList<Page> pages) {
+    private void follow(List<Page> pages) {
         RecyclerView.Adapter adapter = new PagesAdapter(pages);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
                 UserActivity.this
@@ -293,7 +389,7 @@ public class UserActivity extends AppCompatActivity
                 getSupportFragmentManager(),
                 UserActivity.this,
                 getString(R.string.dialogTitle_choosePage),
-                pages,
+                (ArrayList<Page>) pages,
                 adapter,
                 layoutManager,
                 divider

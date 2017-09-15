@@ -19,9 +19,11 @@ import com.google.gson.reflect.TypeToken;
 import com.wehud.R;
 import com.wehud.adapter.GamesAdapter;
 import com.wehud.model.Game;
+import com.wehud.model.Payload;
 import com.wehud.network.APICall;
 import com.wehud.util.Constants;
 import com.wehud.util.GsonUtils;
+import com.wehud.util.Utils;
 
 import java.lang.reflect.Type;
 import java.util.HashMap;
@@ -41,6 +43,33 @@ public class GamesFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(Constants.INTENT_GAMES_LIST) && !mPaused) {
+                String response = intent.getStringExtra(Constants.EXTRA_BROADCAST);
+                Payload payload = GsonUtils.getInstance().fromJson(response, Payload.class);
+
+                String code = payload.getCode();
+
+                if (Integer.valueOf(code) == Constants.HTTP_OK) {
+                    String content = payload.getContent();
+
+                    Type gameListType = new TypeToken<List<Game>>(){}.getType();
+                    mGames = GsonUtils.getInstance().fromJson(content, gameListType);
+
+                    if (!mGames.isEmpty()) {
+                        GamesAdapter adapter = new GamesAdapter(mGames);
+                        adapter.setViewResourceId(1);
+                        mGameListView.setAdapter(adapter);
+
+                        mEmptyLayout.setVisibility(View.GONE);
+                        mSwipeLayout.setVisibility(View.VISIBLE);
+                        mSwipeLayout.setRefreshing(false);
+                    }
+                } else if (Integer.valueOf(code) == Constants.HTTP_INTERNAL_SERVER_ERROR)
+                    Utils.toast(mContext, getString(R.string.error_server));
+                else Utils.toast(mContext, R.string.error_general, code);
+            }
+
+            /*
             String payload = intent.getStringExtra(Constants.EXTRA_BROADCAST);
 
             if (intent.getAction().equals(Constants.INTENT_GAMES_LIST)) {
@@ -57,6 +86,7 @@ public class GamesFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                     mSwipeLayout.setRefreshing(false);
                 }
             }
+            */
         }
     };
 

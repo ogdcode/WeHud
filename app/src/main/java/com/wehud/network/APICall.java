@@ -78,10 +78,18 @@ public final class APICall extends AsyncTask<Void, Void, Response> {
 
     @Override
     protected void onPostExecute(Response response) {
+        /*
         mLoading = false;
         String content = response.getContent();
         Intent intent = new Intent(mAction);
         intent.putExtra(Constants.EXTRA_BROADCAST, content);
+        mContext.sendBroadcast(intent);
+        */
+
+        mLoading = false;
+        String payload = this.buildPayload(response);
+        Intent intent = new Intent(mAction);
+        intent.putExtra(Constants.EXTRA_BROADCAST, payload);
         mContext.sendBroadcast(intent);
     }
 

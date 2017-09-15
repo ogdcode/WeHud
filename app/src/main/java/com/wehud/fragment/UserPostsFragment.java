@@ -19,10 +19,12 @@ import android.view.ViewGroup;
 import com.google.gson.reflect.TypeToken;
 import com.wehud.R;
 import com.wehud.adapter.PostsAdapter;
+import com.wehud.model.Payload;
 import com.wehud.model.Post;
 import com.wehud.network.APICall;
 import com.wehud.util.Constants;
 import com.wehud.util.GsonUtils;
+import com.wehud.util.Utils;
 
 import java.lang.reflect.Type;
 import java.util.HashMap;
@@ -45,6 +47,31 @@ public class UserPostsFragment extends Fragment implements SwipeRefreshLayout.On
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(Constants.INTENT_POSTS_LIST) && !mPaused) {
+                String response = intent.getStringExtra(Constants.EXTRA_BROADCAST);
+                Payload payload = GsonUtils.getInstance().fromJson(response, Payload.class);
+
+                String code = payload.getCode();
+
+                if (Integer.valueOf(code) == Constants.HTTP_OK) {
+                    String content = payload.getContent();
+
+                    Type postListType = new TypeToken<List<Post>>(){}.getType();
+                    mPosts = GsonUtils.getInstance().fromJson(content, postListType);
+                    if (!mPosts.isEmpty()) {
+                        PostsAdapter adapter = new PostsAdapter(mPosts, false);
+                        mPostListView.setAdapter(adapter);
+
+                        mEmptyLayout.setVisibility(View.GONE);
+                        mSwipeLayout.setVisibility(View.VISIBLE);
+                        mSwipeLayout.setRefreshing(false);
+                    }
+                } else if (Integer.valueOf(code) == Constants.HTTP_INTERNAL_SERVER_ERROR)
+                    Utils.toast(mContext, getString(R.string.error_server));
+                else Utils.toast(mContext, R.string.error_general, code);
+            }
+
+            /*
             String payload = intent.getStringExtra(Constants.EXTRA_BROADCAST);
 
             if (intent.getAction().equals(Constants.INTENT_POSTS_LIST) && !mPaused) {
@@ -59,6 +86,7 @@ public class UserPostsFragment extends Fragment implements SwipeRefreshLayout.On
                     mSwipeLayout.setRefreshing(false);
                 }
             }
+            */
         }
     };
 

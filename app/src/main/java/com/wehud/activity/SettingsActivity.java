@@ -27,6 +27,7 @@ import com.wehud.dialog.EditDialogFragment;
 import com.wehud.dialog.ListDialogFragment;
 import com.wehud.dialog.TextDialogFragment;
 import com.wehud.model.Image;
+import com.wehud.model.Payload;
 import com.wehud.model.User;
 import com.wehud.network.APICall;
 import com.wehud.util.Constants;
@@ -60,6 +61,54 @@ public class SettingsActivity extends AppCompatActivity
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            if (!mPaused) {
+                String response = intent.getStringExtra(Constants.EXTRA_BROADCAST);
+                Payload payload = GsonUtils.getInstance().fromJson(response, Payload.class);
+
+                String code = payload.getCode();
+
+                if (Integer.valueOf(code) == Constants.HTTP_OK ||
+                        Integer.valueOf(code) == Constants.HTTP_NO_CONTENT) {
+                    String content = payload.getContent();
+
+                    switch (intent.getAction()) {
+                        case Constants.INTENT_USER_GET:
+                            mCurrentUser = GsonUtils.getInstance().fromJson(content, User.class);
+
+                            String avatar = mCurrentUser.getAvatar();
+                            String currentPassword = mCurrentUser.getPassword();
+
+                            mImage = new Image(avatar, 0);
+
+                            Utils.loadImage(SettingsActivity.this, avatar, mAvatar, 256);
+                            mUsername.setText(mCurrentUser.getUsername());
+                            mEmail.setText(mCurrentUser.getEmail());
+
+                            mPassword.setTag(currentPassword);
+                            mPassword.setText(getString(R.string.sample_password));
+                            break;
+                        case Constants.INTENT_USER_UPDATE:
+                            Utils.toast(
+                                    SettingsActivity.this,
+                                    getString(R.string.message_updateSuccess)
+                            );
+                            SettingsActivity.this.finish();
+                            break;
+                        case Constants.INTENT_USER_DELETE:
+                            Utils.toast(
+                                    SettingsActivity.this,
+                                    getString(R.string.message_deleteSuccess)
+                            );
+                            break;
+                        default:
+                            break;
+                    }
+                } else if (Integer.valueOf(code) == Constants.HTTP_INTERNAL_SERVER_ERROR)
+                    Utils.toast(SettingsActivity.this, getString(R.string.error_server));
+                else Utils.toast(SettingsActivity.this, R.string.error_general, code);
+            }
+
+            /*
             String payload = intent.getStringExtra(Constants.EXTRA_BROADCAST);
 
             if (intent.getAction().equals(Constants.INTENT_USER_GET) && !mPaused) {
@@ -86,6 +135,7 @@ public class SettingsActivity extends AppCompatActivity
             if (intent.getAction().equals(Constants.INTENT_USER_DELETE) && !mPaused) {
                 Utils.toast(SettingsActivity.this, getString(R.string.message_deleteSuccess));
             }
+            */
         }
     };
 

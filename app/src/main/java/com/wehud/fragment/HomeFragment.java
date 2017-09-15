@@ -22,6 +22,7 @@ import com.wehud.adapter.VPAdapter;
 import com.wehud.dialog.EditDialogFragment;
 import com.wehud.dialog.TextDialogFragment;
 import com.wehud.model.Page;
+import com.wehud.model.Payload;
 import com.wehud.network.APICall;
 import com.wehud.util.Constants;
 import com.wehud.util.GsonUtils;
@@ -51,6 +52,60 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            if (!mPaused) {
+                String response = intent.getStringExtra(Constants.EXTRA_BROADCAST);
+                Payload payload = GsonUtils.getInstance().fromJson(response, Payload.class);
+
+                String code = payload.getCode();
+
+                if (Integer.valueOf(code) == Constants.HTTP_OK ||
+                        Integer.valueOf(code) == Constants.HTTP_NO_CONTENT) {
+                    String content = payload.getContent();
+
+                    switch (intent.getAction()) {
+                        case Constants.INTENT_PAGES_LIST:
+                            Type pageListType = new TypeToken<List<Page>>() {
+                            }.getType();
+                            mPages = GsonUtils.getInstance().fromJson(content, pageListType);
+
+                            if (!mPages.isEmpty()) {
+                                for (Page page : mPages)
+                                    mAdapter.add(PostsFragment.newInstance(), page.getTitle());
+
+                                mAdapter.notifyDataSetChanged();
+                                mPager.invalidate();
+                            }
+                            break;
+                        case Constants.INTENT_PAGES_ADD:
+                            Page page = GsonUtils.getInstance().fromJson(content, Page.class);
+                            mPages.add(page);
+                            mAdapter.add(PostsFragment.newInstance(), page.getTitle());
+                            mAdapter.notifyDataSetChanged();
+                            mPager.invalidate();
+                            break;
+                        case Constants.INTENT_PAGES_DELETE:
+                            Fragment item = mAdapter.getItem(mCurrentPage);
+                            String title = mAdapter.getPageTitle(mCurrentPage);
+
+                            mPages.remove(mCurrentPage);
+                            mAdapter.remove(
+                                    item,
+                                    title
+                            );
+                            mAdapter.notifyDataSetChanged();
+                            mPager.invalidate();
+
+                            Utils.toast(mContext, R.string.message_pageRemoved, title);
+                            break;
+                        default:
+                            break;
+                    }
+                } else if (Integer.valueOf(code) == Constants.HTTP_INTERNAL_SERVER_ERROR)
+                    Utils.toast(mContext, getString(R.string.error_server));
+                else Utils.toast(mContext, R.string.error_general, code);
+            }
+
+            /*
             String payload = intent.getStringExtra(Constants.EXTRA_BROADCAST);
 
             if (intent.getAction().equals(Constants.INTENT_PAGES_ADD) && !mPaused) {
@@ -83,6 +138,7 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
 
                 Utils.toast(mContext, getString(R.string.message_pageRemoved));
             }
+            */
         }
     };
 

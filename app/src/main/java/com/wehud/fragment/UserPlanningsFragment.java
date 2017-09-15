@@ -22,6 +22,7 @@ import com.google.gson.reflect.TypeToken;
 import com.wehud.R;
 import com.wehud.adapter.PlanningsAdapter;
 import com.wehud.dialog.EditDialogFragment;
+import com.wehud.model.Payload;
 import com.wehud.model.Planning;
 import com.wehud.network.APICall;
 import com.wehud.util.Constants;
@@ -57,6 +58,57 @@ public class UserPlanningsFragment extends Fragment
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            if (!mPaused) {
+                String response = intent.getStringExtra(Constants.EXTRA_BROADCAST);
+                Payload payload = GsonUtils.getInstance().fromJson(response, Payload.class);
+
+                String code = payload.getCode();
+
+                if (Integer.valueOf(code) == Constants.HTTP_OK ||
+                        Integer.valueOf(code) == Constants.HTTP_CREATED ||
+                        Integer.valueOf(code) == Constants.HTTP_NO_CONTENT) {
+                    String content = payload.getContent();
+
+                    switch (intent.getAction()) {
+                        case Constants.INTENT_PLANNINGS_ADD:
+                            Utils.toast(mContext, getString(R.string.message_addPlanningSuccess));
+                            getPlannings();
+                            break;
+                        case Constants.INTENT_PLANNINGS_DELETE:
+                            Utils.toast(mContext, getString(
+                                    R.string.message_deletePlanningSuccess)
+                            );
+                            getPlannings();
+                            break;
+                        case Constants.INTENT_PLANNINGS_LIST:
+                            Type planningListType = new TypeToken<List<Planning>>(){}.getType();
+                            mPlannings = GsonUtils.getInstance().fromJson(
+                                    content, planningListType
+                            );
+
+                            if (!mPlannings.isEmpty()) {
+                                PlanningsAdapter adapter = new PlanningsAdapter(mPlannings);
+                                adapter.setFragmentManager(mManager);
+                                mPlanningListView.setAdapter(adapter);
+
+                                mEmptyLayout.setVisibility(View.GONE);
+                                mSwipeLayout.setVisibility(View.VISIBLE);
+                            } else {
+                                mEmptyLayout.setVisibility(View.VISIBLE);
+                                mSwipeLayout.setVisibility(View.GONE);
+                            }
+
+                            mSwipeLayout.setRefreshing(false);
+                            break;
+                        default:
+                            break;
+                    }
+                } else if (Integer.valueOf(code) == Constants.HTTP_INTERNAL_SERVER_ERROR)
+                    Utils.toast(mContext, getString(R.string.error_server));
+                else Utils.toast(mContext, R.string.error_general, code);
+            }
+
+            /*
             String payload = intent.getStringExtra(Constants.EXTRA_BROADCAST);
 
             if (intent.getAction().equals(Constants.INTENT_PLANNINGS_LIST) && !mPaused) {
@@ -87,6 +139,7 @@ public class UserPlanningsFragment extends Fragment
                 Utils.toast(mContext, getString(R.string.message_deletePlanningSuccess));
                 getPlannings();
             }
+            */
         }
     };
 

@@ -24,6 +24,7 @@ import com.wehud.dialog.ListDialogFragment;
 import com.wehud.model.Follower;
 import com.wehud.model.Game;
 import com.wehud.model.Page;
+import com.wehud.model.Payload;
 import com.wehud.model.Status;
 import com.wehud.model.User;
 import com.wehud.network.APICall;
@@ -79,6 +80,65 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            if (!mPaused) {
+                String response = intent.getStringExtra(Constants.EXTRA_BROADCAST);
+                Payload payload = GsonUtils.getInstance().fromJson(response, Payload.class);
+
+                String code = payload.getCode();
+
+                if (Integer.valueOf(code) == Constants.HTTP_OK) {
+                    String content = payload.getContent();
+
+                    switch (intent.getAction()) {
+                        case Constants.INTENT_GAME_GET:
+                            GameActivity.this.fillGamePage(content);
+                            break;
+                        case Constants.INTENT_PAGES_LIST:
+                            Type pageListType = new TypeToken<List<Page>>() {}.getType();
+                            ArrayList<Page> pages = GsonUtils.getInstance().fromJson(
+                                    content, pageListType
+                            );
+                            GameActivity.this.follow(pages);
+                            break;
+                        case Constants.INTENT_GAME_FOLLOW:
+                            mFollowButton.setText(getString(R.string.btnUnfollow));
+                            Follower newFollower = GsonUtils.getInstance().fromJson(
+                                    content, Follower.class
+                            );
+
+                            mCurrentGame.follow(newFollower.getUser());
+                            String countAfterFollow = mCurrentGame.getFollowers().size()
+                                    + "\t" + getString(R.string.followerCount);
+
+                            mFollowers.setText(countAfterFollow);
+
+                            Utils.toast(GameActivity.this,
+                                    R.string.message_followingGame, mCurrentGame.getName()
+                            );
+                            break;
+                        case Constants.INTENT_GAME_UNFOLLOW:
+                            mFollowButton.setText(getString(R.string.btnFollow));
+                            Follower oldFollower = GsonUtils.getInstance().fromJson(content, Follower.class);
+
+                            mCurrentGame.unfollow(oldFollower.getUser());
+                            String countAfterUnfollow = mCurrentGame.getFollowers().size()
+                                    + "\t" + getString(R.string.followerCount);
+
+                            mFollowers.setText(countAfterUnfollow);
+
+                            Utils.toast(GameActivity.this,
+                                    R.string.message_unfollowingGame, mCurrentGame.getName()
+                            );
+                            break;
+                        default:
+                            break;
+                    }
+                } else if (Integer.valueOf(code) == Constants.HTTP_INTERNAL_SERVER_ERROR)
+                    Utils.toast(GameActivity.this, getString(R.string.error_server));
+                else Utils.toast(GameActivity.this, R.string.error_general, code);
+            }
+
+            /*
             String payload = intent.getStringExtra(Constants.EXTRA_BROADCAST);
 
             if (intent.getAction().equals(Constants.INTENT_GAME_GET) && !mPaused) {
@@ -167,8 +227,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             }
 
             if (intent.getAction().equals(Constants.INTENT_PAGES_LIST) && !mPaused) {
-                Type pageListType = new TypeToken<List<Page>>() {
-                }.getType();
+                Type pageListType = new TypeToken<List<Page>>() {}.getType();
                 ArrayList<Page> pages = GsonUtils.getInstance().fromJson(payload, pageListType);
 
                 GameActivity.this.follow(pages);
@@ -199,6 +258,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
                 Utils.toast(GameActivity.this, getString(R.string.message_unfollowingGame));
             }
+            */
         }
     };
 
@@ -330,6 +390,94 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         mWebsiteLayout.setVisibility(View.GONE);
         mEsrbLayout.setVisibility(View.GONE);
         mPegiLayout.setVisibility(View.GONE);
+    }
+
+    private void fillGamePage(String content) {
+        mCurrentGame = GsonUtils.getInstance().fromJson(content, Game.class);
+        String cover = "https://" + mCurrentGame.getCover();
+        String name = mCurrentGame.getName();
+        Status status = Utils.getStatus(GameActivity.this, mCurrentGame.getStatus());
+        List<User> followers = mCurrentGame.getFollowers();
+        List<String> genres = mCurrentGame.getGenres();
+        List<String> developers = mCurrentGame.getDevelopers();
+        List<String> publishers = mCurrentGame.getPublishers();
+        String franchise = mCurrentGame.getFranchise();
+        String mainGame = mCurrentGame.getGame();
+        List<String> modes = mCurrentGame.getModes();
+        String firstReleaseDate = Utils.timestampToLocalDateString(
+                mCurrentGame.getFirstReleaseDate()
+        );
+        String synopsis = mCurrentGame.getSynopsis();
+        String website = mCurrentGame.getWebsite();
+        String esrb = mCurrentGame.getEsrb();
+        String pegi = mCurrentGame.getPegi();
+
+        Utils.loadImage(GameActivity.this, cover, mCover);
+        mName.setText(name);
+
+        boolean found = false;
+        for (User user : followers) {
+            if (user.getId().equals("598f1d65493a620aa918be42")) {
+                found = true;
+                break;
+            }
+        }
+
+        if (found) mFollowButton.setText(getString(R.string.btnUnfollow));
+        else mFollowButton.setText(getString(R.string.btnFollow));
+
+        String numFollowers = followers.size() + ' '
+                + getString(R.string.followerCount);
+        mFollowers.setText(numFollowers);
+
+        mStatus.setCompoundDrawablesWithIntrinsicBounds(
+                status.getIcon(), 0, 0, 0
+        );
+        mStatus.setText(status.getDescription());
+        if (!genres.isEmpty()) {
+            Utils.putStringListIntoTextView(mGenres, genres);
+            mGenresLayout.setVisibility(View.VISIBLE);
+        }
+        if (!developers.isEmpty()) {
+            Utils.putStringListIntoTextView(mDevelopers, developers);
+            mDevelopersLayout.setVisibility(View.VISIBLE);
+        }
+        if (!publishers.isEmpty()) {
+            Utils.putStringListIntoTextView(mPublishers, publishers);
+            mPublishersLayout.setVisibility(View.VISIBLE);
+        }
+        if (!TextUtils.isEmpty(franchise)) {
+            mFranchise.setText(franchise);
+            mFranchiseLayout.setVisibility(View.VISIBLE);
+        }
+        if (!TextUtils.isEmpty(mainGame)) {
+            mMainGame.setText(mainGame);
+            mMainGameLayout.setVisibility(View.VISIBLE);
+        }
+        if (!modes.isEmpty()) {
+            Utils.putStringListIntoTextView(mModes, modes);
+            mModesLayout.setVisibility(View.VISIBLE);
+        }
+        if (!TextUtils.isEmpty(firstReleaseDate)) {
+            mFirstReleaseDate.setText(firstReleaseDate);
+            mFirstReleaseDateLayout.setVisibility(View.VISIBLE);
+        }
+        if (!TextUtils.isEmpty(synopsis)) {
+            mSynopsis.setText(synopsis);
+            mSynopsisLayout.setVisibility(View.VISIBLE);
+        }
+        if (!TextUtils.isEmpty(website)) {
+            mWebsite.setText(website);
+            mWebsiteLayout.setVisibility(View.VISIBLE);
+        }
+        if (!TextUtils.isEmpty(esrb)) {
+            mEsrb.setText(esrb);
+            mEsrbLayout.setVisibility(View.VISIBLE);
+        }
+        if (!TextUtils.isEmpty(pegi)) {
+            mPegi.setText(pegi);
+            mPegiLayout.setVisibility(View.VISIBLE);
+        }
     }
 
     private void getGame(String id) {

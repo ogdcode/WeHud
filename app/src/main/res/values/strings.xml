@@ -23,7 +23,7 @@
     <string name="hint_name">Name</string>
     <string name="hint_title">Title</string>
     <string name="dialogMessage_removePage">Remove this page?</string>
-    <string name="message_pageRemoved">Page Removed</string>
+    <string name="message_pageRemoved">Page %s has been removed</string>
     <string name="hint_video">YouTube Video ID (Optionnal)</string>
     <string name="newPost_isOpinion">This post is an opinion about a game</string>
     <string name="hint_text">What\'s up?</string>
@@ -101,8 +101,8 @@
     <string name="status_offline">Offline</string>
     <string name="status_cancelled">Cancelled</string>
     <string name="status_unknown">Unknown</string>
-    <string name="message_followingGame">You now follow this game.</string>
-    <string name="message_unfollowingGame">You no longer follow this game.</string>
+    <string name="message_followingGame">You now follow %s</string>
+    <string name="message_unfollowingGame">You no longer follow %s</string>
     <string name="dialogTitle_choosePage">Choose a page</string>
     <string name="score_sample">1 POINT(S)</string>
     <string name="score">POINT(S)</string>
@@ -111,8 +111,8 @@
     <string name="description">Description</string>
     <string name="tab_posts">Posts</string>
     <string name="tab_plannings">Plannings</string>
-    <string name="message_followingUser">You now follow this user.</string>
-    <string name="message_unfollowingUser">You no longer follow this user.</string>
+    <string name="message_followingUser">You now follow %s</string>
+    <string name="message_unfollowingUser">You no longer follow %s</string>
     <string name="numEvents">EVENT(S)</string>
     <string name="menu_event_add">Add Event</string>
     <string name="dialogTitle_newEvent">New Event</string>
@@ -149,4 +149,5 @@
     <string name="btnForgotPassword">I forgot my password</string>
     <string name="message_sendSuccess">Username or email was successfully sent. Please check your mails.</string>
     <string name="btnSend">Send</string>
+    <string name="error_general">There was an error while fetching the database: code %s</string>
 </resources>

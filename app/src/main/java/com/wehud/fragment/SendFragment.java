@@ -34,6 +34,7 @@ import com.wehud.adapter.GamesAdapter;
 import com.wehud.adapter.UsersAdapter;
 import com.wehud.dialog.ListDialogFragment;
 import com.wehud.model.Game;
+import com.wehud.model.Payload;
 import com.wehud.model.User;
 import com.wehud.network.APICall;
 import com.wehud.util.Constants;
@@ -72,8 +73,40 @@ public class SendFragment extends Fragment
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+
+            if (!mPaused) {
+                String response = intent.getStringExtra(Constants.EXTRA_BROADCAST);
+                Payload payload = GsonUtils.getInstance().fromJson(response, Payload.class);
+
+                String code = payload.getCode();
+
+                if (Integer.valueOf(code) == Constants.HTTP_OK ||
+                        Integer.valueOf(code) == Constants.HTTP_CREATED) {
+                    String content = payload.getContent();
+
+                    switch (intent.getAction()) {
+                        case Constants.INTENT_POSTS_ADD:
+                            Utils.toast(mContext, getString(R.string.message_newPost));
+                            break;
+                        case Constants.INTENT_FOLLOWERS_LIST:
+                            Type userListType = new TypeToken<List<User>>(){}.getType();
+                            mFollowers = GsonUtils.getInstance().fromJson(content, userListType);
+                            break;
+                        case Constants.INTENT_GAMES_LIST:
+                            Type gameListType = new TypeToken<List<Game>>(){}.getType();
+                            mGames = GsonUtils.getInstance().fromJson(content, gameListType);
+                            break;
+                        default:
+                            break;
+                    }
+
+                } else if (Integer.valueOf(code) == Constants.HTTP_INTERNAL_SERVER_ERROR)
+                    Utils.toast(mContext, getString(R.string.error_server));
+                else Utils.toast(mContext, R.string.error_general, code);
+            }
+
+            /*
             String payload = intent.getStringExtra(Constants.EXTRA_BROADCAST);
-            Log.d("MAIN", payload);
 
             if (intent.getAction().equals(Constants.INTENT_FOLLOWERS_LIST) && !mPaused) {
                 Type userListType = new TypeToken<List<User>>(){}.getType();
@@ -88,6 +121,7 @@ public class SendFragment extends Fragment
             if (intent.getAction().equals(Constants.INTENT_POSTS_ADD) && !mPaused) {
                 Utils.toast(mContext, getString(R.string.message_newPost));
             }
+            */
         }
     };
 

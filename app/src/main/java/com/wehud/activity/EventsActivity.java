@@ -30,6 +30,7 @@ import com.wehud.adapter.EventsAdapter;
 import com.wehud.dialog.DateTimePickerDialogFragment;
 import com.wehud.model.Event;
 import com.wehud.model.EventBindResponse;
+import com.wehud.model.Payload;
 import com.wehud.model.Planning;
 import com.wehud.network.APICall;
 import com.wehud.util.Constants;
@@ -72,11 +73,72 @@ public class EventsActivity extends AppCompatActivity
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            if (!mPaused) {
+                String response = intent.getStringExtra(Constants.EXTRA_BROADCAST);
+                Payload payload = GsonUtils.getInstance().fromJson(response, Payload.class);
+
+                String code = payload.getCode();
+
+                if (Integer.valueOf(code) == Constants.HTTP_OK ||
+                        Integer.valueOf(code) == Constants.HTTP_CREATED) {
+                    String content = payload.getContent();
+
+                    switch (intent.getAction()) {
+                        case Constants.INTENT_EVENTS_LIST:
+                            Type eventListType = new TypeToken<List<Event>>(){}.getType();
+                            mEvents = GsonUtils.getInstance().fromJson(content, eventListType);
+
+                            if (!mEvents.isEmpty()) {
+                                EventsAdapter adapter = new EventsAdapter(mEvents);
+                                adapter.setFragmentManager(getSupportFragmentManager());
+                                adapter.setPlannings(mPlannings);
+                                mEventListView.setAdapter(adapter);
+
+                                mEmptyLayout.setVisibility(View.GONE);
+                                mSwipeLayout.setVisibility(View.VISIBLE);
+                                mSwipeLayout.setRefreshing(false);
+                            }
+                            break;
+                        case Constants.INTENT_EVENTS_ADD:
+                            mSwipeLayout.setRefreshing(true);
+                            Utils.toast(
+                                    EventsActivity.this,
+                                    getString(R.string.message_createEventSuccess)
+                            );
+                            break;
+                        case Constants.INTENT_EVENTS_BIND:
+                            EventBindResponse bindResponse = GsonUtils.getInstance().fromJson(
+                                    content, EventBindResponse.class
+                            );
+                            Utils.toast(
+                                    EventsActivity.this,
+                                    R.string.message_eventBound,
+                                    bindResponse.getPlanning()
+                            );
+                            break;
+                        case Constants.INTENT_EVENTS_UNBIND:
+                            EventBindResponse unbindResponse = GsonUtils.getInstance().fromJson(
+                                    content, EventBindResponse.class
+                            );
+                            Utils.toast(
+                                    EventsActivity.this,
+                                    R.string.message_eventUnbound,
+                                    unbindResponse.getPlanning()
+                            );
+                            break;
+                        default:
+                            break;
+                    }
+                } else if (Integer.valueOf(code) == Constants.HTTP_INTERNAL_SERVER_ERROR)
+                    Utils.toast(EventsActivity.this, getString(R.string.error_server));
+                else Utils.toast(EventsActivity.this, R.string.error_general, code);
+            }
+
+            /*
             String payload = intent.getStringExtra(Constants.EXTRA_BROADCAST);
 
             if (intent.getAction().equals(Constants.INTENT_EVENTS_LIST) && !mPaused) {
-                Type eventListType = new TypeToken<List<Event>>() {
-                }.getType();
+                Type eventListType = new TypeToken<List<Event>>() {}.getType();
                 mEvents = GsonUtils.getInstance().fromJson(payload, eventListType);
 
                 if (!mEvents.isEmpty()) {
@@ -117,6 +179,7 @@ public class EventsActivity extends AppCompatActivity
                 );
                 Utils.toast(EventsActivity.this, message);
             }
+            */
         }
     };
 
