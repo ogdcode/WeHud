@@ -69,7 +69,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 return;
                         }
 
-                        Utils.toast(context, getString(messageId));
+                        Utils.toast(context, messageId);
                     }
                 }
             }

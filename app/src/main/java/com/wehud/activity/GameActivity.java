@@ -119,9 +119,9 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                             break;
                         case Constants.INTENT_GAME_UNFOLLOW:
                             mFollowButton.setText(getString(R.string.btnFollow));
-                            Follower oldFollower = GsonUtils.getInstance().fromJson(content, Follower.class);
+                            Follower oldFollowed = GsonUtils.getInstance().fromJson(content, Follower.class);
 
-                            mCurrentGame.unfollow(oldFollower.getUser());
+                            mCurrentGame.unfollow(oldFollowed.getUser());
                             String countAfterUnfollow = mCurrentGame.getFollowers().size()
                                     + "\t" + getString(R.string.followerCount);
 
@@ -135,7 +135,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                             break;
                     }
                 } else if (Integer.valueOf(code) == Constants.HTTP_INTERNAL_SERVER_ERROR)
-                    Utils.toast(GameActivity.this, getString(R.string.error_server));
+                    Utils.toast(GameActivity.this, R.string.error_server);
                 else Utils.toast(GameActivity.this, R.string.error_general, code);
             }
 

@@ -38,7 +38,7 @@ public class ForgotPasswordActivity extends AppCompatActivity implements View.On
                 String code = payload.getCode();
 
                 if (Integer.valueOf(code) == Constants.HTTP_OK)
-                    Utils.toast(context, getString(R.string.message_sendSuccess));
+                    Utils.toast(context, R.string.message_sendSuccess);
                 else {
                     int messageId;
                     switch (Integer.valueOf(code)) {
@@ -50,7 +50,7 @@ public class ForgotPasswordActivity extends AppCompatActivity implements View.On
                             return;
                     }
 
-                    Utils.toast(context, getString(messageId));
+                    Utils.toast(context, messageId);
                 }
             }
         }

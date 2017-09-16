@@ -66,7 +66,7 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                         mSwipeLayout.setRefreshing(false);
                     }
                 } else if (Integer.valueOf(code) == Constants.HTTP_INTERNAL_SERVER_ERROR)
-                    Utils.toast(mContext, getString(R.string.error_server));
+                    Utils.toast(mContext, R.string.error_server);
                 else Utils.toast(mContext, R.string.error_general, code);
             }
 

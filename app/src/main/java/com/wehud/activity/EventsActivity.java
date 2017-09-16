@@ -102,7 +102,7 @@ public class EventsActivity extends AppCompatActivity
                             mSwipeLayout.setRefreshing(true);
                             Utils.toast(
                                     EventsActivity.this,
-                                    getString(R.string.message_createEventSuccess)
+                                    R.string.message_createEventSuccess
                             );
                             break;
                         case Constants.INTENT_EVENTS_BIND:
@@ -129,7 +129,7 @@ public class EventsActivity extends AppCompatActivity
                             break;
                     }
                 } else if (Integer.valueOf(code) == Constants.HTTP_INTERNAL_SERVER_ERROR)
-                    Utils.toast(EventsActivity.this, getString(R.string.error_server));
+                    Utils.toast(EventsActivity.this, R.string.error_server);
                 else Utils.toast(EventsActivity.this, R.string.error_general, code);
             }
 

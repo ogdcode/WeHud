@@ -65,7 +65,7 @@ public class ContactsActivity extends AppCompatActivity
                         mSwipeLayout.setRefreshing(false);
                     }
                 } else if (Integer.valueOf(code) == Constants.HTTP_INTERNAL_SERVER_ERROR)
-                    Utils.toast(ContactsActivity.this, getString(R.string.error_server));
+                    Utils.toast(ContactsActivity.this, R.string.error_server);
                 else Utils.toast(ContactsActivity.this, R.string.error_general, code);
             }
 

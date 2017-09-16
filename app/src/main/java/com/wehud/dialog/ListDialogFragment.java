@@ -108,7 +108,7 @@ public final class ListDialogFragment extends DialogFragment {
                         mListener.onListDialogDismissOk(p);
                         dismiss();
                     } else
-                        Utils.toast(context, getString(R.string.message_chooseElementInList));
+                        Utils.toast(context, R.string.message_chooseElementInList);
                 }
             }
         });

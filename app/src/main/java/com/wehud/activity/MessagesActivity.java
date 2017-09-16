@@ -64,7 +64,7 @@ public class MessagesActivity extends AppCompatActivity implements SwipeRefreshL
                         mSwipeLayout.setRefreshing(false);
                     }
                 } else if (Integer.valueOf(code) == Constants.HTTP_INTERNAL_SERVER_ERROR)
-                    Utils.toast(MessagesActivity.this, getString(R.string.error_server));
+                    Utils.toast(MessagesActivity.this, R.string.error_server);
                 else Utils.toast(MessagesActivity.this, R.string.error_general, code);
             }
 

@@ -130,9 +130,12 @@ public class UserActivity extends AppCompatActivity
                             break;
                         case Constants.INTENT_USER_UNFOLLOW:
                             mFollowOrEventsButton.setText(getString(R.string.btnFollow));
-                            Follower oldFollower = GsonUtils.getInstance().fromJson(content, Follower.class);
+                            Follower oldFollowed = GsonUtils.getInstance().fromJson(
+                                    content,
+                                    Follower.class
+                            );
 
-                            mCurrentUser.unfollow(oldFollower.getUser());
+                            mCurrentUser.unfollow(oldFollowed.getUser());
                             String countAfterUnfollow = mCurrentUser.getFollowers().size()
                                     + "\t" + getString(R.string.followerCount
                             );
@@ -141,7 +144,8 @@ public class UserActivity extends AppCompatActivity
 
                             Utils.toast(
                                     UserActivity.this,
-                                    getString(R.string.message_unfollowingUser)
+                                    R.string.message_unfollowingUser,
+                                    mCurrentUser.getUsername()
                             );
                             break;
                         case Constants.INTENT_PAGES_LIST:
@@ -156,7 +160,7 @@ public class UserActivity extends AppCompatActivity
                             break;
                     }
                 } else if (Integer.valueOf(code) == Constants.HTTP_INTERNAL_SERVER_ERROR)
-                    Utils.toast(UserActivity.this, getString(R.string.error_server));
+                    Utils.toast(UserActivity.this, R.string.error_server);
                 else Utils.toast(UserActivity.this, R.string.error_general, code);
             }
 

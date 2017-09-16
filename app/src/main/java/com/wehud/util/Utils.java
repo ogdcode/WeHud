@@ -29,22 +29,20 @@ public final class Utils {
 
     private Utils() {}
 
-    public static void toast(Context context, int messageId, Object... formatArgs) {
+    public static void toast(Context context, int id, Object... formatArgs) {
         Toast.makeText(
                 context,
-                context.getResources().getString(messageId, formatArgs),
+                context.getResources().getString(id, formatArgs),
                 Toast.LENGTH_SHORT
         ).show();
     }
 
-    /**
-     * Displays a {@link Toast} on the screen.
-     *
-     * @param context the {@link Context} of the application
-     * @param message the {@link String} to display as a message in the Toast.
-     */
-    public static void toast(Context context, String message) {
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+    public static void toast(Context context, int id) {
+        Toast.makeText(
+                context,
+                context.getString(id),
+                Toast.LENGTH_SHORT
+        ).show();
     }
 
     public static void expand(final View v) {
@@ -71,7 +69,9 @@ public final class Utils {
         };
 
         // Animation duration is set to 1 dp per millisecond.
-        anim.setDuration((int) (targetHeight / v.getContext().getResources().getDisplayMetrics().density));
+        anim.setDuration(
+                (int) (targetHeight / v.getContext().getResources().getDisplayMetrics().density)
+        );
         v.startAnimation(anim);
     }
 
@@ -84,7 +84,8 @@ public final class Utils {
                 if (interpolatedTime == 1) {
                     v.setVisibility(View.GONE);
                 } else {
-                    v.getLayoutParams().height = initialHeight - (int) (initialHeight * interpolatedTime);
+                    v.getLayoutParams().height =
+                            initialHeight - (int) (initialHeight * interpolatedTime);
                     v.requestLayout();
                 }
             }
@@ -96,13 +97,17 @@ public final class Utils {
         };
 
         // Animation duration is set to 1 dp per millisecond.
-        anim.setDuration((int) (initialHeight / v.getContext().getResources().getDisplayMetrics().density));
+        anim.setDuration(
+                (int) (initialHeight / v.getContext().getResources().getDisplayMetrics().density));
         v.startAnimation(anim);
     }
 
 
     public static String isoDateTimeStringToLocalDateTimeString(String iso) {
-        SimpleDateFormat sdf = new SimpleDateFormat(Constants.ISO_8601_PATTERN, Locale.getDefault());
+        SimpleDateFormat sdf = new SimpleDateFormat(
+                Constants.ISO_8601_PATTERN,
+                Locale.getDefault()
+        );
         Date d = null;
         try {
             d = sdf.parse(iso);
@@ -115,7 +120,10 @@ public final class Utils {
     }
 
     public static String localDateTimeStringToIsoDateTimeString(String local) {
-        SimpleDateFormat sdf = new SimpleDateFormat(Constants.LOCAL_PATTERN_DATETIME, Locale.getDefault());
+        SimpleDateFormat sdf = new SimpleDateFormat(
+                Constants.LOCAL_PATTERN_DATETIME,
+                Locale.getDefault()
+        );
         Date d = null;
         try {
             d = sdf.parse(local);
@@ -243,7 +251,8 @@ public final class Utils {
 
     public static boolean isConnectedUser(Context context, String userId) {
         String connectedId = PreferencesUtils.get(context, Constants.PREF_USER_ID);
-        return connectedId.equals(userId);
+        return !TextUtils.isEmpty(connectedId) && connectedId.equals(userId);
+
     }
 
     /**

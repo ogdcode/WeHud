@@ -237,7 +237,7 @@ public final class PlanningsAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     context,
                     PreferencesUtils.get(context, Constants.PREF_USER_ID)
             );
-            if (isConnectedUser) {
+            if (!isConnectedUser) {
                 unbindButton.setVisibility(View.GONE);
                 deleteButton.setVisibility(View.GONE);
             }

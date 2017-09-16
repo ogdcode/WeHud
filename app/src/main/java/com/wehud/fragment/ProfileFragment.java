@@ -60,7 +60,7 @@ public class ProfileFragment extends Fragment
                     else mProfileUserAvatar.setImageResource(R.mipmap.ic_launcher_round);
                     mProfileUsername.setText(username);
                 } else if (Integer.valueOf(code) == Constants.HTTP_INTERNAL_SERVER_ERROR)
-                    Utils.toast(mContext, getString(R.string.error_server));
+                    Utils.toast(mContext, R.string.error_server);
                 else Utils.toast(mContext, R.string.error_general, code);
             }
         }

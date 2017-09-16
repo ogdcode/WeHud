@@ -87,7 +87,7 @@ public class SendFragment extends Fragment
 
                     switch (intent.getAction()) {
                         case Constants.INTENT_POSTS_ADD:
-                            Utils.toast(mContext, getString(R.string.message_newPost));
+                            Utils.toast(mContext, R.string.message_newPost);
                             break;
                         case Constants.INTENT_FOLLOWERS_LIST:
                             User currentUser = GsonUtils.getInstance().fromJson(
@@ -104,7 +104,7 @@ public class SendFragment extends Fragment
                     }
 
                 } else if (Integer.valueOf(code) == Constants.HTTP_INTERNAL_SERVER_ERROR)
-                    Utils.toast(mContext, getString(R.string.error_server));
+                    Utils.toast(mContext, R.string.error_server);
                 else Utils.toast(mContext, R.string.error_general, code);
             }
 

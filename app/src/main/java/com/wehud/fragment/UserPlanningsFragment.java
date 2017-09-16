@@ -66,13 +66,11 @@ public class UserPlanningsFragment extends Fragment
 
                     switch (intent.getAction()) {
                         case Constants.INTENT_PLANNINGS_ADD:
-                            Utils.toast(mContext, getString(R.string.message_addPlanningSuccess));
+                            Utils.toast(mContext, R.string.message_addPlanningSuccess);
                             getPlannings();
                             break;
                         case Constants.INTENT_PLANNINGS_DELETE:
-                            Utils.toast(mContext, getString(
-                                    R.string.message_deletePlanningSuccess)
-                            );
+                            Utils.toast(mContext, R.string.message_deletePlanningSuccess);
                             getPlannings();
                             break;
                         case Constants.INTENT_PLANNINGS_LIST:
@@ -99,7 +97,7 @@ public class UserPlanningsFragment extends Fragment
                             break;
                     }
                 } else if (Integer.valueOf(code) == Constants.HTTP_INTERNAL_SERVER_ERROR)
-                    Utils.toast(mContext, getString(R.string.error_server));
+                    Utils.toast(mContext, R.string.error_server);
                 else Utils.toast(mContext, R.string.error_general, code);
             }
 
@@ -169,14 +167,14 @@ public class UserPlanningsFragment extends Fragment
         mPlanningListView.addItemDecoration(new DividerItemDecoration(mContext,
                 DividerItemDecoration.HORIZONTAL));
 
+        Button createFirstPlanningButton = (Button) view.findViewById(R.id.btnCreateFirstPlanning);
+        createFirstPlanningButton.setOnClickListener(this);
+
         boolean isConnectedUser = Utils.isConnectedUser(
                 mContext,
                 PreferencesUtils.get(mContext, Constants.PREF_USER_ID)
         );
-        if (isConnectedUser) {
-            Button createFirstPlanningButton = (Button) view.findViewById(R.id.btnCreateFirstPlanning);
-            createFirstPlanningButton.setOnClickListener(this);
-        }
+        if (!isConnectedUser) createFirstPlanningButton.setVisibility(View.GONE);
 
         return view;
     }
