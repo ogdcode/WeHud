@@ -39,9 +39,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SettingsActivity extends AppCompatActivity
-        implements View.OnClickListener,
-        EditDialogFragment.OnEditDialogDismissOkListener,
-        ListDialogFragment.OnListDialogDismissOkListener, TextDialogFragment.OnTextDialogDismissOkListener {
+        implements View.OnClickListener, EditDialogFragment.OnEditDialogDismissOkListener,
+        ListDialogFragment.OnListDialogDismissOkListener,
+        TextDialogFragment.OnTextDialogDismissOkListener {
 
     private static final String PARAM_AVATAR = "avatar";
     private static final String PARAM_USERNAME = "username";
@@ -265,7 +265,7 @@ public class SettingsActivity extends AppCompatActivity
     public void onEditDialogDismissOk(Object textId, String text) {
         TextView textView = (TextView) findViewById((int) textId);
         if (textView != null) {
-            if (textId == R.id.settings_password) {
+            if ((int) textId == R.id.settings_password) {
                 String dotPassword = text.replaceAll("(?s).", "*");
                 textView.setTag(text);
                 textView.setText(dotPassword);
@@ -318,7 +318,7 @@ public class SettingsActivity extends AppCompatActivity
                 this,
                 Constants.INTENT_USER_GET,
                 Constants.GET,
-                Constants.API_USERS,
+                Constants.API_USERS + "/598eccbc74459e02f455e4d9",
                 headers,
                 parameters
         );

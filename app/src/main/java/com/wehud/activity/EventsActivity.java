@@ -59,8 +59,6 @@ public class EventsActivity extends AppCompatActivity
 
     private static final String KEY_PLANNINGS = "key_plannings";
     private static final String KEY_EVENTS = "key_events";
-    private static final String KEY_USER_ID = "key_user_id";
-    private String mUserId;
 
     private View mEmptyLayout;
     private SwipeRefreshLayout mSwipeLayout;
@@ -68,6 +66,7 @@ public class EventsActivity extends AppCompatActivity
 
     private List<Planning> mPlannings;
     private List<Event> mEvents;
+    private String mUserId;
 
     private boolean mPaused;
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
@@ -219,7 +218,7 @@ public class EventsActivity extends AppCompatActivity
         if (bundle != null) {
             mPlannings = bundle.getParcelableArrayList(KEY_PLANNINGS);
             mEvents = bundle.getParcelableArrayList(KEY_EVENTS);
-            mUserId = bundle.getString(KEY_USER_ID);
+            mUserId = bundle.getString(Constants.PREF_USER_ID);
             if (mEvents.isEmpty()) {
                 if (!TextUtils.isEmpty(mUserId) && !mPaused) this.getEvents();
                 else mSwipeLayout.setRefreshing(false);
@@ -401,7 +400,7 @@ public class EventsActivity extends AppCompatActivity
             headers.put(Constants.HEADER_ACCEPT, Constants.APPLICATION_JSON);
 
             Map<String, String> parameters = new HashMap<>();
-            parameters.put(KEY_USER_ID, mUserId);
+            parameters.put(Constants.PREF_USER_ID, mUserId);
             parameters.put(Constants.PARAM_TOKEN, Constants.TOKEN);
 
             Map<String, String> event = new HashMap<>();

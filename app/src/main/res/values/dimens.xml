@@ -100,7 +100,7 @@
     <dimen name="userHeader_frameHeight">50dp</dimen>
     <dimen name="gameHeader_frameHeight">50dp</dimen>
     <dimen name="event_marginLeftStart">8dp</dimen>
-    <dimen name="event_marginTop">8dp</dimen>
+    <dimen name="event_marginTop">16dp</dimen>
     <dimen name="event_marginRightEnd">8dp</dimen>
     <dimen name="event_tagMarginTop">10dp</dimen>
     <dimen name="event_descriptionMarginTop">16dp</dimen>
@@ -112,11 +112,14 @@
     <dimen name="dialogEvent_verticalSpacing">8dp</dimen>
     <dimen name="dialogEvent_horizontalSpacing">8dp</dimen>
     <dimen name="event_verticalSpacing">16dp</dimen>
-    <dimen name="event_btnMarginTop">16dp</dimen>
+    <dimen name="event_btnMarginTop">4dp</dimen>
     <dimen name="event_btnDeleteMarginTop">12dp</dimen>
     <dimen name="planning_cardRadius">4dp</dimen>
     <dimen name="planning_margin">8dp</dimen>
     <dimen name="btnFollowOrEvents_textSize">16sp</dimen>
     <dimen name="planning_marginRightEnd">8dp</dimen>
     <dimen name="login_paddingLeftStart">5dp</dimen>
+    <dimen name="avatarSize">48dp</dimen>
+    <dimen name="planning_marginTop">16dp</dimen>
+    <dimen name="event_horizontalSpacing">32dp</dimen>
 </resources>

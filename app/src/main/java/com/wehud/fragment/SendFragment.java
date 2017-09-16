@@ -39,6 +39,7 @@ import com.wehud.model.User;
 import com.wehud.network.APICall;
 import com.wehud.util.Constants;
 import com.wehud.util.GsonUtils;
+import com.wehud.util.PreferencesUtils;
 import com.wehud.util.Utils;
 
 import java.lang.reflect.Type;
@@ -66,8 +67,8 @@ public class SendFragment extends Fragment
     private TextView mNewPostFollower;
     private RatingBar mNewPostGameRating;
 
-    private ArrayList<Game> mGames;
-    private ArrayList<User> mFollowers;
+    private List<Game> mGames;
+    private List<User> mFollowers;
 
     private boolean mPaused;
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
@@ -89,8 +90,10 @@ public class SendFragment extends Fragment
                             Utils.toast(mContext, getString(R.string.message_newPost));
                             break;
                         case Constants.INTENT_FOLLOWERS_LIST:
-                            Type userListType = new TypeToken<List<User>>(){}.getType();
-                            mFollowers = GsonUtils.getInstance().fromJson(content, userListType);
+                            User currentUser = GsonUtils.getInstance().fromJson(
+                                    content, User.class
+                            );
+                            mFollowers = currentUser.getFollowers();
                             break;
                         case Constants.INTENT_GAMES_LIST:
                             Type gameListType = new TypeToken<List<Game>>(){}.getType();
@@ -225,19 +228,27 @@ public class SendFragment extends Fragment
         switch (view.getId()) {
             case R.id.newPost_btnAddGame:
                 dialogTitle = getString(R.string.dialogTitle_addGame);
-                list = mGames;
+                list = (ArrayList<Game>) mGames;
                 adapter = new GamesAdapter(mGames);
                 break;
             case R.id.newPost_btnAddFollower:
                 dialogTitle = getString(R.string.dialogTitle_addFollower);
-                list = mFollowers;
+                list = (ArrayList<User>) mFollowers;
                 adapter = new UsersAdapter(mFollowers);
                 break;
             default:
                 return;
         }
 
-        ListDialogFragment.generate(manager, this, dialogTitle, list, adapter, layoutManager, divider);
+        ListDialogFragment.generate(
+                manager,
+                this,
+                dialogTitle,
+                list,
+                adapter,
+                layoutManager,
+                divider
+        );
     }
 
     @Override
@@ -267,11 +278,13 @@ public class SendFragment extends Fragment
         headers.put(Constants.HEADER_CONTENT_TYPE, Constants.APPLICATION_JSON);
         headers.put(Constants.HEADER_ACCEPT, Constants.APPLICATION_JSON);
 
+        String currentUserId = PreferencesUtils.get(mContext, Constants.PREF_USER_ID);
+
         APICall call = new APICall(
                 mContext,
                 Constants.INTENT_FOLLOWERS_LIST,
                 Constants.GET,
-                Constants.API_USERS + "/all",
+                Constants.API_USERS + '/' + currentUserId,
                 headers
         );
         if (!call.isLoading()) call.execute();

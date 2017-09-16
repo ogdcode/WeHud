@@ -15,13 +15,12 @@ import com.squareup.picasso.Picasso;
 import com.wehud.R;
 import com.wehud.activity.UserActivity;
 import com.wehud.model.User;
+import com.wehud.util.Constants;
 import com.wehud.util.Utils;
 
 import java.util.List;
 
 public final class UsersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-
-    private static final String KEY_USER_ID = "key_user_id";
 
     private List<User> mUsers;
 
@@ -89,7 +88,7 @@ public final class UsersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 public void onClick(View view) {
                     Intent intent = new Intent(contactsHolder.context, UserActivity.class);
                     Bundle bundle = new Bundle();
-                    bundle.putString(KEY_USER_ID, user.getId());
+                    bundle.putString(Constants.PREF_USER_ID, user.getId());
                     intent.putExtras(bundle);
                     contactsHolder.context.startActivity(intent);
                 }

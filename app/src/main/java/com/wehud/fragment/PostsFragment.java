@@ -33,6 +33,8 @@ import java.util.Map;
 
 public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
+    private static final String KEY_PAGE_POSTS = "key_page_posts";
+
     private Context mContext;
     private View mEmptyLayout;
     private SwipeRefreshLayout mSwipeLayout;
@@ -106,7 +108,13 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
         mSwipeLayout.setOnRefreshListener(this);
         mSwipeLayout.setRefreshing(true);
-        this.getPosts();
+
+        Bundle args = getArguments();
+        if (args != null) {
+            mPosts = args.getParcelableArrayList(KEY_PAGE_POSTS);
+            if (mPosts != null && mPosts.isEmpty()) mSwipeLayout.setRefreshing(false);
+        } else this.getPosts();
+
 
         mPostListView.setLayoutManager(new LinearLayoutManager(mContext));
         mPostListView.addItemDecoration(new DividerItemDecoration(mContext,
@@ -134,8 +142,7 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     public void onResume() {
         super.onResume();
         mPaused = false;
-        if (mReceiver != null)
-            this.getPosts();
+        if (mReceiver != null) this.getPosts();
     }
 
     @Override

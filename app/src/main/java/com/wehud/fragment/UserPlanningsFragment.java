@@ -27,6 +27,7 @@ import com.wehud.model.Planning;
 import com.wehud.network.APICall;
 import com.wehud.util.Constants;
 import com.wehud.util.GsonUtils;
+import com.wehud.util.PreferencesUtils;
 import com.wehud.util.Utils;
 
 import java.lang.reflect.Type;
@@ -40,19 +41,13 @@ public class UserPlanningsFragment extends Fragment
 
     private static final String PARAM_TITLE = "title";
 
-    private static final String KEY_IS_CONNECTED_USER = "key_is_connected_user";
-    private boolean mIsConnectedUser;
-
-    private static final String KEY_USER_ID = "key_user_id";
-    private String mUserId;
-
     private Context mContext;
     private View mEmptyLayout;
     private SwipeRefreshLayout mSwipeLayout;
     private RecyclerView mPlanningListView;
-    private FragmentManager mManager;
 
-    private List<Planning> mPlannings;
+    private String mCurrentUserId;
+    private FragmentManager mManager;
 
     private boolean mPaused;
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
@@ -82,12 +77,12 @@ public class UserPlanningsFragment extends Fragment
                             break;
                         case Constants.INTENT_PLANNINGS_LIST:
                             Type planningListType = new TypeToken<List<Planning>>(){}.getType();
-                            mPlannings = GsonUtils.getInstance().fromJson(
+                            List<Planning> plannings = GsonUtils.getInstance().fromJson(
                                     content, planningListType
                             );
 
-                            if (!mPlannings.isEmpty()) {
-                                PlanningsAdapter adapter = new PlanningsAdapter(mPlannings);
+                            if (!plannings.isEmpty()) {
+                                PlanningsAdapter adapter = new PlanningsAdapter(plannings);
                                 adapter.setFragmentManager(mManager);
                                 mPlanningListView.setAdapter(adapter);
 
@@ -146,7 +141,7 @@ public class UserPlanningsFragment extends Fragment
     public static Fragment newInstance(String userId) {
         Fragment fragment = new UserPlanningsFragment();
         Bundle args = new Bundle();
-        args.putString(KEY_USER_ID, userId);
+        args.putString(Constants.PREF_USER_ID, userId);
         fragment.setArguments(args);
 
         return fragment;
@@ -174,8 +169,14 @@ public class UserPlanningsFragment extends Fragment
         mPlanningListView.addItemDecoration(new DividerItemDecoration(mContext,
                 DividerItemDecoration.HORIZONTAL));
 
-        Button createFirstPlanningButton = (Button) view.findViewById(R.id.btnCreateFirstPlanning);
-        createFirstPlanningButton.setOnClickListener(this);
+        boolean isConnectedUser = Utils.isConnectedUser(
+                mContext,
+                PreferencesUtils.get(mContext, Constants.PREF_USER_ID)
+        );
+        if (isConnectedUser) {
+            Button createFirstPlanningButton = (Button) view.findViewById(R.id.btnCreateFirstPlanning);
+            createFirstPlanningButton.setOnClickListener(this);
+        }
 
         return view;
     }
@@ -184,7 +185,7 @@ public class UserPlanningsFragment extends Fragment
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        if (savedInstanceState != null) mUserId = savedInstanceState.getString(KEY_USER_ID);
+        if (savedInstanceState != null) mCurrentUserId = savedInstanceState.getString(Constants.PREF_USER_ID);
 
         IntentFilter filter = new IntentFilter();
         filter.addAction(Constants.INTENT_PLANNINGS_LIST);
@@ -199,8 +200,8 @@ public class UserPlanningsFragment extends Fragment
         super.onResume();
         Bundle args = getArguments();
         if (args != null) {
-            mUserId = args.getString(KEY_USER_ID);
-            if (!TextUtils.isEmpty(mUserId) && !mPaused) this.getPlannings();
+            mCurrentUserId = args.getString(Constants.PREF_USER_ID);
+            if (!TextUtils.isEmpty(mCurrentUserId) && !mPaused) this.getPlannings();
             else mSwipeLayout.setRefreshing(false);
         }
 
@@ -222,7 +223,7 @@ public class UserPlanningsFragment extends Fragment
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(KEY_USER_ID, mUserId);
+        outState.putString(Constants.PREF_USER_ID, mCurrentUserId);
     }
 
     @Override
@@ -246,7 +247,7 @@ public class UserPlanningsFragment extends Fragment
 
     @Override
     public void onRefresh() {
-        if (!TextUtils.isEmpty(mUserId)) this.getPlannings();
+        if (!TextUtils.isEmpty(mCurrentUserId)) this.getPlannings();
     }
 
     @Override
@@ -255,7 +256,7 @@ public class UserPlanningsFragment extends Fragment
     }
 
     private void getPlannings() {
-        if (!TextUtils.isEmpty(mUserId)) {
+        if (!TextUtils.isEmpty(mCurrentUserId)) {
             Map<String, String> headers = new HashMap<>();
             headers.put(Constants.HEADER_CONTENT_TYPE, Constants.APPLICATION_JSON);
             headers.put(Constants.HEADER_ACCEPT, Constants.APPLICATION_JSON);
@@ -264,7 +265,7 @@ public class UserPlanningsFragment extends Fragment
                     mContext,
                     Constants.INTENT_PLANNINGS_LIST,
                     Constants.GET,
-                    Constants.API_USERS_PLANNINGS + '/' + mUserId,
+                    Constants.API_USERS_PLANNINGS + '/' + mCurrentUserId,
                     headers
             );
             if (!call.isLoading()) call.execute();

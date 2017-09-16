@@ -17,14 +17,13 @@ import com.wehud.activity.UserActivity;
 import com.wehud.model.Game;
 import com.wehud.model.Post;
 import com.wehud.model.User;
+import com.wehud.util.Constants;
 import com.wehud.util.Utils;
 import com.wehud.util.YouTubeUtils;
 
 import java.util.List;
 
 public final class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsVH> {
-
-    private static final String KEY_USER_ID = "key_user_id";
 
     private List<Post> mPosts;
     private boolean mItemsClickable;
@@ -66,7 +65,7 @@ public final class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsV
                 public void onClick(View view) {
                     Intent intent = new Intent(holder.context, UserActivity.class);
                     Bundle bundle = new Bundle();
-                    bundle.putString(KEY_USER_ID, publisher.getId());
+                    bundle.putString(Constants.PREF_USER_ID, publisher.getId());
                     intent.putExtras(bundle);
                     holder.context.startActivity(intent);
                 }

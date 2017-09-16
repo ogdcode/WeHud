@@ -8,7 +8,6 @@ package com.wehud.util;
 
 public final class Constants {
 
-    private Constants() {}
 
     private static final String API_URL = "http://192.168.1.41:3000";
 
@@ -44,7 +43,7 @@ public final class Constants {
 
     public static final String APPLICATION_JSON = "application/json";
 
-    public static final String TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1OThmMWQ2NTQ5M2E2MjBhYTkxOGJlNDIiLCJpYXQiOjE1MDQ4MTAyMDEsImV4cCI6MTUwNDg5NjYwMX0.bDKIQZvAofJzPYgPBuwljCpabGR-1lolcP-jvSSus9A";
+    public static final String TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1OThmMWQ2NTQ5M2E2MjBhYTkxOGJlNDIiLCJpYXQiOjE1MDU1NTM3ODYsImV4cCI6MTUwNTY0MDE4Nn0.uFdsJJoLn9rDXQn2PcXXJ7qzYfzQ-j-BdRq9nSUdTd8";
 
     public static final String GET = "GET";
     public static final String POST = "POST";

@@ -20,7 +20,7 @@ import com.wehud.fragment.SendFragment;
 public class MainActivity extends AppCompatActivity
         implements BottomNavigationView.OnNavigationItemSelectedListener, TextDialogFragment.OnTextDialogDismissOkListener {
 
-    private static final String KEY_MENUID = "key_menuId";
+    private static final String KEY_MENU_ID = "key_menu_id";
 
     private int mMenuId;
 
@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity
         navBottom.setOnNavigationItemSelectedListener(this);
 
         if (savedInstanceState != null)
-            mMenuId = savedInstanceState.getInt(KEY_MENUID);
+            mMenuId = savedInstanceState.getInt(KEY_MENU_ID);
         else mMenuId = R.id.menu_home;
 
         this.setMenu(mMenuId);
@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(KEY_MENUID, mMenuId);
+        outState.putInt(KEY_MENU_ID, mMenuId);
     }
 
     @Override

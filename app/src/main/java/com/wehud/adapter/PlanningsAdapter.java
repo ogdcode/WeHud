@@ -3,8 +3,8 @@ package com.wehud.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +20,8 @@ import com.wehud.model.Event;
 import com.wehud.model.Planning;
 import com.wehud.network.APICall;
 import com.wehud.util.Constants;
+import com.wehud.util.PreferencesUtils;
+import com.wehud.util.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,7 +30,6 @@ import java.util.Map;
 
 public final class PlanningsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private static final String KEY_USER_ID = "key_user_id";
     private static final String KEY_PLANNINGS = "key_plannings";
     private static final String KEY_EVENTS = "key_events";
 
@@ -120,8 +121,12 @@ public final class PlanningsAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 }
             });
 
-            if (numEvents == 0) planningsHolder.unbindButton.setVisibility(View.GONE);
-            else planningsHolder.unbindButton.setVisibility(View.VISIBLE);
+            if (numEvents == 0) planningsHolder.expandCollapseButton.setVisibility(View.GONE);
+            else {
+                EventsAdapter adapter = new EventsAdapter(events);
+                planningsHolder.events.setAdapter(adapter);
+                planningsHolder.expandCollapseButton.setVisibility(View.VISIBLE);
+            }
 
             final String userId = planning.getCreator().getId();
             planningsHolder.view.setOnClickListener(new View.OnClickListener() {
@@ -129,7 +134,7 @@ public final class PlanningsAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 public void onClick(View view) {
                     Intent intent = new Intent(planningsHolder.context, EventsActivity.class);
                     Bundle bundle = new Bundle();
-                    bundle.putString(KEY_USER_ID, userId);
+                    bundle.putString(Constants.PREF_USER_ID, userId);
                     bundle.putParcelableArrayList(KEY_PLANNINGS, (ArrayList<Planning>) mPlannings);
                     bundle.putParcelableArrayList(
                             KEY_EVENTS, (ArrayList<Event>) planning.getEvents()
@@ -198,22 +203,64 @@ public final class PlanningsAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     }
 
     private class PlanningsVH extends RecyclerView.ViewHolder
-            implements TextDialogFragment.OnTextDialogDismissOkListener {
+            implements View.OnClickListener, TextDialogFragment.OnTextDialogDismissOkListener {
         private View view;
         private Context context;
         private TextView title;
-        private ImageButton deleteButton;
         private TextView numEvents;
         private Button unbindButton;
+        private ImageButton deleteButton;
+        private ImageButton expandCollapseButton;
+        private RecyclerView events;
+        private ViewGroup expandedLayout;
 
         PlanningsVH(View itemView) {
             super(itemView);
             view = itemView;
             context = view.getContext();
             title = (TextView) view.findViewById(R.id.title);
-            deleteButton = (ImageButton) view.findViewById(R.id.btnDelete);
             numEvents = (TextView) view.findViewById(R.id.numEvents);
             unbindButton = (Button) view.findViewById(R.id.btnUnbind);
+            deleteButton = (ImageButton) view.findViewById(R.id.btnDelete);
+
+            expandCollapseButton = (ImageButton) view.findViewById(R.id.btnExpandCollapse);
+            expandCollapseButton.setImageResource(R.drawable.ic_expand);
+            expandCollapseButton.setOnClickListener(this);
+
+            events = (RecyclerView) view.findViewById(android.R.id.list);
+            events.setLayoutManager(new LinearLayoutManager(context));
+
+            expandedLayout = (ViewGroup) view.findViewById(R.id.layout_expanded);
+            expandedLayout.setVisibility(View.GONE);
+
+            boolean isConnectedUser = Utils.isConnectedUser(
+                    context,
+                    PreferencesUtils.get(context, Constants.PREF_USER_ID)
+            );
+            if (isConnectedUser) {
+                unbindButton.setVisibility(View.GONE);
+                deleteButton.setVisibility(View.GONE);
+            }
+        }
+
+        @Override
+        public void onClick(View view) {
+            switch (view.getId()) {
+                case R.id.btnExpandCollapse:
+                    if (expandedLayout.getVisibility() == View.GONE) {
+                        Utils.expand(expandedLayout);
+                        numEvents.setVisibility(View.GONE);
+                        expandCollapseButton.setImageResource(R.drawable.ic_collapse);
+                    }
+                    else if (expandedLayout.getVisibility() == View.VISIBLE) {
+                        Utils.collapse(expandedLayout);
+                        numEvents.setVisibility(View.VISIBLE);
+                        expandCollapseButton.setImageResource(R.drawable.ic_expand);
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
 
         @Override

@@ -47,14 +47,24 @@ public final class EditDialogFragment extends DialogFragment {
     public static void generate(FragmentManager manager, OnEditDialogDismissOkListener listener,
                                 Object id, String title, String text, String hint, boolean password) {
         Bundle args = new Bundle();
-        if (id instanceof Long || id instanceof Integer || id instanceof Short)
+        if (id instanceof Long)
             args.putLong(KEY_VIEW_ID, (long) id);
-        if (id instanceof Double || id instanceof Float)
+        if (id instanceof Integer)
+            args.putInt(KEY_VIEW_ID, (int) id);
+        if (id instanceof Short)
+            args.putShort(KEY_VIEW_ID, (short) id);
+        if (id instanceof Double)
             args.putDouble(KEY_VIEW_ID, (double) id);
+        if (id instanceof Float)
+            args.putFloat(KEY_VIEW_ID, (float) id);
         if (id instanceof Byte)
             args.putByte(KEY_VIEW_ID, (byte) id);
-        if (id instanceof String || id instanceof Character)
+        if (id instanceof String)
             args.putString(KEY_VIEW_ID, id.toString());
+        if (id instanceof Character)
+            args.putChar(KEY_VIEW_ID, (char) id);
+        if (id instanceof Boolean)
+            args.putBoolean(KEY_VIEW_ID, (boolean) id);
 
         args.putString(KEY_TITLE, title);
         args.putString(KEY_TEXT, text);

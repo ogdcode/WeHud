@@ -150,4 +150,6 @@
     <string name="message_sendSuccess">Username or email was successfully sent. Please check your mails.</string>
     <string name="btnSend">Send</string>
     <string name="error_general">There was an error while fetching the database: code %s</string>
+    <string name="profile_user">Go to Profile</string>
+    <string name="btnEvents">Events</string>
 </resources>

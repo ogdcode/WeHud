@@ -33,15 +33,12 @@ import java.util.Map;
 
 public class UserPostsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
-    private static final String KEY_USER_ID = "key_user_id";
-    private String mUserId;
-
     private Context mContext;
     private View mEmptyLayout;
     private SwipeRefreshLayout mSwipeLayout;
     private RecyclerView mPostListView;
 
-    private List<Post> mPosts;
+    private String mUserId;
 
     private boolean mPaused;
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
@@ -57,9 +54,9 @@ public class UserPostsFragment extends Fragment implements SwipeRefreshLayout.On
                     String content = payload.getContent();
 
                     Type postListType = new TypeToken<List<Post>>(){}.getType();
-                    mPosts = GsonUtils.getInstance().fromJson(content, postListType);
-                    if (!mPosts.isEmpty()) {
-                        PostsAdapter adapter = new PostsAdapter(mPosts, false);
+                    List<Post> posts = GsonUtils.getInstance().fromJson(content, postListType);
+                    if (!posts.isEmpty()) {
+                        PostsAdapter adapter = new PostsAdapter(posts, false);
                         mPostListView.setAdapter(adapter);
 
                         mEmptyLayout.setVisibility(View.GONE);
@@ -93,7 +90,7 @@ public class UserPostsFragment extends Fragment implements SwipeRefreshLayout.On
     public static Fragment newInstance(String userId) {
         Fragment fragment = new UserPostsFragment();
         Bundle args = new Bundle();
-        args.putString(KEY_USER_ID, userId);
+        args.putString(Constants.PREF_USER_ID, userId);
         fragment.setArguments(args);
 
         return fragment;
@@ -128,7 +125,7 @@ public class UserPostsFragment extends Fragment implements SwipeRefreshLayout.On
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        if (savedInstanceState != null) mUserId = savedInstanceState.getString(KEY_USER_ID);
+        if (savedInstanceState != null) mUserId = savedInstanceState.getString(Constants.PREF_USER_ID);
 
         IntentFilter filter = new IntentFilter();
         filter.addAction(Constants.INTENT_POSTS_LIST);
@@ -146,7 +143,7 @@ public class UserPostsFragment extends Fragment implements SwipeRefreshLayout.On
         super.onResume();
         Bundle args = getArguments();
         if (args != null) {
-            mUserId = args.getString(KEY_USER_ID);
+            mUserId = args.getString(Constants.PREF_USER_ID);
             if (!TextUtils.isEmpty(mUserId) && !mPaused) this.getPosts();
             else mSwipeLayout.setRefreshing(false);
         }
@@ -168,7 +165,7 @@ public class UserPostsFragment extends Fragment implements SwipeRefreshLayout.On
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(KEY_USER_ID, mUserId);
+        outState.putString(Constants.PREF_USER_ID, mUserId);
     }
 
     private void getPosts() {

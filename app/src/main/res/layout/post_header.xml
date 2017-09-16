@@ -7,8 +7,8 @@
 
     <ImageView
         android:id="@+id/post_avatar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/avatarSize"
+        android:layout_height="@dimen/avatarSize"
         android:adjustViewBounds="true"
         android:contentDescription="@string/app_name"
         android:scaleType="fitCenter"

@@ -39,30 +39,48 @@
                 android:contentDescription="@string/app_name"
                 app:srcCompat="@drawable/ic_planning_event_delete" />
 
-        </LinearLayout>
+            <ImageButton
+                android:id="@+id/btnExpandCollapse"
+                style="@style/Base.Widget.AppCompat.Button.Borderless"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/app_name"
+                tools:src="@drawable/ic_expand" />
 
-        <android.support.v4.widget.Space
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/planning_verticalSpacing" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/numEvents"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/event_marginTop"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             tools:text="1 EVENT(S)" />
 
-        <android.support.v4.widget.Space
+        <LinearLayout
+            android:id="@+id/layout_expanded"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/planning_verticalSpacing" />
-
-        <Button
-            android:id="@+id/btnUnbind"
-            style="@style/Widget.AppCompat.Button.Colored"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:text="@string/planning_btnUnbind" />
+            android:layout_marginTop="@dimen/planning_marginTop"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@android:id/list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:listitem="@layout/event" />
+
+            <Button
+                android:id="@+id/btnUnbind"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginTop="@dimen/event_marginTop"
+                android:text="@string/planning_btnUnbind" />
+
+        </LinearLayout>
 
     </LinearLayout>
 

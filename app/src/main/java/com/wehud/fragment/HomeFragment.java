@@ -23,12 +23,14 @@ import com.wehud.dialog.EditDialogFragment;
 import com.wehud.dialog.TextDialogFragment;
 import com.wehud.model.Page;
 import com.wehud.model.Payload;
+import com.wehud.model.Post;
 import com.wehud.network.APICall;
 import com.wehud.util.Constants;
 import com.wehud.util.GsonUtils;
 import com.wehud.util.Utils;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +38,8 @@ import java.util.Map;
 public class HomeFragment extends Fragment implements ViewPager.OnPageChangeListener,
         EditDialogFragment.OnEditDialogDismissOkListener, TextDialogFragment.OnTextDialogDismissOkListener {
 
-    private static final String KEY_CURRENT_PAGE = "key_currentPage";
+    private static final String KEY_CURRENT_PAGE = "key_current_page";
+    private static final String KEY_PAGE_POSTS = "key_page_posts";
 
     private static final String PARAM_TITLE = "title";
 
@@ -69,8 +72,19 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
                             mPages = GsonUtils.getInstance().fromJson(content, pageListType);
 
                             if (!mPages.isEmpty()) {
-                                for (Page page : mPages)
-                                    mAdapter.add(PostsFragment.newInstance(), page.getTitle());
+                                for (Page page : mPages) {
+                                    PostsFragment fragment = PostsFragment.newInstance();
+                                    List<Post> pagePosts = page.getPosts();
+                                    if (pagePosts != null && !pagePosts.isEmpty()) {
+                                        Bundle args = new Bundle();
+                                        args.putParcelableArrayList(KEY_PAGE_POSTS,
+                                                (ArrayList<Post>) page.getPosts()
+                                        );
+                                        fragment.setArguments(args);
+                                    }
+
+                                    mAdapter.add(fragment, page.getTitle());
+                                }
 
                                 mAdapter.notifyDataSetChanged();
                                 mPager.invalidate();
@@ -78,6 +92,7 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
                             break;
                         case Constants.INTENT_PAGES_ADD:
                             Page page = GsonUtils.getInstance().fromJson(content, Page.class);
+
                             mPages.add(page);
                             mAdapter.add(PostsFragment.newInstance(), page.getTitle());
                             mAdapter.notifyDataSetChanged();

@@ -30,6 +30,7 @@ import com.wehud.model.User;
 import com.wehud.network.APICall;
 import com.wehud.util.Constants;
 import com.wehud.util.GsonUtils;
+import com.wehud.util.PreferencesUtils;
 import com.wehud.util.Utils;
 
 import java.lang.reflect.Type;
@@ -393,6 +394,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void fillGamePage(String content) {
+        String connectedUserId = PreferencesUtils.get(this, Constants.PREF_USER_ID);
+
         mCurrentGame = GsonUtils.getInstance().fromJson(content, Game.class);
         String cover = "https://" + mCurrentGame.getCover();
         String name = mCurrentGame.getName();
@@ -417,7 +420,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
         boolean found = false;
         for (User user : followers) {
-            if (user.getId().equals("598f1d65493a620aa918be42")) {
+            if (user.getId().equals(connectedUserId)) {
                 found = true;
                 break;
             }

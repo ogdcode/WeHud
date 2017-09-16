@@ -24,6 +24,7 @@ import com.wehud.model.User;
 import com.wehud.network.APICall;
 import com.wehud.util.Constants;
 import com.wehud.util.GsonUtils;
+import com.wehud.util.PreferencesUtils;
 import com.wehud.util.Utils;
 
 import java.lang.reflect.Type;
@@ -31,13 +32,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ContactsActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
+public class ContactsActivity extends AppCompatActivity
+        implements SwipeRefreshLayout.OnRefreshListener {
 
     private View mEmptyLayout;
     private SwipeRefreshLayout mSwipeLayout;
     private RecyclerView mContactListView;
-
-    private List<User> mFollowers;
 
     private boolean mPaused;
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
@@ -51,12 +51,12 @@ public class ContactsActivity extends AppCompatActivity implements SwipeRefreshL
 
                 if (Integer.valueOf(code) == Constants.HTTP_OK) {
                     String content = payload.getContent();
+                    User connectedUser = GsonUtils.getInstance().fromJson(content, User.class);
 
-                    Type userListType = new TypeToken<List<User>>(){}.getType();
-                    mFollowers = GsonUtils.getInstance().fromJson(content, userListType);
+                    List<User> followers = connectedUser.getFollowers();
 
-                    if (!mFollowers.isEmpty()) {
-                        UsersAdapter adapter = new UsersAdapter(mFollowers);
+                    if (!followers.isEmpty()) {
+                        UsersAdapter adapter = new UsersAdapter(followers);
                         adapter.setViewResourceId(1);
                         mContactListView.setAdapter(adapter);
 
@@ -164,11 +164,13 @@ public class ContactsActivity extends AppCompatActivity implements SwipeRefreshL
         headers.put(Constants.HEADER_CONTENT_TYPE, Constants.APPLICATION_JSON);
         headers.put(Constants.HEADER_ACCEPT, Constants.APPLICATION_JSON);
 
+        String connectedUserId = PreferencesUtils.get(this, Constants.PREF_USER_ID);
+
         APICall call = new APICall(
                 this,
                 Constants.INTENT_FOLLOWERS_LIST,
                 Constants.GET,
-                Constants.API_USERS + "/all",
+                Constants.API_USERS + '/' + connectedUserId,
                 headers
         );
         if (!call.isLoading()) call.execute();

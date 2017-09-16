@@ -32,6 +32,7 @@ import com.wehud.model.User;
 import com.wehud.network.APICall;
 import com.wehud.util.Constants;
 import com.wehud.util.GsonUtils;
+import com.wehud.util.PreferencesUtils;
 import com.wehud.util.Utils;
 
 import java.lang.reflect.Type;
@@ -45,10 +46,6 @@ public class UserActivity extends AppCompatActivity
         ListDialogFragment.OnListDialogDismissOkListener {
 
     private static final String KEY_CURRENT_PAGE = "key_currentPage";
-    private static final String KEY_USER_ID = "key_user_id";
-    private String mUserId;
-
-    private int mCurrentPage;
 
     private ImageView mAvatar;
     private TextView mUsername;
@@ -57,6 +54,10 @@ public class UserActivity extends AppCompatActivity
     private Button mFollowOrEventsButton;
 
     private User mCurrentUser;
+    private String mUserId;
+    private boolean mIsConnectedUser;
+
+    private int mCurrentPage;
 
     private boolean mPaused;
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
@@ -83,18 +84,22 @@ public class UserActivity extends AppCompatActivity
                             String numFollowers = followers.size() + "\t"
                                     + getString(R.string.followerCount);
 
-                            boolean found = false;
-                            for (User user : followers) {
-                                if (user.getId().equals(mUserId)) {
-                                    found = true;
-                                    break;
+                            if (mIsConnectedUser)
+                                mFollowOrEventsButton.setText(getString(R.string.btnEvents));
+                            else {
+                                boolean found = false;
+                                for (User user : followers) {
+                                    if (user.getId().equals(mUserId)) {
+                                        found = true;
+                                        break;
+                                    }
                                 }
-                            }
 
-                            if (found) mFollowOrEventsButton.setText(
-                                    getString(R.string.btnUnfollow)
-                            );
-                            else mFollowOrEventsButton.setText(getString(R.string.btnFollow));
+                                if (found) mFollowOrEventsButton.setText(
+                                        getString(R.string.btnUnfollow)
+                                );
+                                else mFollowOrEventsButton.setText(getString(R.string.btnFollow));
+                            }
 
                             if (!TextUtils.isEmpty(avatar))
                                 Utils.loadImage(UserActivity.this, avatar, mAvatar, 256);
@@ -231,16 +236,18 @@ public class UserActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user);
 
+        mIsConnectedUser = Utils.isConnectedUser(this, PreferencesUtils.get(this, Constants.PREF_USER_ID));
+
         if (savedInstanceState != null) {
             mCurrentPage = savedInstanceState.getInt(KEY_CURRENT_PAGE);
-            mUserId = savedInstanceState.getString(KEY_USER_ID);
+            mUserId = savedInstanceState.getString(Constants.PREF_USER_ID);
         } else {
             mCurrentPage = 0;
 
             Intent intent = getIntent();
             if (intent != null) {
                 Bundle bundle = intent.getExtras();
-                if (bundle != null) mUserId = bundle.getString(KEY_USER_ID);
+                if (bundle != null) mUserId = bundle.getString(Constants.PREF_USER_ID);
             }
         }
 
@@ -297,21 +304,22 @@ public class UserActivity extends AppCompatActivity
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(KEY_CURRENT_PAGE, mCurrentPage);
-        outState.putString(KEY_USER_ID, mUserId);
+        outState.putString(Constants.PREF_USER_ID, mUserId);
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btnFollow:
-                if (mFollowOrEventsButton.getText().equals(getString(R.string.btnFollow)))
+                if (mFollowOrEventsButton.getText().toString()
+                        .equals(getString(R.string.btnFollow)))
                     this.getPages();
-                if (mFollowOrEventsButton.getText().equals(getString(R.string.btnUnfollow)))
+                if (mFollowOrEventsButton.getText().toString()
+                        .equals(getString(R.string.btnUnfollow)))
                     this.unfollow();
-                if (mFollowOrEventsButton.getText().toString().contains(getString(R.string.numEvents))) {
-                    Intent intent = new Intent(this, EventsActivity.class);
-                    startActivity(intent);
-                }
+                if (mFollowOrEventsButton.getText().toString()
+                        .equals(getString(R.string.btnEvents)))
+                    startActivity(new Intent(this, EventsActivity.class));
                 break;
             default:
                 break;

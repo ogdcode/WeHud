@@ -2,6 +2,10 @@ package com.wehud.util;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.view.View;
+import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.Transformation;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,6 +46,60 @@ public final class Utils {
     public static void toast(Context context, String message) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
     }
+
+    public static void expand(final View v) {
+        v.measure(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        final int targetHeight = v.getMeasuredHeight();
+
+        // Older versions of android (pre API 21) cancel animations for views with a height of 0.
+        v.getLayoutParams().height = 1;
+        v.setVisibility(View.VISIBLE);
+
+        final Animation anim = new Animation() {
+            @Override
+            protected void applyTransformation(float interpolatedTime, Transformation t) {
+                v.getLayoutParams().height = interpolatedTime == 1
+                        ? WindowManager.LayoutParams.WRAP_CONTENT
+                        : (int) (targetHeight * interpolatedTime);
+                v.requestLayout();
+            }
+
+            @Override
+            public boolean willChangeBounds() {
+                return true;
+            }
+        };
+
+        // Animation duration is set to 1 dp per millisecond.
+        anim.setDuration((int) (targetHeight / v.getContext().getResources().getDisplayMetrics().density));
+        v.startAnimation(anim);
+    }
+
+    public static void collapse(final View v) {
+        final int initialHeight = v.getMeasuredHeight();
+
+        final Animation anim = new Animation() {
+            @Override
+            protected void applyTransformation(float interpolatedTime, Transformation t) {
+                if (interpolatedTime == 1) {
+                    v.setVisibility(View.GONE);
+                } else {
+                    v.getLayoutParams().height = initialHeight - (int) (initialHeight * interpolatedTime);
+                    v.requestLayout();
+                }
+            }
+
+            @Override
+            public boolean willChangeBounds() {
+                return true;
+            }
+        };
+
+        // Animation duration is set to 1 dp per millisecond.
+        anim.setDuration((int) (initialHeight / v.getContext().getResources().getDisplayMetrics().density));
+        v.startAnimation(anim);
+    }
+
 
     public static String isoDateTimeStringToLocalDateTimeString(String iso) {
         SimpleDateFormat sdf = new SimpleDateFormat(Constants.ISO_8601_PATTERN, Locale.getDefault());

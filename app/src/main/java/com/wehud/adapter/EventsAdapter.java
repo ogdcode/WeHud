@@ -22,6 +22,7 @@ import com.wehud.model.Planning;
 import com.wehud.model.Tag;
 import com.wehud.network.APICall;
 import com.wehud.util.Constants;
+import com.wehud.util.PreferencesUtils;
 import com.wehud.util.Utils;
 
 import java.util.ArrayList;
@@ -31,7 +32,6 @@ import java.util.Map;
 
 public final class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsVH> {
 
-    private static final String KEY_USER_ID = "key_user_id";
     private static final String PREFIX_DELETE = "delete";
     private static final String PREFIX_UNBIND = "unbind";
 
@@ -95,7 +95,9 @@ public final class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.Even
                 )) {
                     PlanningsAdapter planningsAdapter = new PlanningsAdapter(mPlannings);
                     planningsAdapter.setViewResourceId(0);
-                    RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(holder.context);
+                    RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
+                            holder.context
+                    );
                     ListDialogFragment.generate(
                             mManager,
                             holder,
@@ -133,7 +135,7 @@ public final class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.Even
     }
 
     static class EventsVH extends RecyclerView.ViewHolder
-            implements ListDialogFragment.OnListDialogDismissOkListener,
+            implements View.OnClickListener, ListDialogFragment.OnListDialogDismissOkListener,
             TextDialogFragment.OnTextDialogDismissOkListener {
         private Context context;
         private TextView title;
@@ -142,12 +144,19 @@ public final class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.Even
         private TextView endDate;
         private ImageView tag;
         private ImageButton deleteButton;
+        private ImageButton expandCollapseButton;
         private Button bindUnbindButton;
-
+        private ViewGroup expandedLayout;
 
         EventsVH(View view) {
             super(view);
             context = view.getContext();
+
+            boolean isConnectedUser = Utils.isConnectedUser(
+                    context,
+                    PreferencesUtils.get(context, Constants.PREF_USER_ID)
+            );
+
             title = (TextView) view.findViewById(R.id.title);
             description = (TextView) view.findViewById(R.id.description);
             startDate = (TextView) view.findViewById(R.id.startDateTime);
@@ -155,6 +164,29 @@ public final class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.Even
             tag = (ImageView) view.findViewById(R.id.tag);
             deleteButton = (ImageButton) view.findViewById(R.id.btnDelete);
             bindUnbindButton = (Button) view.findViewById(R.id.btnBindUnbind);
+
+            expandCollapseButton = (ImageButton) view.findViewById(R.id.btnExpandCollapse);
+            expandCollapseButton.setImageResource(R.drawable.ic_expand);
+            expandCollapseButton.setOnClickListener(this);
+
+            expandedLayout = (ViewGroup) view.findViewById(R.id.layout_expanded);
+            expandedLayout.setVisibility(View.GONE);
+
+            ViewGroup actionsLayout = (ViewGroup) view.findViewById(R.id.layout_actions);
+            if (!isConnectedUser) actionsLayout.setVisibility(View.GONE);
+        }
+
+        @Override
+        public void onClick(View view) {
+            if (view.getId() == R.id.btnExpandCollapse) {
+                if (expandedLayout.getVisibility() == View.GONE) {
+                    Utils.expand(expandedLayout);
+                    expandCollapseButton.setImageResource(R.drawable.ic_collapse);
+                } else if (expandedLayout.getVisibility() == View.VISIBLE) {
+                    Utils.collapse(expandedLayout);
+                    expandCollapseButton.setImageResource(R.drawable.ic_expand);
+                }
+            }
         }
 
         @Override

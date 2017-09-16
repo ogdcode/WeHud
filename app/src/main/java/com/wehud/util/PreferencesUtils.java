@@ -23,7 +23,7 @@ public final class PreferencesUtils {
         return mInstance;
     }
 
-    static String get(Context context, String key) {
+    public static String get(Context context, String key) {
         return getInstance(context).getString(key, null);
     }
 

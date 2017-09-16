@@ -102,4 +102,9 @@ public final class Event implements Parcelable {
         parcel.writeInt(mTag);
         parcel.writeString(mPlanning);
     }
+
+    @Override
+    public String toString() {
+        return mTitle + "\t\t" + mStartDateTime;
+    }
 }
