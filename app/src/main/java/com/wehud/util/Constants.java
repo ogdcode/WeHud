@@ -55,6 +55,7 @@ public final class Constants {
     public static final int HTTP_CREATED = 201;
     public static final int HTTP_NO_CONTENT = 204;
     public static final int HTTP_FORBIDDEN = 403;
+    public static final int HTTP_METHOD_NOT_ALLOWED = 405;
     public static final int HTTP_INTERNAL_SERVER_ERROR = 500;
 
     public static final int CONNECT_TIMEOUT = 3000;

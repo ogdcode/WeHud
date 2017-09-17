@@ -2,6 +2,7 @@ package com.wehud.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -28,6 +29,7 @@ public final class GamesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private static int mSelectedPosition = -1;
 
     private int mViewResourceId;
+    private int mGridColumns;
 
     public GamesAdapter(List<Game> games) {
         mGames = games;
@@ -35,6 +37,10 @@ public final class GamesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     public void setViewResourceId(int viewResourceId) {
         mViewResourceId = viewResourceId;
+    }
+
+    public void setGridColumns(int n) {
+        mGridColumns = n;
     }
 
     @Override
@@ -73,8 +79,13 @@ public final class GamesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             final GameCoversVH coversHolder = (GameCoversVH) holder;
 
             final String cover = "https://" + game.getCover();
-            if (!TextUtils.isEmpty(cover))
-                Utils.loadImage(coversHolder.context, cover, coversHolder.cover, 512);
+            if (!TextUtils.isEmpty(cover) && mGridColumns > 0)
+                Utils.loadImage(
+                        coversHolder.context,
+                        cover,
+                        coversHolder.cover,
+                        Resources.getSystem().getDisplayMetrics().widthPixels / mGridColumns
+                );
             else coversHolder.cover.setImageResource(R.mipmap.ic_launcher);
 
             coversHolder.cover.setOnClickListener(new View.OnClickListener() {

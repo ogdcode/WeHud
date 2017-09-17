@@ -123,4 +123,5 @@
     <dimen name="planning_marginTop">16dp</dimen>
     <dimen name="event_horizontalSpacing">32dp</dimen>
     <dimen name="event_imgBtnMarginTop">8dp</dimen>
+    <dimen name="gameImageSize">190dp</dimen>
 </resources>

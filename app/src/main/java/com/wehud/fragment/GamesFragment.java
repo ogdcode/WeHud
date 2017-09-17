@@ -37,6 +37,8 @@ public class GamesFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     private SwipeRefreshLayout mSwipeLayout;
     private RecyclerView mGameListView;
 
+    private int mGridColumns = 2;
+
     private boolean mPaused;
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
@@ -56,15 +58,30 @@ public class GamesFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                     if (!games.isEmpty()) {
                         GamesAdapter adapter = new GamesAdapter(games);
                         adapter.setViewResourceId(1);
+                        adapter.setGridColumns(mGridColumns);
                         mGameListView.setAdapter(adapter);
 
                         mEmptyLayout.setVisibility(View.GONE);
                         mSwipeLayout.setVisibility(View.VISIBLE);
                         mSwipeLayout.setRefreshing(false);
                     }
-                } else if (Integer.valueOf(code) == Constants.HTTP_INTERNAL_SERVER_ERROR)
-                    Utils.toast(mContext, R.string.error_server);
-                else Utils.toast(mContext, R.string.error_general, code);
+                } else {
+                    int messageId;
+                    switch (Integer.valueOf(code)) {
+                        case Constants.HTTP_METHOD_NOT_ALLOWED:
+                            messageId = R.string.error_sessionExpired;
+                            getActivity().finish();
+                            break;
+                        case Constants.HTTP_INTERNAL_SERVER_ERROR:
+                            messageId = R.string.error_server;
+                            break;
+                        default:
+                            Utils.toast(mContext, R.string.error_general, code);
+                            return;
+                    }
+
+                    Utils.toast(mContext, messageId);
+                }
             }
         }
     };
@@ -83,7 +100,7 @@ public class GamesFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         mSwipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.layout_swipe);
 
         mGameListView = (RecyclerView) view.findViewById(android.R.id.list);
-        mGameListView.setLayoutManager(new GridLayoutManager(mContext, 2));
+        mGameListView.setLayoutManager(new GridLayoutManager(mContext, mGridColumns));
 
         mEmptyLayout.setVisibility(View.VISIBLE);
         mSwipeLayout.setVisibility(View.GONE);

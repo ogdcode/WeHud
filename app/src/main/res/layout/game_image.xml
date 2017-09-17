@@ -10,6 +10,6 @@
         android:adjustViewBounds="true"
         android:clickable="true"
         android:contentDescription="@string/app_name"
-        android:scaleType="centerCrop" />
+        android:scaleType="fitCenter" />
 
 </FrameLayout>

@@ -134,9 +134,23 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                         default:
                             break;
                     }
-                } else if (Integer.valueOf(code) == Constants.HTTP_INTERNAL_SERVER_ERROR)
-                    Utils.toast(GameActivity.this, R.string.error_server);
-                else Utils.toast(GameActivity.this, R.string.error_general, code);
+                } else {
+                    int messageId;
+                    switch (Integer.valueOf(code)) {
+                        case Constants.HTTP_METHOD_NOT_ALLOWED:
+                            messageId = R.string.error_sessionExpired;
+                            finish();
+                            break;
+                        case Constants.HTTP_INTERNAL_SERVER_ERROR:
+                            messageId = R.string.error_server;
+                            break;
+                        default:
+                            Utils.toast(GameActivity.this, R.string.error_general, code);
+                            return;
+                    }
+
+                    Utils.toast(GameActivity.this, messageId);
+                }
             }
         }
     };

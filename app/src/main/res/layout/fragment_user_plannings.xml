@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:text="@string/empty_list" />
+            android:text="@string/no_plannings" />
 
         <Button
             android:id="@+id/btnCreateFirstPlanning"
@@ -28,18 +28,34 @@
 
     </LinearLayout>
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/layout_swipe"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/white">
+        android:background="@android:color/white"
+        android:orientation="vertical">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@android:id/list"
+        <Button
+            android:id="@+id/btnCreatePlanning"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:text="@string/btnCreatePlanning" />
+
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/layout_swipe"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:listitem="@layout/planning" />
+            android:layout_above="@id/btnCreatePlanning">
 
-    </android.support.v4.widget.SwipeRefreshLayout>
+            <android.support.v7.widget.RecyclerView
+                android:id="@android:id/list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:listitem="@layout/planning" />
 
-</android.support.design.widget.CoordinatorLayout>
+        </android.support.v4.widget.SwipeRefreshLayout>
+
+    </RelativeLayout>
+
+</FrameLayout>

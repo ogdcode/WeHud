@@ -61,7 +61,9 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
             if (!mPaused) {
                 if (!TextUtils.isEmpty(intent.getStringExtra(Constants.EXTRA_BROADCAST))) {
                     final String response = intent.getStringExtra(Constants.EXTRA_BROADCAST);
-                    final Payload payload = GsonUtils.getInstance().fromJson(response, Payload.class);
+                    final Payload payload = GsonUtils.getInstance().fromJson(
+                            response, Payload.class
+                    );
 
                     final String code = payload.getCode();
 
@@ -82,7 +84,8 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
                                         if (pagePosts != null && !pagePosts.isEmpty()) {
                                             Bundle args = new Bundle();
                                             args.putParcelableArrayList(
-                                                    KEY_PAGE_POSTS, (ArrayList<Post>) page.getPosts()
+                                                    KEY_PAGE_POSTS,
+                                                    (ArrayList<Post>) page.getPosts()
                                             );
                                             fragment.setArguments(args);
                                         }
@@ -132,9 +135,23 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
                             default:
                                 break;
                         }
-                    } else if (Integer.valueOf(code) == Constants.HTTP_INTERNAL_SERVER_ERROR)
-                        Utils.toast(mContext, R.string.error_server);
-                    else Utils.toast(mContext, R.string.error_general, code);
+                    } else {
+                        int messageId;
+                        switch (Integer.valueOf(code)) {
+                            case Constants.HTTP_METHOD_NOT_ALLOWED:
+                                messageId = R.string.error_sessionExpired;
+                                getActivity().finish();
+                                break;
+                            case Constants.HTTP_INTERNAL_SERVER_ERROR:
+                                messageId = R.string.error_server;
+                                break;
+                            default:
+                                Utils.toast(mContext, R.string.error_general, code);
+                                return;
+                        }
+
+                        Utils.toast(mContext, messageId);
+                    }
                 }
 
                 if (!TextUtils.isEmpty(intent.getStringExtra(Constants.EXTRA_REFRESH_PAGES))) {

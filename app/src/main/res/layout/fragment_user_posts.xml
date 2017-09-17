@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:text="@string/empty_list" />
+            android:text="@string/no_user_posts" />
 
     </FrameLayout>
 

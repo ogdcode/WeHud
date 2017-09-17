@@ -157,4 +157,12 @@
     <string name="message_accountCreated">Your account has been created</string>
     <string name="title_events">Events</string>
     <string name="title_register">Register</string>
+    <string name="no_plannings">This user has not created a planning yet.</string>
+    <string name="no_events">There are no events yet.</string>
+    <string name="no_user_posts">This user has not posted anything yet.</string>
+    <string name="no_posts">There are no posts to be found.</string>
+    <string name="no_messages">There are no messages to be found.</string>
+    <string name="no_games">There are no games to be found.</string>
+    <string name="btnCreatePlanning">Create a planning</string>
+    <string name="error_sessionExpired">Session expired</string>
 </resources>

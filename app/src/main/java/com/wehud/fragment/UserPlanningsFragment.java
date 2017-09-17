@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.google.gson.reflect.TypeToken;
 import com.wehud.R;
@@ -42,6 +43,7 @@ public class UserPlanningsFragment extends Fragment
     private static final String PARAM_TITLE = "title";
 
     private Context mContext;
+
     private View mEmptyLayout;
     private SwipeRefreshLayout mSwipeLayout;
     private RecyclerView mPlanningListView;
@@ -97,9 +99,23 @@ public class UserPlanningsFragment extends Fragment
                         default:
                             break;
                     }
-                } else if (Integer.valueOf(code) == Constants.HTTP_INTERNAL_SERVER_ERROR)
-                    Utils.toast(mContext, R.string.error_server);
-                else Utils.toast(mContext, R.string.error_general, code);
+                } else {
+                    int messageId;
+                    switch (Integer.valueOf(code)) {
+                        case Constants.HTTP_METHOD_NOT_ALLOWED:
+                            messageId = R.string.error_sessionExpired;
+                            getActivity().finish();
+                            break;
+                        case Constants.HTTP_INTERNAL_SERVER_ERROR:
+                            messageId = R.string.error_server;
+                            break;
+                        default:
+                            Utils.toast(mContext, R.string.error_general, code);
+                            return;
+                    }
+
+                    Utils.toast(mContext, messageId);
+                }
             }
         }
     };
@@ -135,7 +151,9 @@ public class UserPlanningsFragment extends Fragment
         mPlanningListView.addItemDecoration(new DividerItemDecoration(mContext,
                 DividerItemDecoration.HORIZONTAL));
 
+        Button createPlannngButton = (Button) view.findViewById(R.id.btnCreatePlanning);
         Button createFirstPlanningButton = (Button) view.findViewById(R.id.btnCreateFirstPlanning);
+        createPlannngButton.setOnClickListener(this);
         createFirstPlanningButton.setOnClickListener(this);
 
         final boolean isConnectedUser = Utils.isConnectedUser(
@@ -196,6 +214,7 @@ public class UserPlanningsFragment extends Fragment
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.btnCreatePlanning:
             case R.id.btnCreateFirstPlanning:
                 EditDialogFragment.generate(
                         mManager,

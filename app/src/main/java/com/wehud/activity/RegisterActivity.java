@@ -49,9 +49,19 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 if (Integer.valueOf(code) == Constants.HTTP_CREATED) {
                     Utils.toast(RegisterActivity.this, R.string.message_accountCreated);
                     NavUtils.navigateUpFromSameTask(RegisterActivity.this);
-                } else if (Integer.valueOf(code) == Constants.HTTP_INTERNAL_SERVER_ERROR)
-                    Utils.toast(RegisterActivity.this, R.string.error_server);
-                else Utils.toast(RegisterActivity.this, R.string.error_general, code);
+                } else {
+                    int messageId;
+                    switch (Integer.valueOf(code)) {
+                        case Constants.HTTP_INTERNAL_SERVER_ERROR:
+                            messageId = R.string.error_server;
+                            break;
+                        default:
+                            Utils.toast(RegisterActivity.this, R.string.error_unknown, code);
+                            return;
+                    }
+
+                    Utils.toast(RegisterActivity.this, messageId);
+                }
             }
         }
     };
