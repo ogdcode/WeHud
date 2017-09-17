@@ -65,13 +65,6 @@ public final class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsV
         holder.postCreatedAt.setText(datetimeCreated);
         holder.postText.setText(text);
 
-        final String connectedUserId = PreferencesUtils.get(holder.context, Constants.PREF_USER_ID);
-        final boolean connectedUserLiked = userIds.contains(connectedUserId);
-        if (connectedUserLiked)
-            holder.postLikes.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_nolike, 0, 0, 0);
-        else holder.postLikes.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like, 0, 0, 0);
-        holder.postLikes.setText(likes);
-
         if (mItemsClickable) {
             holder.postUsername.setClickable(true);
             holder.postUsername.setOnClickListener(new View.OnClickListener() {
@@ -85,6 +78,18 @@ public final class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsV
                 }
             });
 
+            final String connectedUserId = PreferencesUtils.get(
+                    holder.context, Constants.PREF_USER_ID
+            );
+            final boolean connectedUserLiked = userIds.contains(connectedUserId);
+            if (connectedUserLiked)
+                holder.postLikes.setCompoundDrawablesWithIntrinsicBounds(
+                        R.drawable.ic_liked, 0, 0, 0
+                );
+            else holder.postLikes.setCompoundDrawablesWithIntrinsicBounds(
+                    R.drawable.ic_notliked, 0, 0, 0
+            );
+            holder.postLikes.setText(likes);
             holder.postLikes.setClickable(true);
             holder.postLikes.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -123,7 +128,9 @@ public final class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsV
                     if (!call.isLoading()) call.execute();
                 }
             });
-        }
+
+            holder.postFooter.setVisibility(View.VISIBLE);
+        } else holder.postFooter.setVisibility(View.GONE);
 
         this.setPostMedia(holder, post);
     }
@@ -136,7 +143,7 @@ public final class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsV
     private void setPostMedia(final PostsVH holder, final Post post) {
         holder.postMedia.setVisibility(View.GONE);
 
-        String videoUrl = post.getVideoUrl();
+        final String videoUrl = post.getVideoUrl();
 
         if (post.isMessage() || post.isOpinion() || !TextUtils.isEmpty(videoUrl)) {
             final TextView postReceiver = (TextView) holder.postMedia.findViewById(R.id.post_receiver);
@@ -154,7 +161,6 @@ public final class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsV
                 final String receiverUsername = receiver.getUsername();
 
                 postReceiver.setText(receiverUsername);
-
                 postReceiver.setVisibility(View.VISIBLE);
             }
 
@@ -172,7 +178,6 @@ public final class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsV
 
             if (!TextUtils.isEmpty(videoUrl)) {
                 YouTubeUtils.configureVideo(holder.context, videoUrl, postVideo);
-
                 postVideo.setVisibility(View.VISIBLE);
             }
 
@@ -187,6 +192,7 @@ public final class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsV
         private TextView postCreatedAt;
         private TextView postText;
         private TextView postLikes;
+        private ViewGroup postFooter;
         private ViewGroup postMedia;
 
         PostsVH(View view) {
@@ -197,6 +203,7 @@ public final class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsV
             postCreatedAt = (TextView) view.findViewById(R.id.post_datetimeCreated);
             postText = (TextView) view.findViewById(R.id.post_text);
             postLikes = (TextView) view.findViewById(R.id.post_likes);
+            postFooter = (ViewGroup) view.findViewById(R.id.post_footer);
             postMedia = (ViewGroup) view.findViewById(R.id.post_media);
         }
     }

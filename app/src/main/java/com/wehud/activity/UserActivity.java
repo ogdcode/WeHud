@@ -45,7 +45,8 @@ public class UserActivity extends AppCompatActivity
         implements View.OnClickListener, ViewPager.OnPageChangeListener,
         ListDialogFragment.OnListDialogDismissOkListener {
 
-    private static final String KEY_CURRENT_PAGE = "key_currentPage";
+    private static final String KEY_CURRENT_PAGE = "key_current_page";
+    private static final String PARAM_PAGE = "page";
 
     private ImageView mAvatar;
     private TextView mUsername;
@@ -278,7 +279,30 @@ public class UserActivity extends AppCompatActivity
 
     @Override
     public void onListDialogDismissOk(Parcelable p) {
+        if (p instanceof Page) {
+            Map<String, String> headers = new HashMap<>();
+            headers.put(Constants.HEADER_CONTENT_TYPE, Constants.APPLICATION_JSON);
+            headers.put(Constants.HEADER_ACCEPT, Constants.APPLICATION_JSON);
 
+            Map<String, String> parameters = new HashMap<>();
+            parameters.put(Constants.PARAM_TOKEN, Constants.SAMPLE_TOKEN);
+
+            Map<String, String> page = new HashMap<>();
+            page.put(PARAM_PAGE, ((Page) p).getTitle());
+
+            String body = GsonUtils.getInstance().toJson(page);
+
+            APICall call = new APICall(
+                    this,
+                    Constants.INTENT_USER_FOLLOW,
+                    Constants.PATCH,
+                    Constants.API_USER_FOLLOW,
+                    body,
+                    headers,
+                    parameters
+            );
+            if (!call.isLoading()) call.execute();
+        }
     }
 
     private void getUser() {
@@ -287,7 +311,7 @@ public class UserActivity extends AppCompatActivity
         headers.put(Constants.HEADER_ACCEPT, Constants.APPLICATION_JSON);
 
         Map<String, String> parameters = new HashMap<>();
-        parameters.put(Constants.PARAM_TOKEN, Constants.TOKEN);
+        parameters.put(Constants.PARAM_TOKEN, Constants.SAMPLE_TOKEN);
 
         APICall call = new APICall(
                 this,
@@ -306,7 +330,7 @@ public class UserActivity extends AppCompatActivity
         headers.put(Constants.HEADER_ACCEPT, Constants.APPLICATION_JSON);
 
         Map<String, String> parameters = new HashMap<>();
-        parameters.put(Constants.PARAM_TOKEN, Constants.TOKEN);
+        parameters.put(Constants.PARAM_TOKEN, Constants.SAMPLE_TOKEN);
 
         APICall call = new APICall(
                 this,
@@ -346,7 +370,7 @@ public class UserActivity extends AppCompatActivity
         headers.put(Constants.HEADER_ACCEPT, Constants.APPLICATION_JSON);
 
         Map<String, String> parameters = new HashMap<>();
-        parameters.put(Constants.PARAM_TOKEN, Constants.TOKEN);
+        parameters.put(Constants.PARAM_TOKEN, Constants.SAMPLE_TOKEN);
 
         APICall call = new APICall(
                 this,

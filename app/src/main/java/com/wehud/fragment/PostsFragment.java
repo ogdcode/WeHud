@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -27,17 +28,17 @@ import com.wehud.util.GsonUtils;
 import com.wehud.util.Utils;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class PostsFragment extends Fragment {
 
     private static final String KEY_PAGE_POSTS = "key_page_posts";
 
     private Context mContext;
     private View mEmptyLayout;
-    private SwipeRefreshLayout mSwipeLayout;
     private RecyclerView mPostListView;
 
     private List<Post> mPosts;
@@ -46,24 +47,34 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equals(Constants.INTENT_POSTS_LIST) && !mPaused) {
+            if (!mPaused) {
                 final String response = intent.getStringExtra(Constants.EXTRA_BROADCAST);
                 final Payload payload = GsonUtils.getInstance().fromJson(response, Payload.class);
 
                 final String code = payload.getCode();
 
-                if (Integer.valueOf(code) == Constants.HTTP_OK) {
-                    final String content = payload.getContent();
+                if (Integer.valueOf(code) == Constants.HTTP_OK ||
+                        Integer.valueOf(code) == Constants.HTTP_NO_CONTENT) {
+                    switch (intent.getAction()) {
+                        case Constants.INTENT_POSTS_LIST:
+                            final String content = payload.getContent();
 
-                    final Type postListType = new TypeToken<List<Post>>(){}.getType();
-                    mPosts = GsonUtils.getInstance().fromJson(content, postListType);
-                    if (!mPosts.isEmpty()) {
-                        final PostsAdapter adapter = new PostsAdapter(mPosts, true);
-                        mPostListView.setAdapter(adapter);
-
-                        mEmptyLayout.setVisibility(View.GONE);
-                        mSwipeLayout.setVisibility(View.VISIBLE);
-                        mSwipeLayout.setRefreshing(false);
+                            final Type postListType = new TypeToken<List<Post>>(){}.getType();
+                            mPosts = GsonUtils.getInstance().fromJson(content, postListType);
+                            if (!mPosts.isEmpty()) {
+                                final PostsAdapter adapter = new PostsAdapter(mPosts, true);
+                                mPostListView.setLayoutManager(new LinearLayoutManager(mContext));
+                                mPostListView.setAdapter(adapter);
+                                mPostListView.setVisibility(View.VISIBLE);
+                                mEmptyLayout.setVisibility(View.GONE);
+                            }
+                            break;
+                        case Constants.INTENT_POST_LIKE:
+                        case Constants.INTENT_POST_DISLIKE:
+                            mContext.sendBroadcast(new Intent(Constants.EXTRA_REFRESH_PAGES));
+                            break;
+                        default:
+                            break;
                     }
                 } else if (Integer.valueOf(code) == Constants.HTTP_INTERNAL_SERVER_ERROR)
                     Utils.toast(mContext, R.string.error_server);
@@ -83,25 +94,25 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         mContext = view.getContext();
 
         mEmptyLayout = view.findViewById(R.id.layout_empty);
-        mSwipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.layout_swipe);
         mPostListView = (RecyclerView) view.findViewById(android.R.id.list);
 
         mEmptyLayout.setVisibility(View.VISIBLE);
-        mSwipeLayout.setVisibility(View.GONE);
+        mPostListView.setVisibility(View.GONE);
 
-        mSwipeLayout.setOnRefreshListener(this);
-        mSwipeLayout.setRefreshing(true);
-
-        final Bundle args = getArguments();
-        if (args != null) {
-            mPosts = args.getParcelableArrayList(KEY_PAGE_POSTS);
-            if (mPosts != null && mPosts.isEmpty()) mSwipeLayout.setRefreshing(false);
-        } else this.getPosts();
-
-
-        mPostListView.setLayoutManager(new LinearLayoutManager(mContext));
-        mPostListView.addItemDecoration(new DividerItemDecoration(mContext,
-                DividerItemDecoration.HORIZONTAL));
+        if (savedInstanceState != null)
+            mPosts = savedInstanceState.getParcelableArrayList(KEY_PAGE_POSTS);
+        else {
+            final Bundle args = getArguments();
+            if (args != null) {
+                mPosts = args.getParcelableArrayList(KEY_PAGE_POSTS);
+                if (mPosts != null && !mPosts.isEmpty()) {
+                    final PostsAdapter adapter = new PostsAdapter(mPosts, true);
+                    mPostListView.setLayoutManager(new LinearLayoutManager(mContext));
+                    mPostListView.setAdapter(adapter);
+                    mPostListView.setVisibility(View.VISIBLE);
+                }
+            } else this.getPosts();
+        }
 
         return view;
     }
@@ -112,7 +123,15 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
         IntentFilter filter = new IntentFilter();
         filter.addAction(Constants.INTENT_POSTS_LIST);
+        filter.addAction(Constants.INTENT_POST_LIKE);
+        filter.addAction(Constants.INTENT_POST_DISLIKE);
         mContext.registerReceiver(mReceiver, filter);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mPaused = false;
     }
 
     @Override
@@ -122,21 +141,15 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        mPaused = false;
-        if (mReceiver != null) this.getPosts();
-    }
-
-    @Override
     public void onDestroy() {
         super.onDestroy();
         mContext.unregisterReceiver(mReceiver);
     }
 
     @Override
-    public void onRefresh() {
-        this.getPosts();
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList(KEY_PAGE_POSTS, (ArrayList<Post>) mPosts);
     }
 
     private void getPosts() {

@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -44,6 +45,7 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
 
     private static final String PARAM_TITLE = "title";
 
+    private TabLayout mTabs;
     private VPAdapter mAdapter;
     private ViewPager mPager;
 
@@ -57,67 +59,90 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
         @Override
         public void onReceive(Context context, Intent intent) {
             if (!mPaused) {
-                final String response = intent.getStringExtra(Constants.EXTRA_BROADCAST);
-                final Payload payload = GsonUtils.getInstance().fromJson(response, Payload.class);
+                if (!TextUtils.isEmpty(intent.getStringExtra(Constants.EXTRA_BROADCAST))) {
+                    final String response = intent.getStringExtra(Constants.EXTRA_BROADCAST);
+                    final Payload payload = GsonUtils.getInstance().fromJson(response, Payload.class);
 
-                final String code = payload.getCode();
+                    final String code = payload.getCode();
 
-                if (Integer.valueOf(code) == Constants.HTTP_OK ||
-                        Integer.valueOf(code) == Constants.HTTP_NO_CONTENT) {
-                    final String content = payload.getContent();
+                    if (Integer.valueOf(code) == Constants.HTTP_OK ||
+                            Integer.valueOf(code) == Constants.HTTP_CREATED ||
+                            Integer.valueOf(code) == Constants.HTTP_NO_CONTENT) {
+                        final String content = payload.getContent();
 
-                    switch (intent.getAction()) {
-                        case Constants.INTENT_PAGES_LIST:
-                            final Type pageListType = new TypeToken<List<Page>>(){}.getType();
-                            mPages = GsonUtils.getInstance().fromJson(content, pageListType);
+                        switch (intent.getAction()) {
+                            case Constants.INTENT_PAGES_LIST:
+                                final Type pageListType = new TypeToken<List<Page>>(){}.getType();
+                                mPages = GsonUtils.getInstance().fromJson(content, pageListType);
 
-                            if (!mPages.isEmpty()) {
-                                for (Page page : mPages) {
-                                    final List<Post> pagePosts = page.getPosts();
-                                    PostsFragment fragment = PostsFragment.newInstance();
-                                    if (pagePosts != null && !pagePosts.isEmpty()) {
-                                        Bundle args = new Bundle();
-                                        args.putParcelableArrayList(KEY_PAGE_POSTS,
-                                                (ArrayList<Post>) page.getPosts()
-                                        );
-                                        fragment.setArguments(args);
+                                if (!mPages.isEmpty()) {
+                                    for (Page page : mPages) {
+                                        final List<Post> pagePosts = page.getPosts();
+                                        PostsFragment fragment = PostsFragment.newInstance();
+                                        if (pagePosts != null && !pagePosts.isEmpty()) {
+                                            Bundle args = new Bundle();
+                                            args.putParcelableArrayList(
+                                                    KEY_PAGE_POSTS, (ArrayList<Post>) page.getPosts()
+                                            );
+                                            fragment.setArguments(args);
+                                        }
+
+                                        mAdapter.add(fragment, page.getTitle());
                                     }
 
-                                    mAdapter.add(fragment, page.getTitle());
-                                }
+                                    mAdapter.notifyDataSetChanged();
+                                    mPager.invalidate();
+                                } else mTabs.setVisibility(View.GONE);
+                                break;
+                            case Constants.INTENT_PAGES_ADD:
+                                if (mTabs.getVisibility() == View.GONE)
+                                    mTabs.setVisibility(View.VISIBLE);
 
+                                final Page page = GsonUtils.getInstance().fromJson(
+                                        content, Page.class
+                                );
+                                Fragment fragment = PostsFragment.newInstance();
+                                Bundle args = new Bundle();
+                                args.putParcelableArrayList(
+                                        KEY_PAGE_POSTS, (ArrayList<Post>) page.getPosts()
+                                );
+                                fragment.setArguments(args);
+
+                                mPages.add(page);
+                                mAdapter.add(fragment, page.getTitle());
                                 mAdapter.notifyDataSetChanged();
                                 mPager.invalidate();
-                            }
-                            break;
-                        case Constants.INTENT_PAGES_ADD:
-                            final Page page = GsonUtils.getInstance().fromJson(content, Page.class);
+                                break;
+                            case Constants.INTENT_PAGES_DELETE:
+                                final Fragment item = mAdapter.getItem(mCurrentPage);
+                                final String title = mAdapter.getPageTitle(mCurrentPage);
 
-                            mPages.add(page);
-                            mAdapter.add(PostsFragment.newInstance(), page.getTitle());
-                            mAdapter.notifyDataSetChanged();
-                            mPager.invalidate();
-                            break;
-                        case Constants.INTENT_PAGES_DELETE:
-                            final Fragment item = mAdapter.getItem(mCurrentPage);
-                            final String title = mAdapter.getPageTitle(mCurrentPage);
+                                mPages.remove(mCurrentPage - 1);
+                                mAdapter.remove(
+                                        item,
+                                        title
+                                );
+                                mAdapter.notifyDataSetChanged();
+                                mPager.invalidate();
 
-                            mPages.remove(mCurrentPage);
-                            mAdapter.remove(
-                                    item,
-                                    title
-                            );
-                            mAdapter.notifyDataSetChanged();
-                            mPager.invalidate();
+                                if (mPages.isEmpty()) mTabs.setVisibility(View.GONE);
 
-                            Utils.toast(mContext, R.string.message_pageRemoved, title);
-                            break;
-                        default:
-                            break;
-                    }
-                } else if (Integer.valueOf(code) == Constants.HTTP_INTERNAL_SERVER_ERROR)
-                    Utils.toast(mContext, R.string.error_server);
-                else Utils.toast(mContext, R.string.error_general, code);
+                                Utils.toast(mContext, R.string.message_pageRemoved, title);
+                                break;
+                            default:
+                                break;
+                        }
+                    } else if (Integer.valueOf(code) == Constants.HTTP_INTERNAL_SERVER_ERROR)
+                        Utils.toast(mContext, R.string.error_server);
+                    else Utils.toast(mContext, R.string.error_general, code);
+                }
+
+                if (!TextUtils.isEmpty(intent.getStringExtra(Constants.EXTRA_REFRESH_PAGES))) {
+                    mAdapter.clear();
+                    mAdapter.notifyDataSetChanged();
+                    mPager.invalidate();
+                    getPages();
+                }
             }
         }
     };
@@ -138,7 +163,7 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
         if (savedInstanceState != null) mCurrentPage = savedInstanceState.getInt(KEY_CURRENT_PAGE);
         else mCurrentPage = 0;
 
-        TabLayout tabs = (TabLayout) view.findViewById(android.R.id.tabs);
+        mTabs = (TabLayout) view.findViewById(android.R.id.tabs);
         mPager = (ViewPager) view.findViewById(R.id.pager);
 
         mAdapter = new VPAdapter(getChildFragmentManager());
@@ -147,7 +172,7 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
         mPager.setAdapter(mAdapter);
         mPager.setCurrentItem(mCurrentPage);
         mPager.addOnPageChangeListener(this);
-        tabs.setupWithViewPager(mPager);
+        mTabs.setupWithViewPager(mPager);
 
         IntentFilter filter = new IntentFilter();
         filter.addAction(Constants.INTENT_PAGES_ADD);
@@ -249,11 +274,13 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
         headers.put(Constants.HEADER_CONTENT_TYPE, Constants.APPLICATION_JSON);
         headers.put(Constants.HEADER_ACCEPT, Constants.APPLICATION_JSON);
 
+        final String connectedUserId = PreferencesUtils.get(mContext, Constants.PREF_USER_ID);
+
         final APICall call = new APICall(
                 mContext,
                 Constants.INTENT_PAGES_LIST,
                 Constants.GET,
-                Constants.API_PAGES,
+                Constants.API_USERS_PAGES + '/' + connectedUserId,
                 headers
         );
         if (!call.isLoading()) call.execute();
@@ -265,7 +292,7 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
         headers.put(Constants.HEADER_ACCEPT, Constants.APPLICATION_JSON);
 
         Map<String, String> parameters = new HashMap<>();
-        parameters.put(Constants.PARAM_TOKEN, PreferencesUtils.get(mContext, Constants.PREF_TOKEN));
+        parameters.put(Constants.PARAM_TOKEN, Constants.SAMPLE_TOKEN);
 
         final String pageId = mPages.get(mCurrentPage - 1).getId();
 
@@ -286,7 +313,7 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
         headers.put(Constants.HEADER_ACCEPT, Constants.APPLICATION_JSON);
 
         Map<String, String> parameters = new HashMap<>();
-        parameters.put(Constants.PARAM_TOKEN, PreferencesUtils.get(mContext, Constants.PREF_TOKEN));
+        parameters.put(Constants.PARAM_TOKEN, Constants.SAMPLE_TOKEN);
 
         Map<String, String> page = new HashMap<>();
         page.put(PARAM_TITLE, title);

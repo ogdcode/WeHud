@@ -20,7 +20,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
 import com.wehud.R;
 import com.wehud.adapter.ImagesAdapter;
 import com.wehud.dialog.EditDialogFragment;
@@ -264,7 +263,7 @@ public class SettingsActivity extends AppCompatActivity
         headers.put(Constants.HEADER_ACCEPT, Constants.APPLICATION_JSON);
 
         Map<String, String> parameters = new HashMap<>();
-        parameters.put(Constants.PARAM_TOKEN, Constants.TOKEN);
+        parameters.put(Constants.PARAM_TOKEN, Constants.SAMPLE_TOKEN);
 
         final APICall call = new APICall(
                 this,
@@ -283,7 +282,7 @@ public class SettingsActivity extends AppCompatActivity
         headers.put(Constants.HEADER_ACCEPT, Constants.APPLICATION_JSON);
 
         Map<String, String> parameters = new HashMap<>();
-        parameters.put(Constants.PARAM_TOKEN, Constants.TOKEN);
+        parameters.put(Constants.PARAM_TOKEN, Constants.SAMPLE_TOKEN);
 
         final APICall call = new APICall(
                 this,
@@ -332,7 +331,7 @@ public class SettingsActivity extends AppCompatActivity
             headers.put(Constants.HEADER_ACCEPT, Constants.APPLICATION_JSON);
 
             Map<String, String> parameters = new HashMap<>();
-            parameters.put(Constants.PARAM_TOKEN, Constants.TOKEN);
+            parameters.put(Constants.PARAM_TOKEN, Constants.SAMPLE_TOKEN);
 
             Map<String, String> newSettings = new HashMap<>();
             newSettings.put(PARAM_AVATAR, avatar);

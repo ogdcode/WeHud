@@ -10,10 +10,10 @@
         android:id="@+id/post_likes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/ic_nolike"
         android:drawablePadding="@dimen/post_footerIconPadding"
-        android:drawableStart="@drawable/ic_nolike"
         android:gravity="center_vertical"
+        tools:drawableLeft="@drawable/ic_notliked"
+        tools:drawableStart="@drawable/ic_notliked"
         tools:text="@string/likes" />
 
 </LinearLayout>

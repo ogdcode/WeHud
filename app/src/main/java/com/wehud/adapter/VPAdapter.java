@@ -29,6 +29,11 @@ public final class VPAdapter extends FragmentStatePagerAdapter {
         mTitles.remove(title);
     }
 
+    public void clear() {
+        for (int i = 0; i < mFragments.size(); ++i) mFragments.remove(i);
+        for (int i = 0; i < mTitles.size(); ++i) mTitles.remove(i);
+    }
+
     public void setBundle(Bundle bundle) {
         mBundle = bundle;
     }

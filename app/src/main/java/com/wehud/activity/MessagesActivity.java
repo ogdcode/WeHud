@@ -143,7 +143,7 @@ public class MessagesActivity extends AppCompatActivity implements SwipeRefreshL
         headers.put(Constants.HEADER_ACCEPT, Constants.APPLICATION_JSON);
 
         Map<String, String> parameters = new HashMap<>();
-        parameters.put(Constants.PARAM_TOKEN, Constants.TOKEN);
+        parameters.put(Constants.PARAM_TOKEN, Constants.SAMPLE_TOKEN);
 
         final APICall call = new APICall(
                 this,

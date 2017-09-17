@@ -7,7 +7,7 @@ package com.wehud.util;
  */
 
 public final class Constants {
-
+    public static final String SAMPLE_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1OThmMWQ2NTQ5M2E2MjBhYTkxOGJlNDIiLCJpYXQiOjE1MDU2NTI2MDAsImV4cCI6MTUwNTczOTAwMH0.APpfDV5J7RqjaDZxjMbYmNxAQvb-QcekJcyxW4xg-UI";
 
     private static final String API_URL = "http://192.168.1.41:3000";
 
@@ -44,8 +44,6 @@ public final class Constants {
     public static final String PARAM_TOKEN = "token";
 
     public static final String APPLICATION_JSON = "application/json";
-
-    public static final String TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1OThmMWQ2NTQ5M2E2MjBhYTkxOGJlNDIiLCJpYXQiOjE1MDU1NTM3ODYsImV4cCI6MTUwNTY0MDE4Nn0.uFdsJJoLn9rDXQn2PcXXJ7qzYfzQ-j-BdRq9nSUdTd8";
 
     public static final String GET = "GET";
     public static final String POST = "POST";
@@ -94,6 +92,7 @@ public final class Constants {
     public static final String INTENT_EVENTS_UNBIND = "intent_events_unbind";
 
     public static final String EXTRA_BROADCAST = "extra_broadcast";
+    public static final String EXTRA_REFRESH_PAGES = "extra_refresh_pages";
 
     public static final String PREF_USER_ID = "pref_user_id";
     public static final String PREF_TOKEN = "pref_token";

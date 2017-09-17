@@ -56,7 +56,9 @@
             android:layout_marginTop="@dimen/post_dividerMargin"
             android:background="@android:color/black" />
 
-        <include layout="@layout/post_footer" />
+        <include
+            android:id="@+id/post_footer"
+            layout="@layout/post_footer" />
 
     </LinearLayout>
 
