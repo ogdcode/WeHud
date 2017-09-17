@@ -44,19 +44,19 @@ public class ContactsActivity extends AppCompatActivity
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(Constants.INTENT_FOLLOWERS_LIST) && !mPaused) {
-                String response = intent.getStringExtra(Constants.EXTRA_BROADCAST);
-                Payload payload = GsonUtils.getInstance().fromJson(response, Payload.class);
+                final String response = intent.getStringExtra(Constants.EXTRA_BROADCAST);
+                final Payload payload = GsonUtils.getInstance().fromJson(response, Payload.class);
 
-                String code = payload.getCode();
+                final String code = payload.getCode();
 
                 if (Integer.valueOf(code) == Constants.HTTP_OK) {
-                    String content = payload.getContent();
-                    User connectedUser = GsonUtils.getInstance().fromJson(content, User.class);
+                    final String content = payload.getContent();
+                    final User connectedUser = GsonUtils.getInstance().fromJson(content, User.class);
 
-                    List<User> followers = connectedUser.getFollowers();
+                    final List<User> followers = connectedUser.getFollowers();
 
                     if (!followers.isEmpty()) {
-                        UsersAdapter adapter = new UsersAdapter(followers);
+                        final UsersAdapter adapter = new UsersAdapter(followers);
                         adapter.setViewResourceId(1);
                         mContactListView.setAdapter(adapter);
 
@@ -68,25 +68,6 @@ public class ContactsActivity extends AppCompatActivity
                     Utils.toast(ContactsActivity.this, R.string.error_server);
                 else Utils.toast(ContactsActivity.this, R.string.error_general, code);
             }
-
-            /*
-            String payload = intent.getStringExtra(Constants.EXTRA_BROADCAST);
-
-            if (intent.getAction().equals(Constants.INTENT_FOLLOWERS_LIST) && !mPaused) {
-                Type userListType = new TypeToken<List<User>>(){}.getType();
-                mFollowers = GsonUtils.getInstance().fromJson(payload, userListType);
-
-                if (!mFollowers.isEmpty()) {
-                    UsersAdapter adapter = new UsersAdapter(mFollowers);
-                    adapter.setViewResourceId(1);
-                    mContactListView.setAdapter(adapter);
-
-                    mEmptyLayout.setVisibility(View.GONE);
-                    mSwipeLayout.setVisibility(View.VISIBLE);
-                    mSwipeLayout.setRefreshing(false);
-                }
-            }
-            */
         }
     };
 
@@ -95,7 +76,7 @@ public class ContactsActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacts);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         ActionBar ab = getSupportActionBar();
@@ -164,9 +145,9 @@ public class ContactsActivity extends AppCompatActivity
         headers.put(Constants.HEADER_CONTENT_TYPE, Constants.APPLICATION_JSON);
         headers.put(Constants.HEADER_ACCEPT, Constants.APPLICATION_JSON);
 
-        String connectedUserId = PreferencesUtils.get(this, Constants.PREF_USER_ID);
+        final String connectedUserId = PreferencesUtils.get(this, Constants.PREF_USER_ID);
 
-        APICall call = new APICall(
+        final APICall call = new APICall(
                 this,
                 Constants.INTENT_FOLLOWERS_LIST,
                 Constants.GET,

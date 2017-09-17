@@ -76,14 +76,14 @@ public class SendFragment extends Fragment
         public void onReceive(Context context, Intent intent) {
 
             if (!mPaused) {
-                String response = intent.getStringExtra(Constants.EXTRA_BROADCAST);
-                Payload payload = GsonUtils.getInstance().fromJson(response, Payload.class);
+                final String response = intent.getStringExtra(Constants.EXTRA_BROADCAST);
+                final Payload payload = GsonUtils.getInstance().fromJson(response, Payload.class);
 
-                String code = payload.getCode();
+                final String code = payload.getCode();
 
                 if (Integer.valueOf(code) == Constants.HTTP_OK ||
                         Integer.valueOf(code) == Constants.HTTP_CREATED) {
-                    String content = payload.getContent();
+                    final String content = payload.getContent();
 
                     switch (intent.getAction()) {
                         case Constants.INTENT_POSTS_ADD:
@@ -107,24 +107,6 @@ public class SendFragment extends Fragment
                     Utils.toast(mContext, R.string.error_server);
                 else Utils.toast(mContext, R.string.error_general, code);
             }
-
-            /*
-            String payload = intent.getStringExtra(Constants.EXTRA_BROADCAST);
-
-            if (intent.getAction().equals(Constants.INTENT_FOLLOWERS_LIST) && !mPaused) {
-                Type userListType = new TypeToken<List<User>>(){}.getType();
-                mFollowers = GsonUtils.getInstance().fromJson(payload, userListType);
-            }
-
-            if (intent.getAction().equals(Constants.INTENT_GAMES_LIST) && !mPaused) {
-                Type gameListType = new TypeToken<List<Game>>(){}.getType();
-                mGames = GsonUtils.getInstance().fromJson(payload, gameListType);
-            }
-
-            if (intent.getAction().equals(Constants.INTENT_POSTS_ADD) && !mPaused) {
-                Utils.toast(mContext, getString(R.string.message_newPost));
-            }
-            */
         }
     };
 
@@ -137,7 +119,7 @@ public class SendFragment extends Fragment
                              Bundle savedInstanceState) {
         setHasOptionsMenu(true);
 
-        View view = inflater.inflate(R.layout.fragment_send, container, false);
+        final View view = inflater.inflate(R.layout.fragment_send, container, false);
         mContext = view.getContext();
 
         mNewPostText = (EditText) view.findViewById(R.id.newPost_text);
@@ -218,12 +200,14 @@ public class SendFragment extends Fragment
 
     @Override
     public void onClick(View view) {
-        FragmentManager manager = getFragmentManager();
+        final FragmentManager manager = getFragmentManager();
+        final RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(mContext);
+        final DividerItemDecoration divider = new DividerItemDecoration(
+                mContext, DividerItemDecoration.HORIZONTAL
+        );
         String dialogTitle;
         ArrayList<? extends Parcelable> list;
         RecyclerView.Adapter adapter;
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(mContext);
-        DividerItemDecoration divider = new DividerItemDecoration(mContext, DividerItemDecoration.HORIZONTAL);
 
         switch (view.getId()) {
             case R.id.newPost_btnAddGame:
@@ -278,9 +262,9 @@ public class SendFragment extends Fragment
         headers.put(Constants.HEADER_CONTENT_TYPE, Constants.APPLICATION_JSON);
         headers.put(Constants.HEADER_ACCEPT, Constants.APPLICATION_JSON);
 
-        String currentUserId = PreferencesUtils.get(mContext, Constants.PREF_USER_ID);
+        final String currentUserId = PreferencesUtils.get(mContext, Constants.PREF_USER_ID);
 
-        APICall call = new APICall(
+        final APICall call = new APICall(
                 mContext,
                 Constants.INTENT_FOLLOWERS_LIST,
                 Constants.GET,
@@ -295,7 +279,7 @@ public class SendFragment extends Fragment
         headers.put(Constants.HEADER_CONTENT_TYPE, Constants.APPLICATION_JSON);
         headers.put(Constants.HEADER_ACCEPT, Constants.APPLICATION_JSON);
 
-        APICall call = new APICall(
+        final APICall call = new APICall(
                 mContext,
                 Constants.INTENT_GAMES_LIST,
                 Constants.GET,
@@ -306,18 +290,18 @@ public class SendFragment extends Fragment
     }
 
     private void createPost() {
-        String text = mNewPostText.getText().toString();
-        String videoUri = mNewPostVideo.getText().toString();
-        String game = mNewPostGame.getText().toString();
-        String follower = mNewPostFollower.getText().toString();
-        String rating = String.valueOf(mNewPostGameRating.getRating());
+        final String text = mNewPostText.getText().toString();
+        final String videoUri = mNewPostVideo.getText().toString();
+        final String game = mNewPostGame.getText().toString();
+        final String follower = mNewPostFollower.getText().toString();
+        final String rating = String.valueOf(mNewPostGameRating.getRating());
 
         Map<String, String> headers = new HashMap<>();
         headers.put(Constants.HEADER_CONTENT_TYPE, Constants.APPLICATION_JSON);
         headers.put(Constants.HEADER_ACCEPT, Constants.APPLICATION_JSON);
 
         Map<String, String> parameters = new HashMap<>();
-        parameters.put(Constants.PARAM_TOKEN, Constants.TOKEN);
+        parameters.put(Constants.PARAM_TOKEN, PreferencesUtils.get(mContext, Constants.PREF_TOKEN));
 
         Map<String, String> post = new HashMap<>();
         post.put(PARAM_TEXT, text);
@@ -333,9 +317,9 @@ public class SendFragment extends Fragment
         if (mNewPostFollowerLayout.getVisibility() == View.VISIBLE)
             if (!TextUtils.isEmpty(follower)) post.put(PARAM_FOLLOWER, follower);
 
-        String body = GsonUtils.getInstance().toJson(post);
+        final String body = GsonUtils.getInstance().toJson(post);
 
-        APICall call = new APICall(
+        final APICall call = new APICall(
                 mContext,
                 Constants.INTENT_POSTS_ADD,
                 Constants.POST,

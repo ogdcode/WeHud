@@ -7,12 +7,15 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.support.v4.app.NavUtils;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -35,6 +38,7 @@ import com.wehud.model.Planning;
 import com.wehud.network.APICall;
 import com.wehud.util.Constants;
 import com.wehud.util.GsonUtils;
+import com.wehud.util.PreferencesUtils;
 import com.wehud.util.Utils;
 
 import java.lang.reflect.Type;
@@ -73,18 +77,18 @@ public class EventsActivity extends AppCompatActivity
         @Override
         public void onReceive(Context context, Intent intent) {
             if (!mPaused) {
-                String response = intent.getStringExtra(Constants.EXTRA_BROADCAST);
-                Payload payload = GsonUtils.getInstance().fromJson(response, Payload.class);
+                final String response = intent.getStringExtra(Constants.EXTRA_BROADCAST);
+                final Payload payload = GsonUtils.getInstance().fromJson(response, Payload.class);
 
-                String code = payload.getCode();
+                final String code = payload.getCode();
 
                 if (Integer.valueOf(code) == Constants.HTTP_OK ||
                         Integer.valueOf(code) == Constants.HTTP_CREATED) {
-                    String content = payload.getContent();
+                    final String content = payload.getContent();
 
                     switch (intent.getAction()) {
                         case Constants.INTENT_EVENTS_LIST:
-                            Type eventListType = new TypeToken<List<Event>>(){}.getType();
+                            final Type eventListType = new TypeToken<List<Event>>(){}.getType();
                             mEvents = GsonUtils.getInstance().fromJson(content, eventListType);
 
                             if (!mEvents.isEmpty()) {
@@ -106,7 +110,7 @@ public class EventsActivity extends AppCompatActivity
                             );
                             break;
                         case Constants.INTENT_EVENTS_BIND:
-                            EventBindResponse bindResponse = GsonUtils.getInstance().fromJson(
+                            final EventBindResponse bindResponse = GsonUtils.getInstance().fromJson(
                                     content, EventBindResponse.class
                             );
                             Utils.toast(
@@ -116,9 +120,11 @@ public class EventsActivity extends AppCompatActivity
                             );
                             break;
                         case Constants.INTENT_EVENTS_UNBIND:
-                            EventBindResponse unbindResponse = GsonUtils.getInstance().fromJson(
-                                    content, EventBindResponse.class
-                            );
+                            final EventBindResponse unbindResponse =
+                                    GsonUtils.getInstance().fromJson(
+                                            content,
+                                            EventBindResponse.class
+                                    );
                             Utils.toast(
                                     EventsActivity.this,
                                     R.string.message_eventUnbound,
@@ -132,53 +138,6 @@ public class EventsActivity extends AppCompatActivity
                     Utils.toast(EventsActivity.this, R.string.error_server);
                 else Utils.toast(EventsActivity.this, R.string.error_general, code);
             }
-
-            /*
-            String payload = intent.getStringExtra(Constants.EXTRA_BROADCAST);
-
-            if (intent.getAction().equals(Constants.INTENT_EVENTS_LIST) && !mPaused) {
-                Type eventListType = new TypeToken<List<Event>>() {}.getType();
-                mEvents = GsonUtils.getInstance().fromJson(payload, eventListType);
-
-                if (!mEvents.isEmpty()) {
-                    EventsAdapter adapter = new EventsAdapter(mEvents);
-                    adapter.setFragmentManager(getSupportFragmentManager());
-                    adapter.setPlannings(mPlannings);
-                    mEventListView.setAdapter(adapter);
-
-                    mEmptyLayout.setVisibility(View.GONE);
-                    mSwipeLayout.setVisibility(View.VISIBLE);
-                    mSwipeLayout.setRefreshing(false);
-                }
-            }
-
-            if (intent.getAction().equals(Constants.INTENT_EVENTS_ADD) && !mPaused) {
-                mSwipeLayout.setRefreshing(true);
-                Utils.toast(EventsActivity.this, getString(R.string.message_createEventSuccess));
-            }
-
-            if (intent.getAction().equals(Constants.INTENT_EVENTS_BIND) && !mPaused) {
-                EventBindResponse response = GsonUtils.getInstance().fromJson(
-                        payload, EventBindResponse.class
-                );
-
-                String message = getResources().getString(
-                        R.string.message_eventBound, response.getPlanning()
-                );
-                Utils.toast(EventsActivity.this, message);
-            }
-
-            if (intent.getAction().equals(Constants.INTENT_EVENTS_UNBIND) && !mPaused) {
-                EventBindResponse response = GsonUtils.getInstance().fromJson(
-                        payload, EventBindResponse.class
-                );
-
-                String message = getResources().getString(
-                        R.string.message_eventUnbound, response.getPlanning()
-                );
-                Utils.toast(EventsActivity.this, message);
-            }
-            */
         }
     };
 
@@ -186,6 +145,12 @@ public class EventsActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_events);
+
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        ActionBar ab = getSupportActionBar();
+        if (ab != null) ab.setDisplayHomeAsUpEnabled(true);
 
         mEmptyLayout = findViewById(R.id.layout_empty);
         mSwipeLayout = (SwipeRefreshLayout) findViewById(R.id.layout_swipe);
@@ -214,7 +179,7 @@ public class EventsActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        Bundle bundle = getIntent().getExtras();
+        final Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             mPlannings = bundle.getParcelableArrayList(KEY_PLANNINGS);
             mEvents = bundle.getParcelableArrayList(KEY_EVENTS);
@@ -251,6 +216,9 @@ public class EventsActivity extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+                break;
             case R.id.menu_event_add:
                 this.generateNewEventDialog();
                 break;
@@ -362,13 +330,13 @@ public class EventsActivity extends AppCompatActivity
                     final String description = descriptionView.getText().toString();
                     final String startDateTime = (startDateTimeView.getTag() == null ?
                             "" : Utils.localDateTimeStringToIsoDateTimeString(
-                                    startDateTimeView.getText().toString()
-                                )
+                            startDateTimeView.getText().toString()
+                    )
                     );
                     final String endDateTime = (endDateTimeView.getTag() == null ?
                             "" : Utils.localDateTimeStringToIsoDateTimeString(
-                                    endDateTimeView.getText().toString()
-                                )
+                            endDateTimeView.getText().toString()
+                    )
                     );
                     final String planning = (planningView.getSelectedItem() == null ?
                             "" : planningView.getSelectedItem().toString()
@@ -401,7 +369,7 @@ public class EventsActivity extends AppCompatActivity
 
             Map<String, String> parameters = new HashMap<>();
             parameters.put(Constants.PREF_USER_ID, mUserId);
-            parameters.put(Constants.PARAM_TOKEN, Constants.TOKEN);
+            parameters.put(Constants.PARAM_TOKEN, PreferencesUtils.get(this, Constants.PREF_TOKEN));
 
             Map<String, String> event = new HashMap<>();
             event.put(PARAM_TITLE, title);
@@ -410,9 +378,9 @@ public class EventsActivity extends AppCompatActivity
             if (!TextUtils.isEmpty(endDateTime)) event.put(PARAM_END_DATE_TIME, endDateTime);
             if (!TextUtils.isEmpty(planning)) event.put(PARAM_PLANNING, planning);
 
-            String body = GsonUtils.getInstance().toJson(event);
+            final String body = GsonUtils.getInstance().toJson(event);
 
-            APICall call = new APICall(
+            final APICall call = new APICall(
                     this,
                     Constants.INTENT_EVENTS_ADD,
                     Constants.POST,
@@ -431,7 +399,7 @@ public class EventsActivity extends AppCompatActivity
             headers.put(Constants.HEADER_CONTENT_TYPE, Constants.APPLICATION_JSON);
             headers.put(Constants.HEADER_ACCEPT, Constants.APPLICATION_JSON);
 
-            APICall call = new APICall(
+            final APICall call = new APICall(
                     this,
                     Constants.INTENT_EVENTS_LIST,
                     Constants.GET,

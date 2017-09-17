@@ -47,18 +47,18 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(Constants.INTENT_POSTS_LIST) && !mPaused) {
-                String response = intent.getStringExtra(Constants.EXTRA_BROADCAST);
-                Payload payload = GsonUtils.getInstance().fromJson(response, Payload.class);
+                final String response = intent.getStringExtra(Constants.EXTRA_BROADCAST);
+                final Payload payload = GsonUtils.getInstance().fromJson(response, Payload.class);
 
-                String code = payload.getCode();
+                final String code = payload.getCode();
 
                 if (Integer.valueOf(code) == Constants.HTTP_OK) {
-                    String content = payload.getContent();
+                    final String content = payload.getContent();
 
-                    Type postListType = new TypeToken<List<Post>>(){}.getType();
+                    final Type postListType = new TypeToken<List<Post>>(){}.getType();
                     mPosts = GsonUtils.getInstance().fromJson(content, postListType);
                     if (!mPosts.isEmpty()) {
-                        PostsAdapter adapter = new PostsAdapter(mPosts, true);
+                        final PostsAdapter adapter = new PostsAdapter(mPosts, true);
                         mPostListView.setAdapter(adapter);
 
                         mEmptyLayout.setVisibility(View.GONE);
@@ -69,23 +69,6 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                     Utils.toast(mContext, R.string.error_server);
                 else Utils.toast(mContext, R.string.error_general, code);
             }
-
-            /*
-            String payload = intent.getStringExtra(Constants.EXTRA_BROADCAST);
-
-            if (intent.getAction().equals(Constants.INTENT_POSTS_LIST) && !mPaused) {
-                Type postListType = new TypeToken<List<Post>>(){}.getType();
-                mPosts = GsonUtils.getInstance().fromJson(payload, postListType);
-                if (!mPosts.isEmpty()) {
-                    PostsAdapter adapter = new PostsAdapter(mPosts, true);
-                    mPostListView.setAdapter(adapter);
-
-                    mEmptyLayout.setVisibility(View.GONE);
-                    mSwipeLayout.setVisibility(View.VISIBLE);
-                    mSwipeLayout.setRefreshing(false);
-                }
-            }
-            */
         }
     };
 
@@ -96,7 +79,7 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_posts, container, false);
+        final View view = inflater.inflate(R.layout.fragment_posts, container, false);
         mContext = view.getContext();
 
         mEmptyLayout = view.findViewById(R.id.layout_empty);
@@ -109,7 +92,7 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         mSwipeLayout.setOnRefreshListener(this);
         mSwipeLayout.setRefreshing(true);
 
-        Bundle args = getArguments();
+        final Bundle args = getArguments();
         if (args != null) {
             mPosts = args.getParcelableArrayList(KEY_PAGE_POSTS);
             if (mPosts != null && mPosts.isEmpty()) mSwipeLayout.setRefreshing(false);
@@ -161,7 +144,7 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         headers.put(Constants.HEADER_CONTENT_TYPE, Constants.APPLICATION_JSON);
         headers.put(Constants.HEADER_ACCEPT, Constants.APPLICATION_JSON);
 
-        APICall call = new APICall(
+        final APICall call = new APICall(
                 mContext,
                 Constants.INTENT_POSTS_LIST,
                 Constants.GET,

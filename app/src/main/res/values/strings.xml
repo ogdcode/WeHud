@@ -7,7 +7,7 @@
     <string name="menu_send">Send</string>
     <string name="menu_games">Games</string>
     <string name="menu_profile">Profile</string>
-    <string name="empty_list">This list does not contain any posts. How sad! : (</string>
+    <string name="empty_list">Nothing was found…</string>
     <string name="username">Username</string>
     <string name="datetime">dd/MM/yyyy HH:mm</string>
     <string name="text">Text</string>
@@ -152,4 +152,9 @@
     <string name="error_general">There was an error while fetching the database: code %s</string>
     <string name="profile_user">Go to Profile</string>
     <string name="btnEvents">Events</string>
+    <string name="hint_confirmPassword">Confirm Password</string>
+    <string name="create_account">Create account</string>
+    <string name="message_accountCreated">Your account has been created</string>
+    <string name="title_events">Events</string>
+    <string name="title_register">Register</string>
 </resources>

@@ -51,7 +51,7 @@ public final class PlanningsAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         mManager = manager;
     }
 
-    public void setViewResourceId(int viewResourceId) {
+    void setViewResourceId(int viewResourceId) {
         mViewResourceId = viewResourceId;
     }
 
@@ -78,7 +78,7 @@ public final class PlanningsAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
         final Planning planning = mPlannings.get(position);
-        String title = planning.getTitle();
+        final String title = planning.getTitle();
 
         if (holder instanceof PlanningTitlesVH) {
             final PlanningTitlesVH titlesHolder = (PlanningTitlesVH) holder;
@@ -95,7 +95,7 @@ public final class PlanningsAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             final PlanningsVH planningsHolder = (PlanningsVH) holder;
             final List<Event> events = planning.getEvents();
 
-            int numEvents = events.size();
+            final int numEvents = events.size();
 
             planningsHolder.title.setText(title);
             planningsHolder.numEvents.setText(numEvents + "\t" +
@@ -162,9 +162,9 @@ public final class PlanningsAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         headers.put(Constants.HEADER_CONTENT_TYPE, Constants.APPLICATION_JSON);
         headers.put(Constants.HEADER_ACCEPT, Constants.APPLICATION_JSON);
 
-        String planningId = planning.getId();
+        final String planningId = planning.getId();
 
-        APICall call = new APICall(
+        final APICall call = new APICall(
                 context,
                 Constants.INTENT_PLANNINGS_UNBIND,
                 Constants.PATCH,
@@ -233,7 +233,7 @@ public final class PlanningsAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             expandedLayout = (ViewGroup) view.findViewById(R.id.layout_expanded);
             expandedLayout.setVisibility(View.GONE);
 
-            boolean isConnectedUser = Utils.isConnectedUser(
+            final boolean isConnectedUser = Utils.isConnectedUser(
                     context,
                     PreferencesUtils.get(context, Constants.PREF_USER_ID)
             );
@@ -269,7 +269,7 @@ public final class PlanningsAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             headers.put(Constants.HEADER_CONTENT_TYPE, Constants.APPLICATION_JSON);
             headers.put(Constants.HEADER_ACCEPT, Constants.APPLICATION_JSON);
 
-            APICall call = new APICall(
+            final APICall call = new APICall(
                     context,
                     Constants.INTENT_PLANNINGS_DELETE,
                     Constants.DELETE,

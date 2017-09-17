@@ -62,21 +62,21 @@ public class SettingsActivity extends AppCompatActivity
         @Override
         public void onReceive(Context context, Intent intent) {
             if (!mPaused) {
-                String response = intent.getStringExtra(Constants.EXTRA_BROADCAST);
-                Payload payload = GsonUtils.getInstance().fromJson(response, Payload.class);
+                final String response = intent.getStringExtra(Constants.EXTRA_BROADCAST);
+                final Payload payload = GsonUtils.getInstance().fromJson(response, Payload.class);
 
-                String code = payload.getCode();
+                final String code = payload.getCode();
 
                 if (Integer.valueOf(code) == Constants.HTTP_OK ||
                         Integer.valueOf(code) == Constants.HTTP_NO_CONTENT) {
-                    String content = payload.getContent();
+                    final String content = payload.getContent();
 
                     switch (intent.getAction()) {
                         case Constants.INTENT_USER_GET:
                             mCurrentUser = GsonUtils.getInstance().fromJson(content, User.class);
 
-                            String avatar = mCurrentUser.getAvatar();
-                            String currentPassword = mCurrentUser.getPassword();
+                            final String avatar = mCurrentUser.getAvatar();
+                            final String currentPassword = mCurrentUser.getPassword();
 
                             mImage = new Image(avatar, 0);
 
@@ -107,35 +107,6 @@ public class SettingsActivity extends AppCompatActivity
                     Utils.toast(SettingsActivity.this, R.string.error_server);
                 else Utils.toast(SettingsActivity.this, R.string.error_general, code);
             }
-
-            /*
-            String payload = intent.getStringExtra(Constants.EXTRA_BROADCAST);
-
-            if (intent.getAction().equals(Constants.INTENT_USER_GET) && !mPaused) {
-                mCurrentUser = GsonUtils.getInstance().fromJson(payload, User.class);
-
-                String avatar = mCurrentUser.getAvatar();
-                String currentPassword = mCurrentUser.getPassword();
-
-                mImage = new Image(avatar, 0);
-
-                Utils.loadImage(SettingsActivity.this, avatar, mAvatar, 256);
-                mUsername.setText(mCurrentUser.getUsername());
-                mEmail.setText(mCurrentUser.getEmail());
-
-                mPassword.setTag(currentPassword);
-                mPassword.setText(getString(R.string.sample_password));
-            }
-
-            if (intent.getAction().equals(Constants.INTENT_USER_UPDATE) && !mPaused) {
-                Utils.toast(SettingsActivity.this, getString(R.string.message_updateSuccess));
-                SettingsActivity.this.finish();
-            }
-
-            if (intent.getAction().equals(Constants.INTENT_USER_DELETE) && !mPaused) {
-                Utils.toast(SettingsActivity.this, getString(R.string.message_deleteSuccess));
-            }
-            */
         }
     };
 
@@ -144,7 +115,7 @@ public class SettingsActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         ActionBar ab = getSupportActionBar();
@@ -280,7 +251,7 @@ public class SettingsActivity extends AppCompatActivity
         if (p instanceof Image) {
             mImage = (Image) p;
 
-            String url = mImage.getUrl();
+            final String url = mImage.getUrl();
             if (!TextUtils.isEmpty(url)) Utils.loadImage(this, url, mAvatar, 256);
             else mAvatar.setImageResource(mImage.getResId());
         }
@@ -295,7 +266,7 @@ public class SettingsActivity extends AppCompatActivity
         Map<String, String> parameters = new HashMap<>();
         parameters.put(Constants.PARAM_TOKEN, Constants.TOKEN);
 
-        APICall call = new APICall(
+        final APICall call = new APICall(
                 this,
                 Constants.INTENT_USER_DELETE,
                 Constants.DELETE,
@@ -314,7 +285,7 @@ public class SettingsActivity extends AppCompatActivity
         Map<String, String> parameters = new HashMap<>();
         parameters.put(Constants.PARAM_TOKEN, Constants.TOKEN);
 
-        APICall call = new APICall(
+        final APICall call = new APICall(
                 this,
                 Constants.INTENT_USER_GET,
                 Constants.GET,
@@ -326,13 +297,13 @@ public class SettingsActivity extends AppCompatActivity
     }
 
     private void changeAvatar() {
-        FragmentManager manager = getSupportFragmentManager();
-        String title = getString(R.string.dialogTitle_chooseAvatar);
+        final FragmentManager manager = getSupportFragmentManager();
+        final String title = getString(R.string.dialogTitle_chooseAvatar);
 
-        ArrayList<Image> images = Utils.getDefaultAvatars();
+        final ArrayList<Image> images = Utils.getDefaultAvatars();
 
-        RecyclerView.Adapter adapter = new ImagesAdapter(images);
-        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this, 2);
+        final RecyclerView.Adapter adapter = new ImagesAdapter(images);
+        final RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this, 2);
 
         ListDialogFragment.generate(
                 manager,
@@ -346,10 +317,12 @@ public class SettingsActivity extends AppCompatActivity
     }
 
     private void updateAccount() {
-        String avatar = mImage.getUrl();
-        String username = mUsername.getText().toString();
-        String email = mEmail.getText().toString();
-        String password = mPassword.getTag().toString(); // Because text is replaced with dots.
+        final String avatar = mImage.getUrl();
+        final String username = mUsername.getText().toString();
+        final String email = mEmail.getText().toString();
+
+        // Text is replaced with dots, so use tag instead of text.
+        final String password = mPassword.getTag().toString();
 
         if (!avatar.equals(mCurrentUser.getAvatar()) ||
                 !username.equals(mCurrentUser.getUsername()) ||
@@ -368,9 +341,9 @@ public class SettingsActivity extends AppCompatActivity
             if (!password.equals(mCurrentUser.getPassword()))
                 newSettings.put(PARAM_PASSWORD, password);
 
-            String body = GsonUtils.getInstance().toJson(newSettings);
+            final String body = GsonUtils.getInstance().toJson(newSettings);
 
-            APICall call = new APICall(
+            final APICall call = new APICall(
                     this,
                     Constants.INTENT_USER_UPDATE,
                     Constants.PUT,

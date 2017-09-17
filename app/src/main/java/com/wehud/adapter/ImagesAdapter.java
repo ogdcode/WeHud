@@ -28,16 +28,17 @@ public final class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.Imag
 
     @Override
     public ImagesVH onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.avatar, parent, false);
+        final View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.avatar, parent, false);
         return new ImagesVH(view);
     }
 
     @Override
     public void onBindViewHolder(ImagesVH holder, int position) {
-        Image image = mImages.get(position);
+        final Image image = mImages.get(position);
 
-        String url = image.getUrl();
-        int resId = image.getResId();
+        final String url = image.getUrl();
+        final int resId = image.getResId();
 
         if (!TextUtils.isEmpty(url)) Utils.loadImage(holder.context, url, holder.image, 256);
         else holder.image.setImageResource(resId);

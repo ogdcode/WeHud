@@ -31,8 +31,7 @@ public final class APICall extends AsyncTask<Void, Void, Response> {
     private boolean mLoading;
 
     // This class should not be called without parameters.
-    private APICall() {
-    }
+    private APICall() {}
 
     public APICall(Context context, String action, String method, String url, String body,
                    Map<String, String> headers) {
@@ -78,16 +77,8 @@ public final class APICall extends AsyncTask<Void, Void, Response> {
 
     @Override
     protected void onPostExecute(Response response) {
-        /*
+        final String payload = this.buildPayload(response);
         mLoading = false;
-        String content = response.getContent();
-        Intent intent = new Intent(mAction);
-        intent.putExtra(Constants.EXTRA_BROADCAST, content);
-        mContext.sendBroadcast(intent);
-        */
-
-        mLoading = false;
-        String payload = this.buildPayload(response);
         Intent intent = new Intent(mAction);
         intent.putExtra(Constants.EXTRA_BROADCAST, payload);
         mContext.sendBroadcast(intent);

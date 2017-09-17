@@ -37,7 +37,7 @@ public final class YouTubeUtils {
         iv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = YouTubeStandalonePlayer.createVideoIntent(
+                final Intent intent = YouTubeStandalonePlayer.createVideoIntent(
                         (Activity) context,
                         API_KEY,
                         id,

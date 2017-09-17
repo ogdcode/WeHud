@@ -102,7 +102,6 @@ public final class Utils {
         v.startAnimation(anim);
     }
 
-
     public static String isoDateTimeStringToLocalDateTimeString(String iso) {
         SimpleDateFormat sdf = new SimpleDateFormat(
                 Constants.ISO_8601_PATTERN,
@@ -136,7 +135,7 @@ public final class Utils {
     }
 
     public static String timestampToLocalDateString(long timestamp) {
-        Timestamp tstp = new Timestamp(timestamp);
+        final Timestamp tstp = new Timestamp(timestamp);
         DateFormat df = new SimpleDateFormat(Constants.LOCAL_PATTERN_DATE, Locale.getDefault());
         return df.format(new Date(tstp.getTime()));
     }
@@ -233,7 +232,7 @@ public final class Utils {
     }
 
     public static void putStringListIntoTextView(TextView txt, List<String> strings) {
-        int len = strings.size();
+        final int len = strings.size();
         for (int i = 0; i < len; ++i) {
             if (i < len - 1) txt.append(strings.get(i) + ", ");
             else txt.append(strings.get(i));
@@ -242,7 +241,7 @@ public final class Utils {
 
     public static ArrayList<Image> getDefaultAvatars() {
         ArrayList<Image> images = new ArrayList<>();
-        for (String avatar : Constants.AVATARS) {
+        for (final String avatar : Constants.AVATARS) {
             images.add(new Image(avatar, 0));
         }
 
@@ -250,7 +249,7 @@ public final class Utils {
     }
 
     public static boolean isConnectedUser(Context context, String userId) {
-        String connectedId = PreferencesUtils.get(context, Constants.PREF_USER_ID);
+        final String connectedId = PreferencesUtils.get(context, Constants.PREF_USER_ID);
         return !TextUtils.isEmpty(connectedId) && connectedId.equals(userId);
 
     }
@@ -276,7 +275,7 @@ public final class Utils {
      * @param i       a value in pixels used as the width of the image
      * @param i2      a value in pixels used as the height of the image
      */
-    static void loadImage(Context context, String imgUrl, ImageView iv, int i, int i2) {
+    protected static void loadImage(Context context, String imgUrl, ImageView iv, int i, int i2) {
         Picasso.with(context).load(imgUrl).resize(i, i2).into(iv);
     }
 }

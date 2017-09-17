@@ -54,7 +54,8 @@ public final class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.Even
 
     @Override
     public EventsVH onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.event, parent, false);
+        final View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.event, parent, false);
         return new EventsVH(view);
     }
 
@@ -95,7 +96,7 @@ public final class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.Even
                 )) {
                     PlanningsAdapter planningsAdapter = new PlanningsAdapter(mPlannings);
                     planningsAdapter.setViewResourceId(0);
-                    RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
+                    final RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
                             holder.context
                     );
                     ListDialogFragment.generate(
@@ -152,7 +153,7 @@ public final class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.Even
             super(view);
             context = view.getContext();
 
-            boolean isConnectedUser = Utils.isConnectedUser(
+            final boolean isConnectedUser = Utils.isConnectedUser(
                     context,
                     PreferencesUtils.get(context, Constants.PREF_USER_ID)
             );
@@ -196,7 +197,7 @@ public final class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.Even
                 headers.put(Constants.HEADER_CONTENT_TYPE, Constants.APPLICATION_JSON);
                 headers.put(Constants.HEADER_ACCEPT, Constants.APPLICATION_JSON);
 
-                APICall call = new APICall(
+                final APICall call = new APICall(
                         context,
                         Constants.INTENT_EVENTS_BIND,
                         Constants.PATCH,
@@ -234,7 +235,7 @@ public final class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.Even
                     bindUnbindButton.setText(context.getString(R.string.btnBind));
                 }
 
-                APICall call = new APICall(
+                final APICall call = new APICall(
                         context,
                         action,
                         method,

@@ -102,7 +102,7 @@
     <dimen name="event_marginLeftStart">8dp</dimen>
     <dimen name="event_marginTop">16dp</dimen>
     <dimen name="event_marginRightEnd">8dp</dimen>
-    <dimen name="event_tagMarginTop">10dp</dimen>
+    <dimen name="event_tagMarginTop">18dp</dimen>
     <dimen name="event_descriptionMarginTop">16dp</dimen>
     <dimen name="event_timePaddingLeftStart">8dp</dimen>
     <dimen name="event_paddingBottom">8dp</dimen>
@@ -122,4 +122,5 @@
     <dimen name="avatarSize">48dp</dimen>
     <dimen name="planning_marginTop">16dp</dimen>
     <dimen name="event_horizontalSpacing">32dp</dimen>
+    <dimen name="event_imgBtnMarginTop">8dp</dimen>
 </resources>

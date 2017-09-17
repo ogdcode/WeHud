@@ -61,7 +61,7 @@ public final class UsersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         final User user = mUsers.get(position);
 
         if (holder instanceof UsersVH) {
-            UsersVH usersHolder = (UsersVH) holder;
+            final UsersVH usersHolder = (UsersVH) holder;
             if (position == mSelectedPosition) {
                 holder.itemView.setSelected(true);
                 mSelectedView = holder.itemView;
@@ -74,9 +74,9 @@ public final class UsersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         if (holder instanceof ContactsVH) {
             final ContactsVH contactsHolder = (ContactsVH) holder;
 
-            String avatar = user.getAvatar();
-            String username = user.getUsername();
-            boolean connected = user.isConnected();
+            final String avatar = user.getAvatar();
+            final String username = user.getUsername();
+            final boolean connected = user.isConnected();
 
             if (!TextUtils.isEmpty(avatar))
                 Utils.loadImage(contactsHolder.context, avatar, contactsHolder.avatar);

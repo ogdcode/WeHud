@@ -23,8 +23,7 @@ import java.util.Map;
  *
  * @author Olivier Gonçalves, WeHud, 2017
  */
-
-public final class Request {
+final class Request {
     private Map<String, String> mHeaders;
     private Map<String, String> mParameters;
     private String mMethod;
@@ -32,22 +31,9 @@ public final class Request {
     private String mBody;
 
     // Cannot initialize a request without at least a method and URI.
-    private Request() {
-    }
+    private Request() {}
 
-    public Request(String method, String url) {
-        this(method, url, null);
-    }
-
-    public Request(String method, String url, String body) {
-        this(method, url, body, null);
-    }
-
-    public Request(String method, String url, String body, Map<String, String> headers) {
-        this(method, url, body, headers, null);
-    }
-
-    public Request(String method, String url, String body, Map<String, String> headers,
+    Request(String method, String url, String body, Map<String, String> headers,
                    Map<String, String> parameters) {
         mMethod = method;
         mUrl = url;
@@ -56,7 +42,7 @@ public final class Request {
         mParameters = parameters;
     }
 
-    public Response send() {
+    Response send() {
 
         // Build complete request URL.
         Response response = null;
@@ -72,8 +58,7 @@ public final class Request {
                     i++;
                 }
             }
-            URL formattedUri = new URL(baseUrl);
-            //Log.d("MAIN", formattedUri.toString());
+            final URL formattedUri = new URL(baseUrl);
 
             // Configure the connection.
             HttpURLConnection connection = (HttpURLConnection) formattedUri.openConnection();
@@ -98,11 +83,11 @@ public final class Request {
 
             // Retrieve response when it arrives, whether it is a success or a failure.
             try {
-                InputStream is = connection.getInputStream();
+                final InputStream is = connection.getInputStream();
                 if (is != null)
                     response = new Response(connection.getResponseCode(), this.readResponse(is));
             } catch (IOException x) {
-                InputStream es = connection.getErrorStream();
+                final InputStream es = connection.getErrorStream();
                 if (es != null)
                     response = new Response(connection.getResponseCode(), this.readResponse(es));
                 else

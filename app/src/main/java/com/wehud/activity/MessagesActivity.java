@@ -37,26 +37,24 @@ public class MessagesActivity extends AppCompatActivity implements SwipeRefreshL
     private SwipeRefreshLayout mSwipeLayout;
     private RecyclerView mMessageListView;
 
-    private List<Post> mMessages;
-
     private boolean mPaused;
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(Constants.INTENT_MESSAGES_LIST) && !mPaused) {
-                String response = intent.getStringExtra(Constants.EXTRA_BROADCAST);
-                Payload payload = GsonUtils.getInstance().fromJson(response, Payload.class);
+                final String response = intent.getStringExtra(Constants.EXTRA_BROADCAST);
+                final Payload payload = GsonUtils.getInstance().fromJson(response, Payload.class);
 
-                String code = payload.getCode();
+                final String code = payload.getCode();
 
                 if (Integer.valueOf(code) == Constants.HTTP_OK) {
-                    String content = payload.getContent();
+                    final String content = payload.getContent();
 
-                    Type postListType = new TypeToken<List<Post>>(){}.getType();
-                    mMessages = GsonUtils.getInstance().fromJson(content, postListType);
+                    final Type postListType = new TypeToken<List<Post>>(){}.getType();
+                    final List<Post> messages = GsonUtils.getInstance().fromJson(content, postListType);
 
-                    if (!mMessages.isEmpty()) {
-                        PostsAdapter adapter = new PostsAdapter(mMessages, false);
+                    if (!messages.isEmpty()) {
+                        final PostsAdapter adapter = new PostsAdapter(messages, false);
                         mMessageListView.setAdapter(adapter);
 
                         mEmptyLayout.setVisibility(View.GONE);
@@ -67,24 +65,6 @@ public class MessagesActivity extends AppCompatActivity implements SwipeRefreshL
                     Utils.toast(MessagesActivity.this, R.string.error_server);
                 else Utils.toast(MessagesActivity.this, R.string.error_general, code);
             }
-
-            /*
-            String payload = intent.getStringExtra(Constants.EXTRA_BROADCAST);
-
-            if (intent.getAction().equals(Constants.INTENT_MESSAGES_LIST) && !mPaused) {
-                Type postListType = new TypeToken<List<Post>>(){}.getType();
-                mMessages = GsonUtils.getInstance().fromJson(payload, postListType);
-
-                if (!mMessages.isEmpty()) {
-                    PostsAdapter adapter = new PostsAdapter(mMessages, false);
-                    mMessageListView.setAdapter(adapter);
-
-                    mEmptyLayout.setVisibility(View.GONE);
-                    mSwipeLayout.setVisibility(View.VISIBLE);
-                    mSwipeLayout.setRefreshing(false);
-                }
-            }
-            */
         }
     };
 
@@ -93,7 +73,7 @@ public class MessagesActivity extends AppCompatActivity implements SwipeRefreshL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_messages);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         ActionBar ab = getSupportActionBar();
@@ -165,7 +145,7 @@ public class MessagesActivity extends AppCompatActivity implements SwipeRefreshL
         Map<String, String> parameters = new HashMap<>();
         parameters.put(Constants.PARAM_TOKEN, Constants.TOKEN);
 
-        APICall call = new APICall(
+        final APICall call = new APICall(
                 this,
                 Constants.INTENT_MESSAGES_LIST,
                 Constants.GET,

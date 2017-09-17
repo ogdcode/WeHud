@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
     android:paddingBottom="@dimen/event_paddingBottom">
 
@@ -40,6 +40,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/event_marginRightEnd"
         android:layout_marginRight="@dimen/event_marginRightEnd"
+        android:layout_marginTop="@dimen/event_imgBtnMarginTop"
         android:adjustViewBounds="true"
         android:contentDescription="@string/app_name"
         app:layout_constraintRight_toRightOf="parent"

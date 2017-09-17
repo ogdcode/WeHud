@@ -82,20 +82,20 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         @Override
         public void onReceive(Context context, Intent intent) {
             if (!mPaused) {
-                String response = intent.getStringExtra(Constants.EXTRA_BROADCAST);
-                Payload payload = GsonUtils.getInstance().fromJson(response, Payload.class);
+                final String response = intent.getStringExtra(Constants.EXTRA_BROADCAST);
+                final Payload payload = GsonUtils.getInstance().fromJson(response, Payload.class);
 
-                String code = payload.getCode();
+                final String code = payload.getCode();
 
                 if (Integer.valueOf(code) == Constants.HTTP_OK) {
-                    String content = payload.getContent();
+                    final String content = payload.getContent();
 
                     switch (intent.getAction()) {
                         case Constants.INTENT_GAME_GET:
                             GameActivity.this.fillGamePage(content);
                             break;
                         case Constants.INTENT_PAGES_LIST:
-                            Type pageListType = new TypeToken<List<Page>>() {}.getType();
+                            final Type pageListType = new TypeToken<List<Page>>(){}.getType();
                             ArrayList<Page> pages = GsonUtils.getInstance().fromJson(
                                     content, pageListType
                             );
@@ -103,12 +103,12 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                             break;
                         case Constants.INTENT_GAME_FOLLOW:
                             mFollowButton.setText(getString(R.string.btnUnfollow));
-                            Follower newFollower = GsonUtils.getInstance().fromJson(
+                            final Follower newFollower = GsonUtils.getInstance().fromJson(
                                     content, Follower.class
                             );
 
                             mCurrentGame.follow(newFollower.getUser());
-                            String countAfterFollow = mCurrentGame.getFollowers().size()
+                            final String countAfterFollow = mCurrentGame.getFollowers().size()
                                     + "\t" + getString(R.string.followerCount);
 
                             mFollowers.setText(countAfterFollow);
@@ -119,10 +119,10 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                             break;
                         case Constants.INTENT_GAME_UNFOLLOW:
                             mFollowButton.setText(getString(R.string.btnFollow));
-                            Follower oldFollowed = GsonUtils.getInstance().fromJson(content, Follower.class);
+                            final Follower oldFollowed = GsonUtils.getInstance().fromJson(content, Follower.class);
 
                             mCurrentGame.unfollow(oldFollowed.getUser());
-                            String countAfterUnfollow = mCurrentGame.getFollowers().size()
+                            final String countAfterUnfollow = mCurrentGame.getFollowers().size()
                                     + "\t" + getString(R.string.followerCount);
 
                             mFollowers.setText(countAfterUnfollow);
@@ -138,128 +138,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                     Utils.toast(GameActivity.this, R.string.error_server);
                 else Utils.toast(GameActivity.this, R.string.error_general, code);
             }
-
-            /*
-            String payload = intent.getStringExtra(Constants.EXTRA_BROADCAST);
-
-            if (intent.getAction().equals(Constants.INTENT_GAME_GET) && !mPaused) {
-                mCurrentGame = GsonUtils.getInstance().fromJson(payload, Game.class);
-                String cover = "https://" + mCurrentGame.getCover();
-                String name = mCurrentGame.getName();
-                Status status = Utils.getStatus(GameActivity.this, mCurrentGame.getStatus());
-                List<User> followers = mCurrentGame.getFollowers();
-                List<String> genres = mCurrentGame.getGenres();
-                List<String> developers = mCurrentGame.getDevelopers();
-                List<String> publishers = mCurrentGame.getPublishers();
-                String franchise = mCurrentGame.getFranchise();
-                String mainGame = mCurrentGame.getGame();
-                List<String> modes = mCurrentGame.getModes();
-                String firstReleaseDate = Utils.timestampToLocalDateString(
-                        mCurrentGame.getFirstReleaseDate()
-                );
-                String synopsis = mCurrentGame.getSynopsis();
-                String website = mCurrentGame.getWebsite();
-                String esrb = mCurrentGame.getEsrb();
-                String pegi = mCurrentGame.getPegi();
-
-                Utils.loadImage(GameActivity.this, cover, mCover);
-                mName.setText(name);
-
-                boolean found = false;
-                for (User user : followers) {
-                    if (user.getId().equals("598f1d65493a620aa918be42")) {
-                        found = true;
-                        break;
-                    }
-                }
-
-                if (found) mFollowButton.setText(getString(R.string.btnUnfollow));
-                else mFollowButton.setText(getString(R.string.btnFollow));
-
-                String numFollowers = followers.size() + ' ' + getString(R.string.followerCount);
-                mFollowers.setText(numFollowers);
-
-                mStatus.setCompoundDrawablesWithIntrinsicBounds(status.getIcon(), 0, 0, 0);
-                mStatus.setText(status.getDescription());
-                if (!genres.isEmpty()) {
-                    Utils.putStringListIntoTextView(mGenres, genres);
-                    mGenresLayout.setVisibility(View.VISIBLE);
-                }
-                if (!developers.isEmpty()) {
-                    Utils.putStringListIntoTextView(mDevelopers, developers);
-                    mDevelopersLayout.setVisibility(View.VISIBLE);
-                }
-                if (!publishers.isEmpty()) {
-                    Utils.putStringListIntoTextView(mPublishers, publishers);
-                    mPublishersLayout.setVisibility(View.VISIBLE);
-                }
-                if (!TextUtils.isEmpty(franchise)) {
-                    mFranchise.setText(franchise);
-                    mFranchiseLayout.setVisibility(View.VISIBLE);
-                }
-                if (!TextUtils.isEmpty(mainGame)) {
-                    mMainGame.setText(mainGame);
-                    mMainGameLayout.setVisibility(View.VISIBLE);
-                }
-                if (!modes.isEmpty()) {
-                    Utils.putStringListIntoTextView(mModes, modes);
-                    mModesLayout.setVisibility(View.VISIBLE);
-                }
-                if (!TextUtils.isEmpty(firstReleaseDate)) {
-                    mFirstReleaseDate.setText(firstReleaseDate);
-                    mFirstReleaseDateLayout.setVisibility(View.VISIBLE);
-                }
-                if (!TextUtils.isEmpty(synopsis)) {
-                    mSynopsis.setText(synopsis);
-                    mSynopsisLayout.setVisibility(View.VISIBLE);
-                }
-                if (!TextUtils.isEmpty(website)) {
-                    mWebsite.setText(website);
-                    mWebsiteLayout.setVisibility(View.VISIBLE);
-                }
-                if (!TextUtils.isEmpty(esrb)) {
-                    mEsrb.setText(esrb);
-                    mEsrbLayout.setVisibility(View.VISIBLE);
-                }
-                if (!TextUtils.isEmpty(pegi)) {
-                    mPegi.setText(pegi);
-                    mPegiLayout.setVisibility(View.VISIBLE);
-                }
-            }
-
-            if (intent.getAction().equals(Constants.INTENT_PAGES_LIST) && !mPaused) {
-                Type pageListType = new TypeToken<List<Page>>() {}.getType();
-                ArrayList<Page> pages = GsonUtils.getInstance().fromJson(payload, pageListType);
-
-                GameActivity.this.follow(pages);
-            }
-
-            if (intent.getAction().equals(Constants.INTENT_GAME_FOLLOW) && !mPaused) {
-                mFollowButton.setText(getString(R.string.btnUnfollow));
-                Follower newFollower = GsonUtils.getInstance().fromJson(payload, Follower.class);
-
-                mCurrentGame.follow(newFollower.getUser());
-                String newNbrFollowers = mCurrentGame.getFollowers().size()
-                        + ' ' + getString(R.string.followerCount);
-
-                mFollowers.setText(newNbrFollowers);
-
-                Utils.toast(GameActivity.this, getString(R.string.message_followingGame));
-            }
-
-            if (intent.getAction().equals(Constants.INTENT_GAME_UNFOLLOW) && !mPaused) {
-                mFollowButton.setText(getString(R.string.btnFollow));
-                Follower oldFollower = GsonUtils.getInstance().fromJson(payload, Follower.class);
-
-                mCurrentGame.unfollow(oldFollower.getUser());
-                String newNbrFollowers = mCurrentGame.getFollowers().size()
-                        + ' ' + getString(R.string.followerCount);
-
-                mFollowers.setText(newNbrFollowers);
-
-                Utils.toast(GameActivity.this, getString(R.string.message_unfollowingGame));
-            }
-            */
         }
     };
 
@@ -314,7 +192,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     protected void onResume() {
         super.onResume();
         if (!mPaused) {
-            Bundle bundle = getIntent().getExtras();
+            final Bundle bundle = getIntent().getExtras();
             if (bundle != null) {
                 this.getGame(bundle.getString(KEY_GAME_ID));
             }
@@ -352,21 +230,21 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onListDialogDismissOk(Parcelable p) {
         if (p instanceof Page) {
-            String pageTitle = ((Page) p).getTitle();
+            final String pageTitle = ((Page) p).getTitle();
 
             Map<String, String> headers = new HashMap<>();
             headers.put(Constants.HEADER_CONTENT_TYPE, Constants.APPLICATION_JSON);
             headers.put(Constants.HEADER_ACCEPT, Constants.APPLICATION_JSON);
 
             Map<String, String> parameters = new HashMap<>();
-            parameters.put(Constants.PARAM_TOKEN, Constants.TOKEN);
+            parameters.put(Constants.PARAM_TOKEN, PreferencesUtils.get(this, Constants.PREF_TOKEN));
 
             Map<String, String> page = new HashMap<>();
             page.put(PARAM_PAGE, pageTitle);
 
-            String body = GsonUtils.getInstance().toJson(page);
+            final String body = GsonUtils.getInstance().toJson(page);
 
-            APICall call = new APICall(
+            final APICall call = new APICall(
                     this,
                     Constants.INTENT_GAME_FOLLOW,
                     Constants.PATCH,
@@ -394,26 +272,26 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void fillGamePage(String content) {
-        String connectedUserId = PreferencesUtils.get(this, Constants.PREF_USER_ID);
+        final String connectedUserId = PreferencesUtils.get(this, Constants.PREF_USER_ID);
 
         mCurrentGame = GsonUtils.getInstance().fromJson(content, Game.class);
-        String cover = "https://" + mCurrentGame.getCover();
-        String name = mCurrentGame.getName();
-        Status status = Utils.getStatus(GameActivity.this, mCurrentGame.getStatus());
-        List<User> followers = mCurrentGame.getFollowers();
-        List<String> genres = mCurrentGame.getGenres();
-        List<String> developers = mCurrentGame.getDevelopers();
-        List<String> publishers = mCurrentGame.getPublishers();
-        String franchise = mCurrentGame.getFranchise();
-        String mainGame = mCurrentGame.getGame();
-        List<String> modes = mCurrentGame.getModes();
-        String firstReleaseDate = Utils.timestampToLocalDateString(
+        final String cover = "https://" + mCurrentGame.getCover();
+        final String name = mCurrentGame.getName();
+        final Status status = Utils.getStatus(GameActivity.this, mCurrentGame.getStatus());
+        final List<User> followers = mCurrentGame.getFollowers();
+        final List<String> genres = mCurrentGame.getGenres();
+        final List<String> developers = mCurrentGame.getDevelopers();
+        final List<String> publishers = mCurrentGame.getPublishers();
+        final String franchise = mCurrentGame.getFranchise();
+        final String mainGame = mCurrentGame.getGame();
+        final List<String> modes = mCurrentGame.getModes();
+        final String firstReleaseDate = Utils.timestampToLocalDateString(
                 mCurrentGame.getFirstReleaseDate()
         );
-        String synopsis = mCurrentGame.getSynopsis();
-        String website = mCurrentGame.getWebsite();
-        String esrb = mCurrentGame.getEsrb();
-        String pegi = mCurrentGame.getPegi();
+        final String synopsis = mCurrentGame.getSynopsis();
+        final String website = mCurrentGame.getWebsite();
+        final String esrb = mCurrentGame.getEsrb();
+        final String pegi = mCurrentGame.getPegi();
 
         Utils.loadImage(GameActivity.this, cover, mCover);
         mName.setText(name);
@@ -429,7 +307,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         if (found) mFollowButton.setText(getString(R.string.btnUnfollow));
         else mFollowButton.setText(getString(R.string.btnFollow));
 
-        String numFollowers = followers.size() + ' '
+        final String numFollowers = followers.size() + ' '
                 + getString(R.string.followerCount);
         mFollowers.setText(numFollowers);
 
@@ -489,9 +367,9 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         headers.put(Constants.HEADER_ACCEPT, Constants.APPLICATION_JSON);
 
         Map<String, String> parameters = new HashMap<>();
-        parameters.put(Constants.PARAM_TOKEN, Constants.TOKEN);
+        parameters.put(Constants.PARAM_TOKEN, PreferencesUtils.get(this, Constants.PREF_TOKEN));
 
-        APICall call = new APICall(
+        final APICall call = new APICall(
                 this,
                 Constants.INTENT_GAME_GET,
                 Constants.GET,
@@ -508,9 +386,9 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         headers.put(Constants.HEADER_ACCEPT, Constants.APPLICATION_JSON);
 
         Map<String, String> parameters = new HashMap<>();
-        parameters.put(Constants.PARAM_TOKEN, Constants.TOKEN);
+        parameters.put(Constants.PARAM_TOKEN, PreferencesUtils.get(this, Constants.PREF_TOKEN));
 
-        APICall call = new APICall(
+        final APICall call = new APICall(
                 this,
                 Constants.INTENT_PAGES_LIST,
                 Constants.GET,
@@ -522,11 +400,11 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void follow(ArrayList<Page> pages) {
-        RecyclerView.Adapter adapter = new PagesAdapter(pages);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
+        final RecyclerView.Adapter adapter = new PagesAdapter(pages);
+        final RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
                 GameActivity.this
         );
-        DividerItemDecoration divider = new DividerItemDecoration(
+        final DividerItemDecoration divider = new DividerItemDecoration(
                 GameActivity.this, DividerItemDecoration.HORIZONTAL
         );
 
@@ -547,9 +425,9 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         headers.put(Constants.HEADER_ACCEPT, Constants.APPLICATION_JSON);
 
         Map<String, String> parameters = new HashMap<>();
-        parameters.put(Constants.PARAM_TOKEN, Constants.TOKEN);
+        parameters.put(Constants.PARAM_TOKEN, PreferencesUtils.get(this, Constants.PREF_TOKEN));
 
-        APICall call = new APICall(
+        final APICall call = new APICall(
                 this,
                 Constants.INTENT_GAME_UNFOLLOW,
                 Constants.PATCH,

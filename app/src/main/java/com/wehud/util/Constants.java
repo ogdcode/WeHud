@@ -21,6 +21,8 @@ public final class Constants {
     public static final String API_EVENTS = API_URL + "/events";
     public static final String API_PLANNINGS = API_URL + "/plannings";
 
+    public static final String API_LIKE = API_POSTS + "/like";
+    public static final String API_DISLIKE = API_POSTS + "/dislike";
     public static final String API_MESSAGES = API_POSTS + "/messages/all";
 
     public static final String API_USERS_PAGES = API_USERS + "/pages";
@@ -54,9 +56,7 @@ public final class Constants {
     public static final int HTTP_OK = 200;
     public static final int HTTP_CREATED = 201;
     public static final int HTTP_NO_CONTENT = 204;
-    public static final int HTTP_BAD_REQUEST = 400;
     public static final int HTTP_FORBIDDEN = 403;
-    public static final int HTTP_NOT_FOUND = 404;
     public static final int HTTP_INTERNAL_SERVER_ERROR = 500;
 
     public static final int CONNECT_TIMEOUT = 3000;
@@ -66,10 +66,13 @@ public final class Constants {
     public static final String INTENT_FORGOT_PASSWORD = "intent_forgot_password";
     public static final String INTENT_POSTS_LIST = "intent_posts_list";
     public static final String INTENT_POSTS_ADD = "intent_posts_add";
+    public static final String INTENT_POST_LIKE = "intent_post_like";
+    public static final String INTENT_POST_DISLIKE = "intent_post_dislike";
     public static final String INTENT_PAGES_ADD = "intent_pages_add";
     public static final String INTENT_PAGES_DELETE = "intent_pages_delete";
     public static final String INTENT_PAGES_LIST = "intent_pages_list";
     public static final String INTENT_GAMES_LIST = "intent_games_list";
+    public static final String INTENT_USER_CREATE = "intent_user_create";
     public static final String INTENT_USER_GET = "intent_user_get";
     public static final String INTENT_USER_UPDATE = "intent_user_update";
     public static final String INTENT_USER_DELETE = "intent_user_delete";

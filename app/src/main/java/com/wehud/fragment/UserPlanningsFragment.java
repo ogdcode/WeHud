@@ -54,15 +54,15 @@ public class UserPlanningsFragment extends Fragment
         @Override
         public void onReceive(Context context, Intent intent) {
             if (!mPaused) {
-                String response = intent.getStringExtra(Constants.EXTRA_BROADCAST);
-                Payload payload = GsonUtils.getInstance().fromJson(response, Payload.class);
+                final String response = intent.getStringExtra(Constants.EXTRA_BROADCAST);
+                final Payload payload = GsonUtils.getInstance().fromJson(response, Payload.class);
 
-                String code = payload.getCode();
+                final String code = payload.getCode();
 
                 if (Integer.valueOf(code) == Constants.HTTP_OK ||
                         Integer.valueOf(code) == Constants.HTTP_CREATED ||
                         Integer.valueOf(code) == Constants.HTTP_NO_CONTENT) {
-                    String content = payload.getContent();
+                    final String content = payload.getContent();
 
                     switch (intent.getAction()) {
                         case Constants.INTENT_PLANNINGS_ADD:
@@ -74,8 +74,9 @@ public class UserPlanningsFragment extends Fragment
                             getPlannings();
                             break;
                         case Constants.INTENT_PLANNINGS_LIST:
-                            Type planningListType = new TypeToken<List<Planning>>(){}.getType();
-                            List<Planning> plannings = GsonUtils.getInstance().fromJson(
+                            final Type planningListType = new TypeToken<List<Planning>>(){}
+                                    .getType();
+                            final List<Planning> plannings = GsonUtils.getInstance().fromJson(
                                     content, planningListType
                             );
 
@@ -100,39 +101,6 @@ public class UserPlanningsFragment extends Fragment
                     Utils.toast(mContext, R.string.error_server);
                 else Utils.toast(mContext, R.string.error_general, code);
             }
-
-            /*
-            String payload = intent.getStringExtra(Constants.EXTRA_BROADCAST);
-
-            if (intent.getAction().equals(Constants.INTENT_PLANNINGS_LIST) && !mPaused) {
-                Type planningListType = new TypeToken<List<Planning>>(){}.getType();
-                mPlannings = GsonUtils.getInstance().fromJson(payload, planningListType);
-
-                if (!mPlannings.isEmpty()) {
-                    PlanningsAdapter adapter = new PlanningsAdapter(mPlannings);
-                    adapter.setFragmentManager(mManager);
-                    mPlanningListView.setAdapter(adapter);
-
-                    mEmptyLayout.setVisibility(View.GONE);
-                    mSwipeLayout.setVisibility(View.VISIBLE);
-                } else {
-                    mEmptyLayout.setVisibility(View.VISIBLE);
-                    mSwipeLayout.setVisibility(View.GONE);
-                }
-
-                mSwipeLayout.setRefreshing(false);
-            }
-
-            if (intent.getAction().equals(Constants.INTENT_PLANNINGS_ADD) && !mPaused) {
-                Utils.toast(mContext, getString(R.string.message_addPlanningSuccess));
-                getPlannings();
-            }
-
-            if (intent.getAction().equals(Constants.INTENT_PLANNINGS_DELETE) && !mPaused) {
-                Utils.toast(mContext, getString(R.string.message_deletePlanningSuccess));
-                getPlannings();
-            }
-            */
         }
     };
 
@@ -149,7 +117,7 @@ public class UserPlanningsFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_user_plannings, container, false);
+        final View view = inflater.inflate(R.layout.fragment_user_plannings, container, false);
         mContext = view.getContext();
         mManager = getFragmentManager();
 
@@ -170,7 +138,7 @@ public class UserPlanningsFragment extends Fragment
         Button createFirstPlanningButton = (Button) view.findViewById(R.id.btnCreateFirstPlanning);
         createFirstPlanningButton.setOnClickListener(this);
 
-        boolean isConnectedUser = Utils.isConnectedUser(
+        final boolean isConnectedUser = Utils.isConnectedUser(
                 mContext,
                 PreferencesUtils.get(mContext, Constants.PREF_USER_ID)
         );
@@ -183,7 +151,8 @@ public class UserPlanningsFragment extends Fragment
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        if (savedInstanceState != null) mCurrentUserId = savedInstanceState.getString(Constants.PREF_USER_ID);
+        if (savedInstanceState != null)
+            mCurrentUserId = savedInstanceState.getString(Constants.PREF_USER_ID);
 
         IntentFilter filter = new IntentFilter();
         filter.addAction(Constants.INTENT_PLANNINGS_LIST);
@@ -196,7 +165,7 @@ public class UserPlanningsFragment extends Fragment
     @Override
     public void onResume() {
         super.onResume();
-        Bundle args = getArguments();
+        final Bundle args = getArguments();
         if (args != null) {
             mCurrentUserId = args.getString(Constants.PREF_USER_ID);
             if (!TextUtils.isEmpty(mCurrentUserId) && !mPaused) this.getPlannings();
@@ -259,7 +228,7 @@ public class UserPlanningsFragment extends Fragment
             headers.put(Constants.HEADER_CONTENT_TYPE, Constants.APPLICATION_JSON);
             headers.put(Constants.HEADER_ACCEPT, Constants.APPLICATION_JSON);
 
-            APICall call = new APICall(
+            final APICall call = new APICall(
                     mContext,
                     Constants.INTENT_PLANNINGS_LIST,
                     Constants.GET,
@@ -276,14 +245,14 @@ public class UserPlanningsFragment extends Fragment
         headers.put(Constants.HEADER_ACCEPT, Constants.APPLICATION_JSON);
 
         Map<String, String> parameters = new HashMap<>();
-        parameters.put(Constants.PARAM_TOKEN, Constants.TOKEN);
+        parameters.put(Constants.PARAM_TOKEN, PreferencesUtils.get(mContext, Constants.PREF_TOKEN));
 
         Map<String, String> planning = new HashMap<>();
         planning.put(PARAM_TITLE, title);
 
-        String body = GsonUtils.getInstance().toJson(planning);
+        final String body = GsonUtils.getInstance().toJson(planning);
 
-        APICall call = new APICall(
+        final APICall call = new APICall(
                 mContext,
                 Constants.INTENT_PLANNINGS_ADD,
                 Constants.POST,

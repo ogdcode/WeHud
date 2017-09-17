@@ -37,26 +37,24 @@ public class GamesFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     private SwipeRefreshLayout mSwipeLayout;
     private RecyclerView mGameListView;
 
-    private List<Game> mGames;
-
     private boolean mPaused;
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(Constants.INTENT_GAMES_LIST) && !mPaused) {
-                String response = intent.getStringExtra(Constants.EXTRA_BROADCAST);
-                Payload payload = GsonUtils.getInstance().fromJson(response, Payload.class);
+                final String response = intent.getStringExtra(Constants.EXTRA_BROADCAST);
+                final Payload payload = GsonUtils.getInstance().fromJson(response, Payload.class);
 
-                String code = payload.getCode();
+                final String code = payload.getCode();
 
                 if (Integer.valueOf(code) == Constants.HTTP_OK) {
-                    String content = payload.getContent();
+                    final String content = payload.getContent();
 
-                    Type gameListType = new TypeToken<List<Game>>(){}.getType();
-                    mGames = GsonUtils.getInstance().fromJson(content, gameListType);
+                    final Type gameListType = new TypeToken<List<Game>>(){}.getType();
+                    final List<Game> games = GsonUtils.getInstance().fromJson(content, gameListType);
 
-                    if (!mGames.isEmpty()) {
-                        GamesAdapter adapter = new GamesAdapter(mGames);
+                    if (!games.isEmpty()) {
+                        GamesAdapter adapter = new GamesAdapter(games);
                         adapter.setViewResourceId(1);
                         mGameListView.setAdapter(adapter);
 
@@ -68,25 +66,6 @@ public class GamesFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                     Utils.toast(mContext, R.string.error_server);
                 else Utils.toast(mContext, R.string.error_general, code);
             }
-
-            /*
-            String payload = intent.getStringExtra(Constants.EXTRA_BROADCAST);
-
-            if (intent.getAction().equals(Constants.INTENT_GAMES_LIST)) {
-                Type gameListType = new TypeToken<List<Game>>(){}.getType();
-                mGames = GsonUtils.getInstance().fromJson(payload, gameListType);
-
-                if (!mGames.isEmpty()) {
-                    GamesAdapter adapter = new GamesAdapter(mGames);
-                    adapter.setViewResourceId(1);
-                    mGameListView.setAdapter(adapter);
-
-                    mEmptyLayout.setVisibility(View.GONE);
-                    mSwipeLayout.setVisibility(View.VISIBLE);
-                    mSwipeLayout.setRefreshing(false);
-                }
-            }
-            */
         }
     };
 
@@ -97,7 +76,7 @@ public class GamesFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_games, container, false);
+        final View view = inflater.inflate(R.layout.fragment_games, container, false);
         mContext = view.getContext();
 
         mEmptyLayout = view.findViewById(R.id.layout_empty);
@@ -154,7 +133,7 @@ public class GamesFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         headers.put(Constants.HEADER_CONTENT_TYPE, Constants.APPLICATION_JSON);
         headers.put(Constants.HEADER_ACCEPT, Constants.APPLICATION_JSON);
 
-        APICall call = new APICall(
+        final APICall call = new APICall(
                 mContext,
                 Constants.INTENT_GAMES_LIST,
                 Constants.GET,

@@ -37,15 +37,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         @Override
         public void onReceive(Context context, Intent intent) {
             if (!mPaused) {
-                String response = intent.getStringExtra(Constants.EXTRA_BROADCAST);
-                Payload payload = GsonUtils.getInstance().fromJson(response, Payload.class);
+                final String response = intent.getStringExtra(Constants.EXTRA_BROADCAST);
+                final Payload payload = GsonUtils.getInstance().fromJson(response, Payload.class);
 
-                String code = payload.getCode();
-                String content = payload.getContent();
+                final String code = payload.getCode();
+                final String content = payload.getContent();
 
                 if (intent.getAction().equals(Constants.INTENT_LOGIN)) {
                     if (Integer.valueOf(code) == Constants.HTTP_OK) {
-                        Auth auth = GsonUtils.getInstance().fromJson(content, Auth.class);
+                        final Auth auth = GsonUtils.getInstance().fromJson(content, Auth.class);
 
                         PreferencesUtils.put(context,
                                 Constants.PREF_USER_ID, auth.getId()
@@ -81,7 +81,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         mUsernameOrEmail = (EditText) findViewById(R.id.usernameOrEmail);
@@ -128,8 +128,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 this.signIn();
                 break;
             case R.id.btnSignUp:
-                Intent intent = new Intent(this, RegisterActivity.class);
-                startActivity(intent);
+                startActivity(new Intent(this, RegisterActivity.class));
                 break;
             default:
                 break;
@@ -146,16 +145,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             headers.put(Constants.HEADER_CONTENT_TYPE, Constants.APPLICATION_JSON);
             headers.put(Constants.HEADER_ACCEPT, Constants.APPLICATION_JSON);
 
-            String usernameOrEmail = mUsernameOrEmail.getText().toString();
-            String password = mPassword.getText().toString();
+            final String usernameOrEmail = mUsernameOrEmail.getText().toString();
+            final String password = mPassword.getText().toString();
 
             Map<String, String> login = new HashMap<>();
             login.put(PARAM_USERNAME_OR_EMAIL, usernameOrEmail);
             login.put(PARAM_PASSWORD, password);
 
-            String body = GsonUtils.getInstance().toJson(login);
+            final String body = GsonUtils.getInstance().toJson(login);
 
-            APICall call = new APICall(
+            final APICall call = new APICall(
                     this,
                     Constants.INTENT_LOGIN,
                     Constants.POST,

@@ -31,11 +31,11 @@ public class ForgotPasswordActivity extends AppCompatActivity implements View.On
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            String response = intent.getStringExtra(Constants.EXTRA_BROADCAST);
-            Payload payload = GsonUtils.getInstance().fromJson(response, Payload.class);
+            final String response = intent.getStringExtra(Constants.EXTRA_BROADCAST);
+            final Payload payload = GsonUtils.getInstance().fromJson(response, Payload.class);
 
             if (!mPaused) {
-                String code = payload.getCode();
+                final String code = payload.getCode();
 
                 if (Integer.valueOf(code) == Constants.HTTP_OK)
                     Utils.toast(context, R.string.message_sendSuccess);
@@ -100,7 +100,7 @@ public class ForgotPasswordActivity extends AppCompatActivity implements View.On
         if (firstInvalidField != null)
             firstInvalidField.setError(getString(R.string.error_fieldRequired));
         else {
-            String usernameOrEmail = mUsernameOrEmail.getText().toString();
+            final String usernameOrEmail = mUsernameOrEmail.getText().toString();
 
             Map<String, String> headers = new HashMap<>();
             headers.put(Constants.HEADER_CONTENT_TYPE, Constants.APPLICATION_JSON);
@@ -109,9 +109,9 @@ public class ForgotPasswordActivity extends AppCompatActivity implements View.On
             Map<String, String> info = new HashMap<>();
             info.put(PARAM_USERNAME_OR_EMAIL, usernameOrEmail);
 
-            String body = GsonUtils.getInstance().toJson(info);
+            final String body = GsonUtils.getInstance().toJson(info);
 
-            APICall call = new APICall(
+            final APICall call = new APICall(
                     this,
                     Constants.INTENT_FORGOT_PASSWORD,
                     Constants.POST,

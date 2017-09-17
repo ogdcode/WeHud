@@ -43,17 +43,17 @@ public class ProfileFragment extends Fragment
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(Constants.INTENT_USER_GET) && !mPaused) {
-                String response = intent.getStringExtra(Constants.EXTRA_BROADCAST);
-                Payload payload = GsonUtils.getInstance().fromJson(response, Payload.class);
+                final String response = intent.getStringExtra(Constants.EXTRA_BROADCAST);
+                final Payload payload = GsonUtils.getInstance().fromJson(response, Payload.class);
 
-                String code = payload.getCode();
+                final String code = payload.getCode();
 
                 if (Integer.valueOf(code) == Constants.HTTP_OK) {
-                    String content = payload.getContent();
-                    User currentUser = GsonUtils.getInstance().fromJson(content, User.class);
+                    final String content = payload.getContent();
+                    final User currentUser = GsonUtils.getInstance().fromJson(content, User.class);
 
-                    String avatar = currentUser.getAvatar();
-                    String username = currentUser.getUsername();
+                    final String avatar = currentUser.getAvatar();
+                    final String username = currentUser.getUsername();
 
                     if (!TextUtils.isEmpty(avatar))
                         Utils.loadImage(mContext, avatar, mProfileUserAvatar);
@@ -73,7 +73,7 @@ public class ProfileFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_profile, container, false);
+        final View view = inflater.inflate(R.layout.fragment_profile, container, false);
         mContext = view.getContext();
 
         mProfileUserAvatar = (ImageView) view.findViewById(R.id.profile_icUser);
@@ -165,9 +165,9 @@ public class ProfileFragment extends Fragment
         headers.put(Constants.HEADER_CONTENT_TYPE, Constants.APPLICATION_JSON);
         headers.put(Constants.HEADER_ACCEPT, Constants.APPLICATION_JSON);
 
-        String currentUserId = PreferencesUtils.get(mContext, Constants.PREF_USER_ID);
+        final String currentUserId = PreferencesUtils.get(mContext, Constants.PREF_USER_ID);
 
-        APICall call = new APICall(
+        final APICall call = new APICall(
                 mContext,
                 Constants.INTENT_USER_GET,
                 Constants.GET,

@@ -59,20 +59,20 @@ public final class GamesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         final Game game = mGames.get(position);
 
         if (holder instanceof GameTextsVH) {
-            GameTextsVH textsHolder = (GameTextsVH) holder;
+            final GameTextsVH textsHolder = (GameTextsVH) holder;
             if (position == mSelectedPosition) {
                 textsHolder.itemView.setSelected(true);
                 mSelectedView = textsHolder.itemView;
             } else textsHolder.itemView.setSelected(false);
 
-            String name = game.getName();
+            final String name = game.getName();
             textsHolder.name.setText(name);
         }
 
         if (holder instanceof GameCoversVH) {
             final GameCoversVH coversHolder = (GameCoversVH) holder;
 
-            String cover = "https://" + game.getCover();
+            final String cover = "https://" + game.getCover();
             if (!TextUtils.isEmpty(cover))
                 Utils.loadImage(coversHolder.context, cover, coversHolder.cover, 512);
             else coversHolder.cover.setImageResource(R.mipmap.ic_launcher);

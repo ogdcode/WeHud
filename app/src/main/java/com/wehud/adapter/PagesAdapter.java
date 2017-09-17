@@ -24,15 +24,14 @@ public final class PagesAdapter extends RecyclerView.Adapter<PagesAdapter.PagesV
 
     @Override
     public PagesVH onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
+        final View view = LayoutInflater.from(parent.getContext())
                     .inflate(android.R.layout.simple_list_item_1, parent, false);
-
         return new PagesVH(view);
     }
 
     @Override
     public void onBindViewHolder(PagesVH holder, int position) {
-        Page page = mPages.get(position);
+        final Page page = mPages.get(position);
         holder.title.setText(page.getTitle());
     }
 

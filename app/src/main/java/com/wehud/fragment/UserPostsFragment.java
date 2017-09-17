@@ -45,18 +45,19 @@ public class UserPostsFragment extends Fragment implements SwipeRefreshLayout.On
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(Constants.INTENT_POSTS_LIST) && !mPaused) {
-                String response = intent.getStringExtra(Constants.EXTRA_BROADCAST);
-                Payload payload = GsonUtils.getInstance().fromJson(response, Payload.class);
+                final String response = intent.getStringExtra(Constants.EXTRA_BROADCAST);
+                final Payload payload = GsonUtils.getInstance().fromJson(response, Payload.class);
 
-                String code = payload.getCode();
+                final String code = payload.getCode();
 
                 if (Integer.valueOf(code) == Constants.HTTP_OK) {
                     String content = payload.getContent();
 
-                    Type postListType = new TypeToken<List<Post>>(){}.getType();
-                    List<Post> posts = GsonUtils.getInstance().fromJson(content, postListType);
+                    final Type postListType = new TypeToken<List<Post>>(){}.getType();
+                    final List<Post> posts = GsonUtils.getInstance()
+                            .fromJson(content, postListType);
                     if (!posts.isEmpty()) {
-                        PostsAdapter adapter = new PostsAdapter(posts, false);
+                        final PostsAdapter adapter = new PostsAdapter(posts, false);
                         mPostListView.setAdapter(adapter);
 
                         mEmptyLayout.setVisibility(View.GONE);
@@ -67,23 +68,6 @@ public class UserPostsFragment extends Fragment implements SwipeRefreshLayout.On
                     Utils.toast(mContext, R.string.error_server);
                 else Utils.toast(mContext, R.string.error_general, code);
             }
-
-            /*
-            String payload = intent.getStringExtra(Constants.EXTRA_BROADCAST);
-
-            if (intent.getAction().equals(Constants.INTENT_POSTS_LIST) && !mPaused) {
-                Type postListType = new TypeToken<List<Post>>(){}.getType();
-                mPosts = GsonUtils.getInstance().fromJson(payload, postListType);
-                if (!mPosts.isEmpty()) {
-                    PostsAdapter adapter = new PostsAdapter(mPosts, false);
-                    mPostListView.setAdapter(adapter);
-
-                    mEmptyLayout.setVisibility(View.GONE);
-                    mSwipeLayout.setVisibility(View.VISIBLE);
-                    mSwipeLayout.setRefreshing(false);
-                }
-            }
-            */
         }
     };
 
@@ -100,7 +84,7 @@ public class UserPostsFragment extends Fragment implements SwipeRefreshLayout.On
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_user_posts, container, false);
+        final View view = inflater.inflate(R.layout.fragment_user_posts, container, false);
         mContext = view.getContext();
 
         mEmptyLayout = view.findViewById(R.id.layout_empty);
@@ -125,7 +109,8 @@ public class UserPostsFragment extends Fragment implements SwipeRefreshLayout.On
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        if (savedInstanceState != null) mUserId = savedInstanceState.getString(Constants.PREF_USER_ID);
+        if (savedInstanceState != null)
+            mUserId = savedInstanceState.getString(Constants.PREF_USER_ID);
 
         IntentFilter filter = new IntentFilter();
         filter.addAction(Constants.INTENT_POSTS_LIST);
@@ -174,7 +159,7 @@ public class UserPostsFragment extends Fragment implements SwipeRefreshLayout.On
             headers.put(Constants.HEADER_CONTENT_TYPE, Constants.APPLICATION_JSON);
             headers.put(Constants.HEADER_ACCEPT, Constants.APPLICATION_JSON);
 
-            APICall call = new APICall(
+            final APICall call = new APICall(
                     mContext,
                     Constants.INTENT_POSTS_LIST,
                     Constants.GET,
