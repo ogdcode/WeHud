@@ -1,7 +1,4 @@
 <resources>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
     <string name="app_name">WeHud</string>
     <string name="menu_home">Home</string>
     <string name="menu_send">Send</string>
@@ -165,4 +162,13 @@
     <string name="no_games">There are no games to be found.</string>
     <string name="btnCreatePlanning">Create a planning</string>
     <string name="error_sessionExpired">Session expired</string>
+    <string name="dialogTitle_emailSent">Email Sent</string>
+    <string name="level"><u>Level:</u> <b>%d</b></string>
+    <string name="rank"><u>Rank:</u> <b>%c</b></string>
+    <string name="dialogText_reward">Congratulations, you just reached %d points! Now %s will grant you no less than %d point(s)!</string>
+    <string name="new_publication">every new %s</string>
+    <string name="new_binding">each %s binding</string>
+    <string name="new_follow">following %s</string>
+    <string name="or">or</string>
+    <string name="dialogTitle_reward">Reward</string>
 </resources>

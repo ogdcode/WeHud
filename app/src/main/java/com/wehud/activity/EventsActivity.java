@@ -31,10 +31,13 @@ import com.google.gson.reflect.TypeToken;
 import com.wehud.R;
 import com.wehud.adapter.EventsAdapter;
 import com.wehud.dialog.DateTimePickerDialogFragment;
+import com.wehud.dialog.TextDialogFragment;
+import com.wehud.fragment.SendFragment;
 import com.wehud.model.Event;
 import com.wehud.model.EventBindResponse;
 import com.wehud.model.Payload;
 import com.wehud.model.Planning;
+import com.wehud.model.Reward;
 import com.wehud.network.APICall;
 import com.wehud.util.Constants;
 import com.wehud.util.GsonUtils;
@@ -50,7 +53,8 @@ import java.util.List;
 import java.util.Map;
 
 public class EventsActivity extends AppCompatActivity
-        implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
+        implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener,
+        TextDialogFragment.OnTextDialogDismissOkListener {
 
     private static final int ID_DIALOG_START_DATE_TIME = 0;
     private static final int ID_DIALOG_END_DATE_TIME = 1;
@@ -103,11 +107,22 @@ public class EventsActivity extends AppCompatActivity
                             }
                             break;
                         case Constants.INTENT_EVENTS_ADD:
-                            mSwipeLayout.setRefreshing(true);
-                            Utils.toast(
-                                    EventsActivity.this,
-                                    R.string.message_createEventSuccess
-                            );
+                            Reward reward = Utils.getNestedReward(content);
+                            if (!reward.getEntities().isEmpty()) {
+                                Utils.generateRewardDialog(
+                                        EventsActivity.this,
+                                        getSupportFragmentManager(),
+                                        EventsActivity.this,
+                                        reward,
+                                        0
+                                );
+                            } else {
+                                mSwipeLayout.setRefreshing(true);
+                                Utils.toast(
+                                        EventsActivity.this,
+                                        R.string.message_createEventSuccess
+                                );
+                            }
                             break;
                         case Constants.INTENT_EVENTS_BIND:
                             final EventBindResponse bindResponse = GsonUtils.getInstance().fromJson(
@@ -137,7 +152,7 @@ public class EventsActivity extends AppCompatActivity
                 } else {
                     int messageId;
                     switch (Integer.valueOf(code)) {
-                        case Constants.HTTP_METHOD_NOT_ALLOWED:
+                        case Constants.HTTP_UNAUTHORIZED:
                             messageId = R.string.error_sessionExpired;
                             finish();
                             break;
@@ -291,6 +306,12 @@ public class EventsActivity extends AppCompatActivity
     @Override
     public void onRefresh() {
         if (!TextUtils.isEmpty(mUserId)) this.getEvents();
+    }
+
+    @Override
+    public void onTextDialogDismissOk(Object o) {
+        mSwipeLayout.setRefreshing(true);
+        Utils.toast(this, R.string.message_createEventSuccess);
     }
 
     @SuppressLint("InflateParams")

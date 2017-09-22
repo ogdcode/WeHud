@@ -1,6 +1,7 @@
 package com.wehud.util;
 
 import android.content.Context;
+import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.WindowManager;
@@ -12,7 +13,11 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.wehud.R;
+import com.wehud.dialog.TextDialogFragment;
+import com.wehud.model.CreatedResponse;
 import com.wehud.model.Image;
+import com.wehud.model.Reward;
+import com.wehud.model.Score;
 import com.wehud.model.Status;
 import com.wehud.model.Tag;
 
@@ -246,6 +251,98 @@ public final class Utils {
         }
 
         return images;
+    }
+
+    public static Score getScore(int score) {
+        int level = 0, rankIndex;
+        if (score >= 0 && score < 100) level = (score / 10) + 1;
+        else level = score / 100;
+        rankIndex = level - 1;
+
+        StringBuilder rank = new StringBuilder();
+        if (score > 999) {
+            int len = String.valueOf(level).length();
+            rankIndex = (level / ((len - 1) * 10)) - 1;
+            rank.append(Constants.RANKS[rankIndex]);
+
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < len - 1; ++i) sb.append('+');
+
+            rank.append(sb.toString());
+        }
+        else rank.append(Constants.RANKS[rankIndex]);
+
+        return new Score(level, rank.toString());
+    }
+
+    public static Reward getNestedReward(String payload) {
+        CreatedResponse response = GsonUtils.getInstance().fromJson(payload, CreatedResponse.class);
+        return response.getReward();
+    }
+
+    public static void generateRewardDialog(
+            Context context,
+            FragmentManager manager,
+            TextDialogFragment.OnTextDialogDismissOkListener listener,
+            Reward reward,
+            int id
+    ) {
+        List<String> entities = reward.getEntities();
+        StringBuilder entitiesString = new StringBuilder();
+        if (entities.size() == 1) entitiesString.append(entities.get(0));
+        else if (entities.size() == 2) {
+            String toAppend = "a " + entities.get(0) + ' ' +
+                    context.getString(R.string.or) + " a " +
+                    entities.get(1);
+            entitiesString.append(toAppend);
+        }
+        else {
+            int size = entities.size();
+            for (int i = 0; i < size - 2; ++i) {
+                String toAppend = entities.get(i) + ", ";
+                entitiesString.append(toAppend);
+            }
+
+            String toAppend = entities.get(size - 2) + ' ' +
+                    context.getString(R.string.or) + ' ' +
+                    entities.get(entities.size() - 1);
+            entitiesString.append(toAppend);
+        }
+
+        int action = reward.getAction();
+
+        String title = context.getString(R.string.dialogTitle_reward);
+        StringBuilder message = new StringBuilder();
+        switch (action) {
+            case 0:
+                message.append(context.getResources().getString(
+                        R.string.dialogText_reward,
+                        action,
+                        context.getResources().getString(R.string.new_publication, entitiesString),
+                        reward.getBonus()
+                ));
+                break;
+            case 1:
+                message.append(context.getResources().getString(
+                        R.string.dialogText_reward,
+                        reward.getScore(),
+                        context.getResources().getString(R.string.new_binding, entitiesString),
+                        reward.getBonus()
+                ));
+                break;
+            case 2:
+                message.append(context.getResources().getString(
+                        R.string.dialogText_reward,
+                        reward.getScore(),
+                        context.getResources().getString(R.string.new_follow, entitiesString),
+                        reward.getBonus()
+                ));
+                break;
+            default:
+                return;
+        }
+
+        TextDialogFragment.generate(manager, listener, title, message.toString(), id);
     }
 
     public static boolean isConnectedUser(Context context, String userId) {

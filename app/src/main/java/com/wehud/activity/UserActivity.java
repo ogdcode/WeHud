@@ -23,11 +23,14 @@ import com.wehud.R;
 import com.wehud.adapter.PagesAdapter;
 import com.wehud.adapter.VPAdapter;
 import com.wehud.dialog.ListDialogFragment;
+import com.wehud.dialog.TextDialogFragment;
 import com.wehud.fragment.UserPlanningsFragment;
 import com.wehud.fragment.UserPostsFragment;
 import com.wehud.model.Follower;
 import com.wehud.model.Page;
 import com.wehud.model.Payload;
+import com.wehud.model.Reward;
+import com.wehud.model.Score;
 import com.wehud.model.User;
 import com.wehud.network.APICall;
 import com.wehud.util.Constants;
@@ -43,7 +46,8 @@ import java.util.Map;
 
 public class UserActivity extends AppCompatActivity
         implements View.OnClickListener, ViewPager.OnPageChangeListener,
-        ListDialogFragment.OnListDialogDismissOkListener {
+        ListDialogFragment.OnListDialogDismissOkListener,
+        TextDialogFragment.OnTextDialogDismissOkListener {
 
     private static final String KEY_CURRENT_PAGE = "key_current_page";
     private static final String PARAM_PAGE = "page";
@@ -78,9 +82,10 @@ public class UserActivity extends AppCompatActivity
                             mCurrentUser = GsonUtils.getInstance().fromJson(content, User.class);
                             String avatar = mCurrentUser.getAvatar();
                             String username = mCurrentUser.getUsername();
-                            String score = String.valueOf(mCurrentUser.getScore())
-                                    + "\t" + getString(R.string.score
-                            );
+                            Score score = Utils.getScore(mCurrentUser.getScore());
+                            String levelRank =
+                                    getResources().getString(R.string.level, score.getLevel()) + "\n" +
+                                    getResources().getString(R.string.rank, score.getRank());
                             List<User> followers = mCurrentUser.getFollowers();
                             String numFollowers = followers.size() + "\t"
                                     + getString(R.string.followerCount);
@@ -107,7 +112,7 @@ public class UserActivity extends AppCompatActivity
                             else mAvatar.setImageResource(R.mipmap.ic_launcher_round);
 
                             mUsername.setText(username);
-                            mScore.setText(score);
+                            mScore.setText(levelRank);
                             mFollowers.setText(numFollowers);
                             break;
                         case Constants.INTENT_USER_FOLLOW:
@@ -123,7 +128,16 @@ public class UserActivity extends AppCompatActivity
 
                             mFollowers.setText(countAfterFollow);
 
-                            Utils.toast(
+                            Reward reward = Utils.getNestedReward(content);
+                            if (!reward.getEntities().isEmpty())
+                                Utils.generateRewardDialog(
+                                        UserActivity.this,
+                                        getSupportFragmentManager(),
+                                        UserActivity.this,
+                                        reward,
+                                        0
+                                );
+                            else Utils.toast(
                                     UserActivity.this,
                                     R.string.message_followingUser,
                                     mCurrentUser.getUsername()
@@ -163,7 +177,7 @@ public class UserActivity extends AppCompatActivity
                 } else {
                     int messageId;
                     switch (Integer.valueOf(code)) {
-                        case Constants.HTTP_METHOD_NOT_ALLOWED:
+                        case Constants.HTTP_UNAUTHORIZED:
                             messageId = R.string.error_sessionExpired;
                             finish();
                             break;
@@ -317,6 +331,11 @@ public class UserActivity extends AppCompatActivity
             );
             if (!call.isLoading()) call.execute();
         }
+    }
+
+    @Override
+    public void onTextDialogDismissOk(Object o) {
+        Utils.toast(UserActivity.this, R.string.message_followingUser, mCurrentUser.getUsername());
     }
 
     private void getUser() {

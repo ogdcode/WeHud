@@ -17,14 +17,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
 
 import com.google.gson.reflect.TypeToken;
 import com.wehud.R;
 import com.wehud.adapter.PlanningsAdapter;
 import com.wehud.dialog.EditDialogFragment;
+import com.wehud.dialog.TextDialogFragment;
 import com.wehud.model.Payload;
 import com.wehud.model.Planning;
+import com.wehud.model.Reward;
 import com.wehud.network.APICall;
 import com.wehud.util.Constants;
 import com.wehud.util.GsonUtils;
@@ -38,7 +39,8 @@ import java.util.Map;
 
 public class UserPlanningsFragment extends Fragment
         implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener,
-        EditDialogFragment.OnEditDialogDismissOkListener {
+        EditDialogFragment.OnEditDialogDismissOkListener,
+        TextDialogFragment.OnTextDialogDismissOkListener {
 
     private static final String PARAM_TITLE = "title";
 
@@ -68,8 +70,19 @@ public class UserPlanningsFragment extends Fragment
 
                     switch (intent.getAction()) {
                         case Constants.INTENT_PLANNINGS_ADD:
-                            Utils.toast(mContext, R.string.message_addPlanningSuccess);
-                            getPlannings();
+                            Reward reward = Utils.getNestedReward(content);
+                            if (!reward.getEntities().isEmpty()) {
+                                Utils.generateRewardDialog(
+                                        mContext,
+                                        getFragmentManager(),
+                                        UserPlanningsFragment.this,
+                                        reward,
+                                        0
+                                );
+                            } else {
+                                Utils.toast(mContext, R.string.message_addPlanningSuccess);
+                                getPlannings();
+                            }
                             break;
                         case Constants.INTENT_PLANNINGS_DELETE:
                             Utils.toast(mContext, R.string.message_deletePlanningSuccess);
@@ -102,7 +115,7 @@ public class UserPlanningsFragment extends Fragment
                 } else {
                     int messageId;
                     switch (Integer.valueOf(code)) {
-                        case Constants.HTTP_METHOD_NOT_ALLOWED:
+                        case Constants.HTTP_UNAUTHORIZED:
                             messageId = R.string.error_sessionExpired;
                             getActivity().finish();
                             break;
@@ -239,6 +252,12 @@ public class UserPlanningsFragment extends Fragment
     @Override
     public void onEditDialogDismissOk(Object id, String text) {
         if (!TextUtils.isEmpty(text)) this.createPlanning(text);
+    }
+
+    @Override
+    public void onTextDialogDismissOk(Object o) {
+        Utils.toast(mContext, R.string.message_addPlanningSuccess);
+        this.getPlannings();
     }
 
     private void getPlannings() {

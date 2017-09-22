@@ -6,11 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -20,8 +17,10 @@ import android.view.ViewGroup;
 import com.google.gson.reflect.TypeToken;
 import com.wehud.R;
 import com.wehud.adapter.PostsAdapter;
+import com.wehud.dialog.TextDialogFragment;
 import com.wehud.model.Payload;
 import com.wehud.model.Post;
+import com.wehud.model.Reward;
 import com.wehud.network.APICall;
 import com.wehud.util.Constants;
 import com.wehud.util.GsonUtils;
@@ -33,7 +32,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class PostsFragment extends Fragment {
+public class PostsFragment extends Fragment implements TextDialogFragment.OnTextDialogDismissOkListener {
 
     private static final String KEY_PAGE_POSTS = "key_page_posts";
 
@@ -55,9 +54,10 @@ public class PostsFragment extends Fragment {
 
                 if (Integer.valueOf(code) == Constants.HTTP_OK ||
                         Integer.valueOf(code) == Constants.HTTP_NO_CONTENT) {
+                    final String content = payload.getContent();
+
                     switch (intent.getAction()) {
                         case Constants.INTENT_POSTS_LIST:
-                            final String content = payload.getContent();
 
                             final Type postListType = new TypeToken<List<Post>>(){}.getType();
                             mPosts = GsonUtils.getInstance().fromJson(content, postListType);
@@ -70,6 +70,22 @@ public class PostsFragment extends Fragment {
                             }
                             break;
                         case Constants.INTENT_POST_LIKE:
+                            if (Integer.valueOf(code) == Constants.HTTP_NO_CONTENT)
+                                mContext.sendBroadcast(new Intent(Constants.EXTRA_REFRESH_PAGES));
+                            else {
+                                Reward reward = GsonUtils.getInstance().fromJson(
+                                        content,
+                                        Reward.class
+                                );
+                                Utils.generateRewardDialog(
+                                        mContext,
+                                        getFragmentManager(),
+                                        PostsFragment.this,
+                                        reward,
+                                        0
+                                );
+                            }
+                            break;
                         case Constants.INTENT_POST_DISLIKE:
                             mContext.sendBroadcast(new Intent(Constants.EXTRA_REFRESH_PAGES));
                             break;
@@ -79,7 +95,7 @@ public class PostsFragment extends Fragment {
                 } else {
                     int messageId;
                     switch (Integer.valueOf(code)) {
-                        case Constants.HTTP_METHOD_NOT_ALLOWED:
+                        case Constants.HTTP_UNAUTHORIZED:
                             messageId = R.string.error_sessionExpired;
                             getActivity().finish();
                             break;
@@ -164,6 +180,11 @@ public class PostsFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList(KEY_PAGE_POSTS, (ArrayList<Post>) mPosts);
+    }
+
+    @Override
+    public void onTextDialogDismissOk(Object o) {
+        mContext.sendBroadcast(new Intent(Constants.EXTRA_REFRESH_PAGES));
     }
 
     private void getPosts() {

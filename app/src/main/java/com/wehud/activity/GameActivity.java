@@ -21,10 +21,12 @@ import com.google.gson.reflect.TypeToken;
 import com.wehud.R;
 import com.wehud.adapter.PagesAdapter;
 import com.wehud.dialog.ListDialogFragment;
+import com.wehud.dialog.TextDialogFragment;
 import com.wehud.model.Follower;
 import com.wehud.model.Game;
 import com.wehud.model.Page;
 import com.wehud.model.Payload;
+import com.wehud.model.Reward;
 import com.wehud.model.Status;
 import com.wehud.model.User;
 import com.wehud.network.APICall;
@@ -40,7 +42,8 @@ import java.util.List;
 import java.util.Map;
 
 public class GameActivity extends AppCompatActivity implements View.OnClickListener,
-        ListDialogFragment.OnListDialogDismissOkListener {
+        ListDialogFragment.OnListDialogDismissOkListener,
+        TextDialogFragment.OnTextDialogDismissOkListener {
 
     private static final String KEY_GAME_ID = "key_game_id";
     private static final String PARAM_PAGE = "page";
@@ -127,7 +130,17 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
                             mFollowers.setText(countAfterUnfollow);
 
-                            Utils.toast(GameActivity.this,
+                            Reward reward = Utils.getNestedReward(content);
+                            if (!reward.getEntities().isEmpty())
+                                Utils.generateRewardDialog(
+                                        GameActivity.this,
+                                        getSupportFragmentManager(),
+                                        GameActivity.this,
+                                        reward,
+                                        0
+                                );
+                            else Utils.toast(
+                                    GameActivity.this,
                                     R.string.message_unfollowingGame, mCurrentGame.getName()
                             );
                             break;
@@ -137,7 +150,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 } else {
                     int messageId;
                     switch (Integer.valueOf(code)) {
-                        case Constants.HTTP_METHOD_NOT_ALLOWED:
+                        case Constants.HTTP_UNAUTHORIZED:
                             messageId = R.string.error_sessionExpired;
                             finish();
                             break;
@@ -269,6 +282,11 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             );
             if (!call.isLoading()) call.execute();
         }
+    }
+
+    @Override
+    public void onTextDialogDismissOk(Object o) {
+        Utils.toast(GameActivity.this, R.string.message_unfollowingGame, mCurrentGame.getName());
     }
 
     private void initializeFields() {

@@ -64,7 +64,7 @@ public class MessagesActivity extends AppCompatActivity implements SwipeRefreshL
                 } else {
                     int messageId;
                     switch (Integer.valueOf(code)) {
-                        case Constants.HTTP_METHOD_NOT_ALLOWED:
+                        case Constants.HTTP_UNAUTHORIZED:
                             messageId = R.string.error_sessionExpired;
                             finish();
                             break;

@@ -5,7 +5,6 @@ package com.wehud.util;
  *
  * @author Olivier Gonçalves, 2017
  */
-
 public final class Constants {
     public static final String SAMPLE_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1OThmMWQ2NTQ5M2E2MjBhYTkxOGJlNDIiLCJpYXQiOjE1MDU2NTI2MDAsImV4cCI6MTUwNTczOTAwMH0.APpfDV5J7RqjaDZxjMbYmNxAQvb-QcekJcyxW4xg-UI";
 
@@ -54,8 +53,8 @@ public final class Constants {
     public static final int HTTP_OK = 200;
     public static final int HTTP_CREATED = 201;
     public static final int HTTP_NO_CONTENT = 204;
+    public static final int HTTP_UNAUTHORIZED = 401;
     public static final int HTTP_FORBIDDEN = 403;
-    public static final int HTTP_METHOD_NOT_ALLOWED = 405;
     public static final int HTTP_INTERNAL_SERVER_ERROR = 500;
 
     public static final int CONNECT_TIMEOUT = 3000;
@@ -97,6 +96,8 @@ public final class Constants {
 
     public static final String PREF_USER_ID = "pref_user_id";
     public static final String PREF_TOKEN = "pref_token";
+
+    static final String[] RANKS = {"I", "H", "G", "F", "E", "D", "C", "B", "A", "S"};
 
     static final int
             TAG_EVENT = 0,

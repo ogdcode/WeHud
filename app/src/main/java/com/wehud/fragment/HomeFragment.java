@@ -25,6 +25,7 @@ import com.wehud.dialog.TextDialogFragment;
 import com.wehud.model.Page;
 import com.wehud.model.Payload;
 import com.wehud.model.Post;
+import com.wehud.model.Reward;
 import com.wehud.network.APICall;
 import com.wehud.util.Constants;
 import com.wehud.util.GsonUtils;
@@ -115,6 +116,17 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
                                 mAdapter.add(fragment, page.getTitle());
                                 mAdapter.notifyDataSetChanged();
                                 mPager.invalidate();
+
+                                Reward reward = Utils.getNestedReward(content);
+                                if (!reward.getEntities().isEmpty()) {
+                                    Utils.generateRewardDialog(
+                                            mContext,
+                                            getFragmentManager(),
+                                            HomeFragment.this,
+                                            reward,
+                                            0
+                                    );
+                                }
                                 break;
                             case Constants.INTENT_PAGES_DELETE:
                                 final Fragment item = mAdapter.getItem(mCurrentPage);
@@ -138,7 +150,7 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
                     } else {
                         int messageId;
                         switch (Integer.valueOf(code)) {
-                            case Constants.HTTP_METHOD_NOT_ALLOWED:
+                            case Constants.HTTP_UNAUTHORIZED:
                                 messageId = R.string.error_sessionExpired;
                                 getActivity().finish();
                                 break;
@@ -156,8 +168,6 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
 
                 if (!TextUtils.isEmpty(intent.getStringExtra(Constants.EXTRA_REFRESH_PAGES))) {
                     mAdapter.clear();
-                    mAdapter.notifyDataSetChanged();
-                    mPager.invalidate();
                     getPages();
                 }
             }
@@ -245,7 +255,7 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
                 TextDialogFragment.generate(
                         getFragmentManager(), this,
                         pageTitle, getString(R.string.dialogMessage_removePage),
-                        0
+                        1
                 );
                 break;
             default:
@@ -283,7 +293,12 @@ public class HomeFragment extends Fragment implements ViewPager.OnPageChangeList
 
     @Override
     public void onTextDialogDismissOk(Object id) {
-        if (mReceiver != null) this.deletePage();
+        switch ((int) id) {
+            case 1:
+                if (mReceiver != null) this.deletePage();
+            default:
+                break;
+        }
     }
 
     private void getPages() {

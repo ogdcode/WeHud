@@ -16,7 +16,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.google.gson.reflect.TypeToken;
 import com.wehud.R;
 import com.wehud.adapter.UsersAdapter;
 import com.wehud.model.Payload;
@@ -27,7 +26,6 @@ import com.wehud.util.GsonUtils;
 import com.wehud.util.PreferencesUtils;
 import com.wehud.util.Utils;
 
-import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,7 +65,7 @@ public class ContactsActivity extends AppCompatActivity
                 } else {
                     int messageId;
                     switch (Integer.valueOf(code)) {
-                        case Constants.HTTP_METHOD_NOT_ALLOWED:
+                        case Constants.HTTP_UNAUTHORIZED:
                             messageId = R.string.error_sessionExpired;
                             finish();
                             break;

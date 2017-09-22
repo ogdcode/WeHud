@@ -9,7 +9,8 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/userHeader_frameHeight"
         android:gravity="center"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:weightSum="3">
 
         <TextView
             android:id="@+id/username"
@@ -27,11 +28,11 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@drawable/bg_user_border"
+            android:background="@drawable/bg_score_border"
             android:gravity="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textColor="@android:color/holo_red_dark"
-            tools:text="@string/score_sample" />
+            android:textColor="@android:color/white"
+            tools:text="Level: 1\nRank: I" />
 
     </LinearLayout>
 

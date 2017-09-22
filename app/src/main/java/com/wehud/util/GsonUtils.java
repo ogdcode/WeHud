@@ -19,7 +19,7 @@ public final class GsonUtils {
 
     public static synchronized Gson getInstance() {
         if (mInstance == null)
-            mInstance = new GsonBuilder().setPrettyPrinting().create();
+            mInstance = new GsonBuilder().serializeNulls().create();
         return mInstance;
     }
 

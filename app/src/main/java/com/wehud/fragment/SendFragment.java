@@ -14,7 +14,6 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -33,8 +32,10 @@ import com.wehud.R;
 import com.wehud.adapter.GamesAdapter;
 import com.wehud.adapter.UsersAdapter;
 import com.wehud.dialog.ListDialogFragment;
+import com.wehud.dialog.TextDialogFragment;
 import com.wehud.model.Game;
 import com.wehud.model.Payload;
+import com.wehud.model.Reward;
 import com.wehud.model.User;
 import com.wehud.network.APICall;
 import com.wehud.util.Constants;
@@ -50,7 +51,8 @@ import java.util.Map;
 
 public class SendFragment extends Fragment
         implements View.OnClickListener, CompoundButton.OnCheckedChangeListener,
-        ListDialogFragment.OnListDialogDismissOkListener {
+        ListDialogFragment.OnListDialogDismissOkListener,
+        TextDialogFragment.OnTextDialogDismissOkListener {
 
     private static final String PARAM_TEXT = "text";
     private static final String PARAM_VIDEO_URI = "videoUri";
@@ -87,7 +89,16 @@ public class SendFragment extends Fragment
 
                     switch (intent.getAction()) {
                         case Constants.INTENT_POSTS_ADD:
-                            Utils.toast(mContext, R.string.message_newPost);
+                            Reward reward = Utils.getNestedReward(content);
+                            if (!reward.getEntities().isEmpty()) {
+                                Utils.generateRewardDialog(
+                                        mContext,
+                                        getFragmentManager(),
+                                        SendFragment.this,
+                                        reward,
+                                        0
+                                );
+                            } else Utils.toast(mContext, R.string.message_newPost);
                             break;
                         case Constants.INTENT_FOLLOWERS_LIST:
                             User currentUser = GsonUtils.getInstance().fromJson(
@@ -106,7 +117,7 @@ public class SendFragment extends Fragment
                 } else {
                     int messageId;
                     switch (Integer.valueOf(code)) {
-                        case Constants.HTTP_METHOD_NOT_ALLOWED:
+                        case Constants.HTTP_UNAUTHORIZED:
                             messageId = R.string.error_sessionExpired;
                             getActivity().finish();
                             break;
@@ -269,6 +280,11 @@ public class SendFragment extends Fragment
             mNewPostFollower.setText(((User) p).getUsername());
         if (p instanceof Game)
             mNewPostGame.setText(((Game) p).getName());
+    }
+
+    @Override
+    public void onTextDialogDismissOk(Object o) {
+        Utils.toast(mContext, R.string.message_newPost);
     }
 
     private void getFollowers() {
