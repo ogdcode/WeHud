@@ -117,14 +117,14 @@ public class PageFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                                 likeIntent.putExtra(Constants.EXTRA_REFRESH_PAGE, mId);
                                 mContext.sendBroadcast(likeIntent);
                             }
-                            else getPosts(Constants.INTENT_POSTS_LIST);
+                            else getPosts();
                         }
                         if (intent.getAction().equals(Constants.INTENT_POST_DISLIKE)) {
                             if (!mIsIndexZero) {
                                 Intent likeIntent = new Intent(Constants.INTENT_REFRESH_PAGE);
                                 likeIntent.putExtra(Constants.EXTRA_REFRESH_PAGE, mId);
                                 mContext.sendBroadcast(likeIntent);
-                            } else getPosts(Constants.INTENT_POSTS_LIST);
+                            } else getPosts();
                         }
                     } else {
                         int messageId;
@@ -211,7 +211,7 @@ public class PageFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     @Override
     public void onResume() {
         super.onResume();
-        if (!mPaused && mIsIndexZero) this.getPosts(Constants.INTENT_POSTS_LIST);
+        if (!mPaused && mIsIndexZero) this.getPosts();
 
         mPaused = false;
     }
@@ -237,7 +237,7 @@ public class PageFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     @Override
     public void onRefresh() {
-        if (mIsIndexZero) this.getPosts(Constants.INTENT_POSTS_LIST);
+        if (mIsIndexZero) this.getPosts();
     }
 
     @Override
@@ -247,14 +247,14 @@ public class PageFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         mContext.sendBroadcast(likeIntent);
     }
 
-    private void getPosts(String action) {
+    private void getPosts() {
         Map<String, String> headers = new HashMap<>();
         headers.put(Constants.HEADER_CONTENT_TYPE, Constants.APPLICATION_JSON);
         headers.put(Constants.HEADER_ACCEPT, Constants.APPLICATION_JSON);
 
         final APICall call = new APICall(
                 mContext,
-                action,
+                Constants.INTENT_POSTS_LIST,
                 Constants.GET,
                 Constants.API_POSTS,
                 headers
