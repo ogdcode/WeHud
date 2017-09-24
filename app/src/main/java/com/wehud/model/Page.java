@@ -21,6 +21,9 @@ public final class Page implements Parcelable {
     @SerializedName("users")
     private List<User> mUsers;
 
+    @SerializedName("games")
+    private List<Game> mGames;
+
     @SerializedName("posts")
     private List<Post> mPosts;
 
@@ -32,16 +35,16 @@ public final class Page implements Parcelable {
         return mTitle;
     }
 
-    public void setTitle(String title) {
-        mTitle = title;
-    }
-
     public User getOwner() {
         return mOwner;
     }
 
     public List<User> getUsers() {
         return mUsers;
+    }
+
+    public List<Game> getGames() {
+        return mGames;
     }
 
     public List<Post> getPosts() {
@@ -53,6 +56,7 @@ public final class Page implements Parcelable {
         mTitle = in.readString();
         mOwner = in.readParcelable(User.class.getClassLoader());
         mUsers = in.createTypedArrayList(User.CREATOR);
+        mGames = in.createTypedArrayList(Game.CREATOR);
         mPosts = in.createTypedArrayList(Post.CREATOR);
     }
 
@@ -79,17 +83,19 @@ public final class Page implements Parcelable {
         parcel.writeString(mTitle);
         parcel.writeParcelable(mOwner, i);
         parcel.writeTypedList(mUsers);
+        parcel.writeTypedList(mGames);
         parcel.writeTypedList(mPosts);
     }
 
     @Override
     public String toString() {
         return "Page{" +
-                "id='" + mId + '\'' +
-                ", title='" + mTitle + '\'' +
-                ", owner=" + mOwner +
-                ", users=" + mUsers +
-                ", posts=" + mPosts +
+                "mId='" + mId + '\'' +
+                ", mTitle='" + mTitle + '\'' +
+                ", mOwner=" + mOwner +
+                ", mUsers=" + mUsers +
+                ", mGames=" + mGames +
+                ", mPosts=" + mPosts +
                 '}';
     }
 }

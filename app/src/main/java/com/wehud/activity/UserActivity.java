@@ -21,7 +21,7 @@ import android.widget.TextView;
 import com.google.gson.reflect.TypeToken;
 import com.wehud.R;
 import com.wehud.adapter.PagesAdapter;
-import com.wehud.adapter.VPAdapter;
+import com.wehud.adapter.PageAdapter;
 import com.wehud.dialog.ListDialogFragment;
 import com.wehud.dialog.TextDialogFragment;
 import com.wehud.fragment.UserPlanningsFragment;
@@ -226,9 +226,13 @@ public class UserActivity extends AppCompatActivity
         TabLayout tabs = (TabLayout) findViewById(android.R.id.tabs);
         ViewPager pager = (ViewPager) findViewById(R.id.pager);
 
-        VPAdapter adapter = new VPAdapter(getSupportFragmentManager());
-        adapter.add(UserPostsFragment.newInstance(mUserId), getString(R.string.tab_posts));
-        adapter.add(UserPlanningsFragment.newInstance(mUserId), getString(R.string.tab_plannings));
+        PageAdapter adapter = new PageAdapter(getSupportFragmentManager());
+        adapter.add(UserPostsFragment.newInstance(mUserId), getString(R.string.tab_posts), false);
+        adapter.add(
+                UserPlanningsFragment.newInstance(mUserId),
+                getString(R.string.tab_plannings),
+                false
+        );
 
         pager.setAdapter(adapter);
         pager.setCurrentItem(mCurrentPage);
@@ -313,7 +317,10 @@ public class UserActivity extends AppCompatActivity
             headers.put(Constants.HEADER_ACCEPT, Constants.APPLICATION_JSON);
 
             Map<String, String> parameters = new HashMap<>();
-            parameters.put(Constants.PARAM_TOKEN, Constants.SAMPLE_TOKEN);
+            parameters.put(
+                    Constants.PARAM_TOKEN,
+                    PreferencesUtils.get(UserActivity.this, Constants.PREF_TOKEN)
+            );
 
             Map<String, String> page = new HashMap<>();
             page.put(PARAM_PAGE, ((Page) p).getTitle());
@@ -344,7 +351,7 @@ public class UserActivity extends AppCompatActivity
         headers.put(Constants.HEADER_ACCEPT, Constants.APPLICATION_JSON);
 
         Map<String, String> parameters = new HashMap<>();
-        parameters.put(Constants.PARAM_TOKEN, Constants.SAMPLE_TOKEN);
+        parameters.put(Constants.PARAM_TOKEN, PreferencesUtils.get(this, Constants.PREF_TOKEN));
 
         APICall call = new APICall(
                 this,
@@ -363,7 +370,7 @@ public class UserActivity extends AppCompatActivity
         headers.put(Constants.HEADER_ACCEPT, Constants.APPLICATION_JSON);
 
         Map<String, String> parameters = new HashMap<>();
-        parameters.put(Constants.PARAM_TOKEN, Constants.SAMPLE_TOKEN);
+        parameters.put(Constants.PARAM_TOKEN, PreferencesUtils.get(this, Constants.PREF_TOKEN));
 
         APICall call = new APICall(
                 this,
@@ -403,7 +410,7 @@ public class UserActivity extends AppCompatActivity
         headers.put(Constants.HEADER_ACCEPT, Constants.APPLICATION_JSON);
 
         Map<String, String> parameters = new HashMap<>();
-        parameters.put(Constants.PARAM_TOKEN, Constants.SAMPLE_TOKEN);
+        parameters.put(Constants.PARAM_TOKEN, PreferencesUtils.get(this, Constants.PREF_TOKEN));
 
         APICall call = new APICall(
                 this,

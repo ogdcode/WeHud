@@ -73,7 +73,7 @@
         app:layout_constraintTop_toBottomOf="@+id/password" />
 
     <Button
-        android:id="@+id/btnSend"
+        android:id="@+id/btnSignIn"
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -96,7 +96,7 @@
         android:layout_marginRight="@dimen/login_marginRightEnd"
         android:layout_marginTop="@dimen/login_btnMarginTop"
         android:text="@string/sign_up"
-        app:layout_constraintLeft_toRightOf="@+id/btnSend"
+        app:layout_constraintLeft_toRightOf="@+id/btnSignIn"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnForgotPassword" />
 

@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 
 public final class Utils {
 
@@ -227,7 +228,7 @@ public final class Utils {
         TextView focusView = null;
         for (TextView view : views) {
             view.setError(null);
-            if (!TextUtils.isEmpty(view.getText().toString())) {
+            if (TextUtils.isEmpty(view.getText().toString())) {
                 focusView = view;
                 break;
             }
@@ -351,6 +352,10 @@ public final class Utils {
 
     }
 
+    public static String generateId(Random rng) {
+        return generateString(rng, Constants.CHARACTERS, 24);
+    }
+
     /**
      * Helper method to call a Picasso static instance to load images and resize them.
      *
@@ -374,5 +379,15 @@ public final class Utils {
      */
     protected static void loadImage(Context context, String imgUrl, ImageView iv, int i, int i2) {
         Picasso.with(context).load(imgUrl).resize(i, i2).into(iv);
+    }
+
+    private static String generateString(Random rng, String characters, int length)
+    {
+        char[] text = new char[length];
+        for (int i = 0; i < length; i++)
+        {
+            text[i] = characters.charAt(rng.nextInt(characters.length()));
+        }
+        return new String(text);
     }
 }

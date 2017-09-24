@@ -165,10 +165,14 @@
     <string name="dialogTitle_emailSent">Email Sent</string>
     <string name="level"><u>Level:</u> <b>%d</b></string>
     <string name="rank"><u>Rank:</u> <b>%c</b></string>
-    <string name="dialogText_reward">Congratulations, you just reached %d points! Now %s will grant you no less than %d point(s)!</string>
+    <string name="dialogText_reward">Congratulations, you just reached %1$d points! Now %2$s will grant you no less than %3$d point(s)!</string>
     <string name="new_publication">every new %s</string>
     <string name="new_binding">each %s binding</string>
     <string name="new_follow">following %s</string>
     <string name="or">or</string>
     <string name="dialogTitle_reward">Reward</string>
+    <string name="title_login">Sign In</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

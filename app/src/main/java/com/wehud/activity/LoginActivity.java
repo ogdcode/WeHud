@@ -54,11 +54,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 Constants.PREF_TOKEN, auth.getToken()
                         );
 
-                        context.startActivity(new Intent(context, MainActivity.class));
+                        startActivity(new Intent(context, MainActivity.class));
                     } else {
                         int messageId;
                         switch (Integer.valueOf(code)) {
                             case Constants.HTTP_FORBIDDEN:
+                            case Constants.HTTP_NOT_FOUND:
                                 messageId = R.string.error_invalidCredentials;
                                 break;
                             case Constants.HTTP_INTERNAL_SERVER_ERROR:
@@ -88,7 +89,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mPassword = (EditText) findViewById(R.id.password);
 
         Button forgotPasswordButton = (Button) findViewById(R.id.btnForgotPassword);
-        Button signInButton = (Button) findViewById(R.id.btnSend);
+        Button signInButton = (Button) findViewById(R.id.btnSignIn);
         Button signUpButton = (Button) findViewById(R.id.btnSignUp);
         forgotPasswordButton.setOnClickListener(this);
         signInButton.setOnClickListener(this);
@@ -123,8 +124,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btnForgotPassword:
+                startActivity(new Intent(this, ForgotPasswordActivity.class));
                 break;
-            case R.id.btnSend:
+            case R.id.btnSignIn:
                 this.signIn();
                 break;
             case R.id.btnSignUp:

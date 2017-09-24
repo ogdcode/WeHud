@@ -80,7 +80,7 @@ public class ForgotPasswordActivity extends AppCompatActivity
         if (ab != null) ab.setDisplayHomeAsUpEnabled(true);
 
         mUsernameOrEmail = (EditText) findViewById(R.id.usernameOrEmail);
-        Button sendButton = (Button) findViewById(R.id.btnSend);
+        Button sendButton = (Button) findViewById(R.id.btnSignIn);
         sendButton.setOnClickListener(this);
 
         IntentFilter filter = new IntentFilter();
@@ -122,7 +122,7 @@ public class ForgotPasswordActivity extends AppCompatActivity
 
     @Override
     public void onClick(View view) {
-        if (view.getId() == R.id.btnSend) this.send();
+        if (view.getId() == R.id.btnSignIn) this.send();
     }
 
     @Override

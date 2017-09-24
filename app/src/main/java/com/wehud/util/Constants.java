@@ -6,8 +6,6 @@ package com.wehud.util;
  * @author Olivier Gonçalves, 2017
  */
 public final class Constants {
-    public static final String SAMPLE_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1OThmMWQ2NTQ5M2E2MjBhYTkxOGJlNDIiLCJpYXQiOjE1MDU2NTI2MDAsImV4cCI6MTUwNTczOTAwMH0.APpfDV5J7RqjaDZxjMbYmNxAQvb-QcekJcyxW4xg-UI";
-
     private static final String API_URL = "http://192.168.1.41:3000";
 
     public static final String API_LOGIN = API_URL + "/auth/login";
@@ -34,6 +32,8 @@ public final class Constants {
     public static final String API_GAME_FOLLOW = API_USERS + "/follow/game";
     public static final String API_GAME_UNFOLLOW = API_USERS + "/unfollow/game";
 
+    public static final String API_PAGE_POSTS = "/posts";
+
     public static final String API_EVENT_BIND = API_EVENTS + "/bind";
     public static final String API_EVENT_UNBIND = API_EVENTS + "/unbind";
 
@@ -55,6 +55,7 @@ public final class Constants {
     public static final int HTTP_NO_CONTENT = 204;
     public static final int HTTP_UNAUTHORIZED = 401;
     public static final int HTTP_FORBIDDEN = 403;
+    public static final int HTTP_NOT_FOUND = 404;
     public static final int HTTP_INTERNAL_SERVER_ERROR = 500;
 
     public static final int CONNECT_TIMEOUT = 3000;
@@ -90,12 +91,17 @@ public final class Constants {
     public static final String INTENT_EVENTS_DELETE = "intent_events_delete";
     public static final String INTENT_EVENTS_BIND = "intent_events_bind";
     public static final String INTENT_EVENTS_UNBIND = "intent_events_unbind";
+    public static final String INTENT_REFRESH_PAGE = "intent_refresh_page";
+    public static final String INTENT_REFRESH_POSTS = "intent_refresh_posts";
 
     public static final String EXTRA_BROADCAST = "extra_broadcast";
-    public static final String EXTRA_REFRESH_PAGES = "extra_refresh_pages";
+    public static final String EXTRA_REFRESH_PAGE = "extra_refresh_page";
+    public static final String EXTRA_REFRESH_POSTS = "extra_refresh_posts";
 
     public static final String PREF_USER_ID = "pref_user_id";
     public static final String PREF_TOKEN = "pref_token";
+
+    static final String CHARACTERS = "0123456789abcdef";
 
     static final String[] RANKS = {"I", "H", "G", "F", "E", "D", "C", "B", "A", "S"};
 

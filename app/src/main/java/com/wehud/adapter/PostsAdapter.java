@@ -65,7 +65,9 @@ public final class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsV
         holder.postCreatedAt.setText(datetimeCreated);
         holder.postText.setText(text);
 
-        if (mItemsClickable) {
+        final String connectedUserId = PreferencesUtils.get(holder.context, Constants.PREF_USER_ID);
+
+        if (mItemsClickable && !connectedUserId.equals(publisher.getId())) {
             holder.postUsername.setClickable(true);
             holder.postUsername.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -78,9 +80,6 @@ public final class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsV
                 }
             });
 
-            final String connectedUserId = PreferencesUtils.get(
-                    holder.context, Constants.PREF_USER_ID
-            );
             final boolean connectedUserLiked = userIds.contains(connectedUserId);
             if (connectedUserLiked)
                 holder.postLikes.setCompoundDrawablesWithIntrinsicBounds(
@@ -103,7 +102,7 @@ public final class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsV
                             Constants.PARAM_TOKEN,
                             PreferencesUtils.get(
                                     holder.context,
-                                    PreferencesUtils.get(holder.context, Constants.PREF_TOKEN)
+                                    Constants.PREF_TOKEN
                             )
                     );
 
