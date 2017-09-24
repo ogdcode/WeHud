@@ -58,8 +58,8 @@ public class PageFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         public void onReceive(Context context, Intent intent) {
             if (!mPaused) {
                 if (!TextUtils.isEmpty(intent.getStringExtra(Constants.EXTRA_REFRESH_POSTS))) {
-                    String payload = intent.getStringExtra(Constants.EXTRA_REFRESH_POSTS);
-                    RefreshResponse response = GsonUtils.getInstance().fromJson(
+                    final String payload = intent.getStringExtra(Constants.EXTRA_REFRESH_POSTS);
+                    final RefreshResponse response = GsonUtils.getInstance().fromJson(
                             payload,
                             RefreshResponse.class
                     );
@@ -78,14 +78,14 @@ public class PageFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 }
 
                 if (!TextUtils.isEmpty(intent.getStringExtra(Constants.EXTRA_BROADCAST))) {
-                    String response = intent.getStringExtra(Constants.EXTRA_BROADCAST);
-                    Payload payload = GsonUtils.getInstance().fromJson(response, Payload.class);
+                    final String response = intent.getStringExtra(Constants.EXTRA_BROADCAST);
+                    final Payload payload = GsonUtils.getInstance().fromJson(response, Payload.class);
 
-                    String code = payload.getCode();
+                    final String code = payload.getCode();
 
                     if (Integer.valueOf(code) == Constants.HTTP_OK ||
                             Integer.valueOf(code) == Constants.HTTP_NO_CONTENT) {
-                        String content = payload.getContent();
+                        final String content = payload.getContent();
 
                         if (intent.getAction().equals(Constants.INTENT_POSTS_LIST)) {
                             final Type postListType = new TypeToken<List<Post>>(){}.getType();
@@ -101,7 +101,7 @@ public class PageFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                         }
                         if (intent.getAction().equals(Constants.INTENT_POST_LIKE)) {
                             if (Integer.valueOf(code) == Constants.HTTP_OK) {
-                                Reward reward = GsonUtils.getInstance().fromJson(
+                                final Reward reward = GsonUtils.getInstance().fromJson(
                                         content,
                                         Reward.class
                                 );
@@ -161,7 +161,7 @@ public class PageFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_page, container, false);
+        final View view = inflater.inflate(R.layout.fragment_page, container, false);
         mContext = view.getContext();
 
         mEmptyLayout = view.findViewById(R.id.layout_empty);
@@ -184,8 +184,9 @@ public class PageFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         if (savedInstanceState != null)
             mPosts = savedInstanceState.getParcelableArrayList(KEY_POSTS);
         else {
-            final IntentFilter filter = new IntentFilter();
             final Bundle args = getArguments();
+            IntentFilter filter = new IntentFilter();
+
             mId = args.getString(KEY_ID);
             mIsIndexZero = args.getInt(KEY_INDEX) == 0;
             if (mIsIndexZero) filter.addAction(Constants.INTENT_POSTS_LIST);
