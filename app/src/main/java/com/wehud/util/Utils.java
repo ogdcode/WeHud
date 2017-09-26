@@ -26,6 +26,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -35,7 +36,7 @@ public final class Utils {
 
     private Utils() {}
 
-    public static void toast(Context context, int id, Object... formatArgs) {
+    public static void toast(final Context context, final int id, final Object... formatArgs) {
         Toast.makeText(
                 context,
                 context.getResources().getString(id, formatArgs),
@@ -43,12 +44,16 @@ public final class Utils {
         ).show();
     }
 
-    public static void toast(Context context, int id) {
+    public static void toast(final Context context, final int id) {
         Toast.makeText(
                 context,
                 context.getString(id),
                 Toast.LENGTH_SHORT
         ).show();
+    }
+
+    public static boolean isNotEmpty(final Collection collection) {
+        return collection != null && collection.isEmpty();
     }
 
     public static void expand(final View v) {
@@ -108,7 +113,7 @@ public final class Utils {
         v.startAnimation(anim);
     }
 
-    public static String isoDateTimeStringToLocalDateTimeString(String iso) {
+    public static String isoDateTimeStringToLocalDateTimeString(final String iso) {
         SimpleDateFormat sdf = new SimpleDateFormat(
                 Constants.ISO_8601_PATTERN,
                 Locale.getDefault()
@@ -124,7 +129,7 @@ public final class Utils {
         return sdf.format(d);
     }
 
-    public static String localDateTimeStringToIsoDateTimeString(String local) {
+    public static String localDateTimeStringToIsoDateTimeString(final String local) {
         SimpleDateFormat sdf = new SimpleDateFormat(
                 Constants.LOCAL_PATTERN_DATETIME,
                 Locale.getDefault()
@@ -140,24 +145,13 @@ public final class Utils {
         return sdf.format(d);
     }
 
-    public static String timestampToLocalDateString(long timestamp) {
+    public static String timestampToLocalDateString(final long timestamp) {
         final Timestamp tstp = new Timestamp(timestamp);
         DateFormat df = new SimpleDateFormat(Constants.LOCAL_PATTERN_DATE, Locale.getDefault());
         return df.format(new Date(tstp.getTime()));
     }
 
-    /**
-     * Helper method to call a Picasso static instance to load images.
-     *
-     * @param context the {@link Context} of the application
-     * @param imgUrl  a {@link String} object representing the URL of the image
-     * @param iv      an {@link ImageView} in which to load the image
-     */
-    public static void loadImage(Context context, String imgUrl, ImageView iv) {
-        Picasso.with(context).load(imgUrl).into(iv);
-    }
-
-    public static Status getStatus(Context context, int status) {
+    public static Status getStatus(final Context context, final int status) {
         StringBuilder sb = new StringBuilder();
         int resId;
 
@@ -195,7 +189,7 @@ public final class Utils {
         return new Status(resId, sb.toString());
     }
 
-    public static Tag getTag(int tag) {
+    public static Tag getTag(final int tag) {
         int code, icon;
 
         switch (tag) {
@@ -237,7 +231,11 @@ public final class Utils {
         return focusView;
     }
 
-    public static void putStringListIntoTextView(TextView txt, List<String> strings) {
+    public static void clearText(TextView... views) {
+        for (TextView view : views) view.setText(null);
+    }
+
+    public static void putStringListIntoTextView(TextView txt, final List<String> strings) {
         final int len = strings.size();
         for (int i = 0; i < len; ++i) {
             if (i < len - 1) txt.append(strings.get(i) + ", ");
@@ -254,15 +252,15 @@ public final class Utils {
         return images;
     }
 
-    public static Score getScore(int score) {
-        int level = 0, rankIndex;
+    public static Score getScore(final int score) {
+        int level, rankIndex;
         if (score >= 0 && score < 100) level = (score / 10) + 1;
         else level = score / 100;
         rankIndex = level - 1;
 
         StringBuilder rank = new StringBuilder();
         if (score > 999) {
-            int len = String.valueOf(level).length();
+            final int len = String.valueOf(level).length();
             rankIndex = (level / ((len - 1) * 10)) - 1;
             rank.append(Constants.RANKS[rankIndex]);
 
@@ -276,19 +274,22 @@ public final class Utils {
         return new Score(level, rank.toString());
     }
 
-    public static Reward getNestedReward(String payload) {
-        CreatedResponse response = GsonUtils.getInstance().fromJson(payload, CreatedResponse.class);
+    public static Reward getNestedReward(final String payload) {
+        final CreatedResponse response = GsonUtils.getInstance().fromJson(
+                payload,
+                CreatedResponse.class
+        );
         return response.getReward();
     }
 
     public static void generateRewardDialog(
-            Context context,
-            FragmentManager manager,
-            TextDialogFragment.OnTextDialogDismissOkListener listener,
-            Reward reward,
-            int id
+            final Context context,
+            final FragmentManager manager,
+            final TextDialogFragment.OnTextDialogDismissOkListener listener,
+            final Reward reward,
+            final int id
     ) {
-        List<String> entities = reward.getEntities();
+        final List<String> entities = reward.getEntities();
         StringBuilder entitiesString = new StringBuilder();
         if (entities.size() == 1) entitiesString.append(entities.get(0));
         else if (entities.size() == 2) {
@@ -298,21 +299,21 @@ public final class Utils {
             entitiesString.append(toAppend);
         }
         else {
-            int size = entities.size();
+            final int size = entities.size();
             for (int i = 0; i < size - 2; ++i) {
-                String toAppend = entities.get(i) + ", ";
+                final String toAppend = entities.get(i) + ", ";
                 entitiesString.append(toAppend);
             }
 
-            String toAppend = entities.get(size - 2) + ' ' +
+            final String toAppend = entities.get(size - 2) + ' ' +
                     context.getString(R.string.or) + ' ' +
                     entities.get(entities.size() - 1);
             entitiesString.append(toAppend);
         }
 
-        int action = reward.getAction();
+        final int action = reward.getAction();
 
-        String title = context.getString(R.string.dialogTitle_reward);
+        final String title = context.getString(R.string.dialogTitle_reward);
         StringBuilder message = new StringBuilder();
         switch (action) {
             case 0:
@@ -346,14 +347,25 @@ public final class Utils {
         TextDialogFragment.generate(manager, listener, title, message.toString(), id);
     }
 
-    public static boolean isConnectedUser(Context context, String userId) {
+    public static boolean isConnectedUser(final Context context, final String userId) {
         final String connectedId = PreferencesUtils.get(context, Constants.PREF_USER_ID);
         return !TextUtils.isEmpty(connectedId) && connectedId.equals(userId);
 
     }
 
-    public static String generateId(Random rng) {
+    public static String generateId(final Random rng) {
         return generateString(rng, Constants.CHARACTERS, 24);
+    }
+
+    /**
+     * Helper method to call a Picasso static instance to load images.
+     *
+     * @param context the {@link Context} of the application
+     * @param imgUrl  a {@link String} object representing the URL of the image
+     * @param iv      an {@link ImageView} in which to load the image
+     */
+    public static void loadImage(final Context context, final String imgUrl, final ImageView iv) {
+        Picasso.with(context).load(imgUrl).into(iv);
     }
 
     /**
@@ -364,7 +376,12 @@ public final class Utils {
      * @param iv      an {@link ImageView} in which to load the image
      * @param i       a value in pixels used to resize the image
      */
-    public static void loadImage(Context context, String imgUrl, ImageView iv, int i) {
+    public static void loadImage(
+            final Context context,
+            final String imgUrl,
+            final ImageView iv,
+            final int i)
+    {
         loadImage(context, imgUrl, iv, i, i);
     }
 
@@ -377,11 +394,20 @@ public final class Utils {
      * @param i       a value in pixels used as the width of the image
      * @param i2      a value in pixels used as the height of the image
      */
-    protected static void loadImage(Context context, String imgUrl, ImageView iv, int i, int i2) {
+    protected static void loadImage(
+            final Context context,
+            final String imgUrl,
+            final ImageView iv,
+            final int i,
+            final int i2)
+    {
         Picasso.with(context).load(imgUrl).resize(i, i2).into(iv);
     }
 
-    private static String generateString(Random rng, String characters, int length)
+    private static String generateString(
+            final Random rng,
+            final String characters,
+            final int length)
     {
         char[] text = new char[length];
         for (int i = 0; i < length; i++)

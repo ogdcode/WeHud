@@ -49,6 +49,7 @@ public class UserActivity extends AppCompatActivity
         ListDialogFragment.OnListDialogDismissOkListener,
         TextDialogFragment.OnTextDialogDismissOkListener {
 
+    private static final String KEY_USER_ID = "key_user_id";
     private static final String KEY_CURRENT_PAGE = "key_current_page";
     private static final String PARAM_PAGE = "page";
 
@@ -117,19 +118,19 @@ public class UserActivity extends AppCompatActivity
                             break;
                         case Constants.INTENT_USER_FOLLOW:
                             mFollowOrEventsButton.setText(getString(R.string.btnUnfollow));
-                            Follower newFollower = GsonUtils.getInstance().fromJson(
+                            final Follower newFollower = GsonUtils.getInstance().fromJson(
                                     content, Follower.class
                             );
 
                             mCurrentUser.follow(newFollower.getUser());
-                            String countAfterFollow = mCurrentUser.getFollowers().size()
+                            final String countAfterFollow = mCurrentUser.getFollowers().size()
                                     + "\t" + getString(R.string.followerCount
                             );
 
                             mFollowers.setText(countAfterFollow);
 
-                            Reward reward = Utils.getNestedReward(content);
-                            if (!reward.getEntities().isEmpty())
+                            final Reward reward = Utils.getNestedReward(content);
+                            if (Utils.isNotEmpty(reward.getEntities()))
                                 Utils.generateRewardDialog(
                                         UserActivity.this,
                                         getSupportFragmentManager(),
@@ -145,13 +146,13 @@ public class UserActivity extends AppCompatActivity
                             break;
                         case Constants.INTENT_USER_UNFOLLOW:
                             mFollowOrEventsButton.setText(getString(R.string.btnFollow));
-                            Follower oldFollowed = GsonUtils.getInstance().fromJson(
+                            final Follower oldFollowed = GsonUtils.getInstance().fromJson(
                                     content,
                                     Follower.class
                             );
 
                             mCurrentUser.unfollow(oldFollowed.getUser());
-                            String countAfterUnfollow = mCurrentUser.getFollowers().size()
+                            final String countAfterUnfollow = mCurrentUser.getFollowers().size()
                                     + "\t" + getString(R.string.followerCount
                             );
 
@@ -164,8 +165,8 @@ public class UserActivity extends AppCompatActivity
                             );
                             break;
                         case Constants.INTENT_PAGES_LIST:
-                            Type pageListType = new TypeToken<List<Page>>(){}.getType();
-                            List<Page> pages = GsonUtils.getInstance().fromJson(
+                            final Type pageListType = new TypeToken<List<Page>>(){}.getType();
+                            final List<Page> pages = GsonUtils.getInstance().fromJson(
                                     content, pageListType
                             );
 
@@ -200,18 +201,19 @@ public class UserActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user);
 
-        mIsConnectedUser = Utils.isConnectedUser(this, PreferencesUtils.get(this, Constants.PREF_USER_ID));
-
         if (savedInstanceState != null) {
             mCurrentPage = savedInstanceState.getInt(KEY_CURRENT_PAGE);
-            mUserId = savedInstanceState.getString(Constants.PREF_USER_ID);
+            mUserId = savedInstanceState.getString(KEY_USER_ID);
         } else {
             mCurrentPage = 0;
 
             Intent intent = getIntent();
             if (intent != null) {
                 Bundle bundle = intent.getExtras();
-                if (bundle != null) mUserId = bundle.getString(Constants.PREF_USER_ID);
+                if (bundle != null) {
+                    mUserId = bundle.getString(KEY_USER_ID);
+                    mIsConnectedUser = Utils.isConnectedUser(this, mUserId);
+                }
             }
         }
 

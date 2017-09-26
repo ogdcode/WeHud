@@ -29,6 +29,8 @@ import java.util.Map;
 
 public final class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsVH> {
 
+    private static final String KEY_USER_ID = "key_user_id";
+
     private List<Post> mPosts;
     private boolean mItemsClickable;
 
@@ -67,18 +69,19 @@ public final class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsV
 
         final String connectedUserId = PreferencesUtils.get(holder.context, Constants.PREF_USER_ID);
 
+        holder.postUsername.setClickable(true);
+        holder.postUsername.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final Intent intent = new Intent(holder.context, UserActivity.class);
+                final Bundle bundle = new Bundle();
+                bundle.putString(KEY_USER_ID, publisher.getId());
+                intent.putExtras(bundle);
+                holder.context.startActivity(intent);
+            }
+        });
+
         if (mItemsClickable && !connectedUserId.equals(publisher.getId())) {
-            holder.postUsername.setClickable(true);
-            holder.postUsername.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    final Intent intent = new Intent(holder.context, UserActivity.class);
-                    final Bundle bundle = new Bundle();
-                    bundle.putString(Constants.PREF_USER_ID, publisher.getId());
-                    intent.putExtras(bundle);
-                    holder.context.startActivity(intent);
-                }
-            });
 
             final boolean connectedUserLiked = userIds.contains(connectedUserId);
             if (connectedUserLiked)

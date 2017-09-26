@@ -133,6 +133,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             final String password = mPassword.getText().toString();
             final String confirmPassword = mConfirmPassword.getText().toString();
 
+            Utils.clearText(mEmail, mUsername, mPassword, mConfirmPassword);
+
             if (!password.equals(confirmPassword)) {
                 mPassword.setError(getString(R.string.error_passwords_no_match));
                 mConfirmPassword.setError(getString(R.string.error_passwords_no_match));

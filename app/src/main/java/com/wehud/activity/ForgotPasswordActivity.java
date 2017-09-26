@@ -138,6 +138,8 @@ public class ForgotPasswordActivity extends AppCompatActivity
         else {
             final String usernameOrEmail = mUsernameOrEmail.getText().toString();
 
+            Utils.clearText(mUsernameOrEmail);
+
             Map<String, String> headers = new HashMap<>();
             headers.put(Constants.HEADER_CONTENT_TYPE, Constants.APPLICATION_JSON);
             headers.put(Constants.HEADER_ACCEPT, Constants.APPLICATION_JSON);

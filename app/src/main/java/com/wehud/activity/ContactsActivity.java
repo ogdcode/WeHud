@@ -67,6 +67,8 @@ public class ContactsActivity extends AppCompatActivity
                     switch (Integer.valueOf(code)) {
                         case Constants.HTTP_UNAUTHORIZED:
                             messageId = R.string.error_sessionExpired;
+                            startActivity(new Intent(ContactsActivity.this, LoginActivity.class));
+                            PreferencesUtils.clear(ContactsActivity.this);
                             finish();
                             break;
                         case Constants.HTTP_INTERNAL_SERVER_ERROR:

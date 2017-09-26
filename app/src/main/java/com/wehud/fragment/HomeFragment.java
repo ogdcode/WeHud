@@ -111,7 +111,7 @@ public class HomeFragment extends Fragment implements TabLayout.OnTabSelectedLis
                                 mPages.add(page);
                                 mAdapter.add(
                                         PageFragment.newInstance(
-                                                mPages.size() - 1,
+                                                mPages.size(),
                                                 page.getId(),
                                                 page.getPosts()
                                         ),
@@ -124,8 +124,7 @@ public class HomeFragment extends Fragment implements TabLayout.OnTabSelectedLis
                                 mPager.invalidate();
 
                                 final Reward reward = Utils.getNestedReward(content);
-                                final List<String> entities = reward.getEntities();
-                                if (entities != null && !entities.isEmpty())
+                                if (Utils.isNotEmpty(reward.getEntities()))
                                     Utils.generateRewardDialog(
                                             mContext,
                                             getFragmentManager(),
@@ -209,6 +208,7 @@ public class HomeFragment extends Fragment implements TabLayout.OnTabSelectedLis
                 false
         );
 
+        mTabs.addOnTabSelectedListener(this);
         mPager.setAdapter(mAdapter);
         mPager.setCurrentItem(mCurrentPage);
         mPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabs));

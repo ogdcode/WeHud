@@ -67,7 +67,11 @@ public class SendFragment extends Fragment
     private ViewGroup mNewPostFollowerLayout;
     private TextView mNewPostGame;
     private TextView mNewPostFollower;
+    private CheckBox mNewPostIsOpinion;
+    private CheckBox mNewPostIsMessage;
     private RatingBar mNewPostGameRating;
+    private Button mAddGameButton;
+    private Button mAddFollowerButton;
 
     private List<Game> mGames;
     private List<User> mFollowers;
@@ -90,7 +94,7 @@ public class SendFragment extends Fragment
                     switch (intent.getAction()) {
                         case Constants.INTENT_POSTS_ADD:
                             Reward reward = Utils.getNestedReward(content);
-                            if (!reward.getEntities().isEmpty()) {
+                            if (Utils.isNotEmpty(reward.getEntities())) {
                                 Utils.generateRewardDialog(
                                         mContext,
                                         getFragmentManager(),
@@ -105,10 +109,19 @@ public class SendFragment extends Fragment
                                     content, User.class
                             );
                             mFollowers = currentUser.getFollowers();
+                            if (mFollowers == null || mFollowers.isEmpty()) {
+                                mNewPostIsMessage.setVisibility(View.GONE);
+                                mAddFollowerButton.setVisibility(View.GONE);
+                            }
                             break;
                         case Constants.INTENT_GAMES_LIST:
-                            Type gameListType = new TypeToken<List<Game>>(){}.getType();
+                            final Type gameListType = new TypeToken<List<Game>>(){}.getType();
                             mGames = GsonUtils.getInstance().fromJson(content, gameListType);
+                            if (mGames == null || mGames.isEmpty()) {
+                                mNewPostIsOpinion.setVisibility(View.GONE);
+                                mAddGameButton.setVisibility(View.GONE);
+                                mNewPostGameRating.setVisibility(View.GONE);
+                            }
                             break;
                         default:
                             break;
@@ -155,15 +168,15 @@ public class SendFragment extends Fragment
         mNewPostFollower = (TextView) view.findViewById(R.id.newPost_follower);
         mNewPostGameRating = (RatingBar) view.findViewById(R.id.newPost_gameRating);
 
-        CheckBox newPostIsOpinion = (CheckBox) view.findViewById(R.id.newPost_isOpinion);
-        CheckBox newPostIsMessage = (CheckBox) view.findViewById(R.id.newPost_isMessage);
-        newPostIsOpinion.setOnCheckedChangeListener(this);
-        newPostIsMessage.setOnCheckedChangeListener(this);
+        mNewPostIsOpinion = (CheckBox) view.findViewById(R.id.newPost_isOpinion);
+        mNewPostIsMessage = (CheckBox) view.findViewById(R.id.newPost_isMessage);
+        mNewPostIsOpinion.setOnCheckedChangeListener(this);
+        mNewPostIsMessage.setOnCheckedChangeListener(this);
 
-        Button addGameButton = (Button) view.findViewById(R.id.newPost_btnAddGame);
-        Button addFollowerButton = (Button) view.findViewById(R.id.newPost_btnAddFollower);
-        addGameButton.setOnClickListener(this);
-        addFollowerButton.setOnClickListener(this);
+        mAddGameButton = (Button) view.findViewById(R.id.newPost_btnAddGame);
+        mAddFollowerButton = (Button) view.findViewById(R.id.newPost_btnAddFollower);
+        mAddGameButton.setOnClickListener(this);
+        mAddFollowerButton.setOnClickListener(this);
 
         mNewPostGameLayout.setVisibility(View.GONE);
         mNewPostFollowerLayout.setVisibility(View.GONE);
@@ -292,14 +305,18 @@ public class SendFragment extends Fragment
         headers.put(Constants.HEADER_CONTENT_TYPE, Constants.APPLICATION_JSON);
         headers.put(Constants.HEADER_ACCEPT, Constants.APPLICATION_JSON);
 
-        final String currentUserId = PreferencesUtils.get(mContext, Constants.PREF_USER_ID);
+        Map<String, String> parameters = new HashMap<>();
+        parameters.put(Constants.PARAM_TOKEN, PreferencesUtils.get(mContext, Constants.PREF_TOKEN));
+
+        final String connectedUserId = PreferencesUtils.get(mContext, Constants.PREF_USER_ID);
 
         final APICall call = new APICall(
                 mContext,
                 Constants.INTENT_FOLLOWERS_LIST,
                 Constants.GET,
-                Constants.API_USERS + '/' + currentUserId,
-                headers
+                Constants.API_USERS + '/' + connectedUserId,
+                headers,
+                parameters
         );
         if (!call.isLoading()) call.execute();
     }

@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Resources;
 import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -116,7 +117,16 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
                             mFollowers.setText(countAfterFollow);
 
-                            Utils.toast(GameActivity.this,
+                            Reward reward = Utils.getNestedReward(content);
+                            if (Utils.isNotEmpty(reward.getEntities()))
+                                Utils.generateRewardDialog(
+                                        GameActivity.this,
+                                        getSupportFragmentManager(),
+                                        GameActivity.this,
+                                        reward,
+                                        0
+                                );
+                            else Utils.toast(GameActivity.this,
                                     R.string.message_followingGame, mCurrentGame.getName()
                             );
                             break;
@@ -130,16 +140,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
                             mFollowers.setText(countAfterUnfollow);
 
-                            Reward reward = Utils.getNestedReward(content);
-                            if (!reward.getEntities().isEmpty())
-                                Utils.generateRewardDialog(
-                                        GameActivity.this,
-                                        getSupportFragmentManager(),
-                                        GameActivity.this,
-                                        reward,
-                                        0
-                                );
-                            else Utils.toast(
+                            Utils.toast(
                                     GameActivity.this,
                                     R.string.message_unfollowingGame, mCurrentGame.getName()
                             );
@@ -325,7 +326,9 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         final String esrb = mCurrentGame.getEsrb();
         final String pegi = mCurrentGame.getPegi();
 
-        Utils.loadImage(GameActivity.this, cover, mCover);
+        Utils.loadImage(GameActivity.this, cover, mCover,
+                Resources.getSystem().getDisplayMetrics().widthPixels
+        );
         mName.setText(name);
 
         boolean found = false;
@@ -339,7 +342,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         if (found) mFollowButton.setText(getString(R.string.btnUnfollow));
         else mFollowButton.setText(getString(R.string.btnFollow));
 
-        final String numFollowers = followers.size() + ' '
+        final String numFollowers = followers.size() + "\t"
                 + getString(R.string.followerCount);
         mFollowers.setText(numFollowers);
 
@@ -420,11 +423,13 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         Map<String, String> parameters = new HashMap<>();
         parameters.put(Constants.PARAM_TOKEN, PreferencesUtils.get(this, Constants.PREF_TOKEN));
 
+        final String connectedUserId = PreferencesUtils.get(this, Constants.PREF_USER_ID);
+
         final APICall call = new APICall(
                 this,
                 Constants.INTENT_PAGES_LIST,
                 Constants.GET,
-                Constants.API_PAGES,
+                Constants.API_USERS_PAGES + '/' + connectedUserId,
                 headers,
                 parameters
         );

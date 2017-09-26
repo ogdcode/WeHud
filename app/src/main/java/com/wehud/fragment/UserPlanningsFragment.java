@@ -70,8 +70,8 @@ public class UserPlanningsFragment extends Fragment
 
                     switch (intent.getAction()) {
                         case Constants.INTENT_PLANNINGS_ADD:
-                            Reward reward = Utils.getNestedReward(content);
-                            if (!reward.getEntities().isEmpty()) {
+                            final Reward reward = Utils.getNestedReward(content);
+                            if (Utils.isNotEmpty(reward.getEntities())) {
                                 Utils.generateRewardDialog(
                                         mContext,
                                         getFragmentManager(),

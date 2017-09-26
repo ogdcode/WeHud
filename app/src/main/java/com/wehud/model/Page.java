@@ -19,10 +19,10 @@ public final class Page implements Parcelable {
     private User mOwner;
 
     @SerializedName("users")
-    private List<User> mUsers;
+    private List<String> mUsers;
 
     @SerializedName("games")
-    private List<Game> mGames;
+    private List<String> mGames;
 
     @SerializedName("posts")
     private List<Post> mPosts;
@@ -39,11 +39,11 @@ public final class Page implements Parcelable {
         return mOwner;
     }
 
-    public List<User> getUsers() {
+    public List<String> getUsers() {
         return mUsers;
     }
 
-    public List<Game> getGames() {
+    public List<String> getGames() {
         return mGames;
     }
 
@@ -55,8 +55,8 @@ public final class Page implements Parcelable {
         mId = in.readString();
         mTitle = in.readString();
         mOwner = in.readParcelable(User.class.getClassLoader());
-        mUsers = in.createTypedArrayList(User.CREATOR);
-        mGames = in.createTypedArrayList(Game.CREATOR);
+        mUsers = in.createStringArrayList();
+        mGames = in.createStringArrayList();
         mPosts = in.createTypedArrayList(Post.CREATOR);
     }
 
@@ -73,21 +73,6 @@ public final class Page implements Parcelable {
     };
 
     @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(mId);
-        parcel.writeString(mTitle);
-        parcel.writeParcelable(mOwner, i);
-        parcel.writeTypedList(mUsers);
-        parcel.writeTypedList(mGames);
-        parcel.writeTypedList(mPosts);
-    }
-
-    @Override
     public String toString() {
         return "Page{" +
                 "mId='" + mId + '\'' +
@@ -97,5 +82,20 @@ public final class Page implements Parcelable {
                 ", mGames=" + mGames +
                 ", mPosts=" + mPosts +
                 '}';
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(mId);
+        parcel.writeString(mTitle);
+        parcel.writeParcelable(mOwner, i);
+        parcel.writeStringList(mUsers);
+        parcel.writeStringList(mGames);
+        parcel.writeTypedList(mPosts);
     }
 }

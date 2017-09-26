@@ -1,5 +1,9 @@
 package com.wehud.activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
@@ -16,6 +20,15 @@ import com.wehud.fragment.GamesFragment;
 import com.wehud.fragment.HomeFragment;
 import com.wehud.fragment.ProfileFragment;
 import com.wehud.fragment.SendFragment;
+import com.wehud.model.Payload;
+import com.wehud.network.APICall;
+import com.wehud.util.Constants;
+import com.wehud.util.GsonUtils;
+import com.wehud.util.PreferencesUtils;
+import com.wehud.util.Utils;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity
         implements BottomNavigationView.OnNavigationItemSelectedListener, TextDialogFragment.OnTextDialogDismissOkListener {
@@ -23,6 +36,26 @@ public class MainActivity extends AppCompatActivity
     private static final String KEY_MENU_ID = "key_menu_id";
 
     private int mMenuId;
+
+    private boolean mPaused;
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(final Context context, final Intent intent) {
+            if (!mPaused && intent.getAction().equals(Constants.INTENT_LOGOUT)) {
+                final String response = intent.getStringExtra(Constants.EXTRA_BROADCAST);
+                final Payload payload = GsonUtils.getInstance().fromJson(response, Payload.class);
+
+                final String code = payload.getCode();
+
+                if (Integer.valueOf(code) == Constants.HTTP_NO_CONTENT) {
+                    PreferencesUtils.clear(MainActivity.this);
+                    finish();
+                } else if (Integer.valueOf(code) == Constants.HTTP_INTERNAL_SERVER_ERROR)
+                    Utils.toast(MainActivity.this, R.string.error_server);
+                else Utils.toast(MainActivity.this, R.string.error_general, code);
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +73,29 @@ public class MainActivity extends AppCompatActivity
         else mMenuId = R.id.menu_home;
 
         this.setMenu(mMenuId);
+
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Constants.INTENT_LOGOUT);
+
+        registerReceiver(mReceiver, filter);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mPaused = false;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mPaused = true;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(mReceiver);
     }
 
     @Override
@@ -61,7 +117,22 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onTextDialogDismissOk(Object id) {
-        finish();
+        Map<String, String> headers = new HashMap<>();
+        headers.put(Constants.HEADER_CONTENT_TYPE, Constants.APPLICATION_JSON);
+        headers.put(Constants.HEADER_ACCEPT, Constants.APPLICATION_JSON);
+
+        Map<String, String> parameters = new HashMap<>();
+        parameters.put(Constants.PARAM_TOKEN, PreferencesUtils.get(this, Constants.PREF_TOKEN));
+
+        final APICall call = new APICall(
+                this,
+                Constants.INTENT_LOGOUT,
+                Constants.GET,
+                Constants.API_LOGOUT,
+                headers,
+                parameters
+        );
+        if (!call.isLoading()) call.execute();
     }
 
     private void setMenu(int menuId) {
@@ -90,8 +161,9 @@ public class MainActivity extends AppCompatActivity
         }
 
         setTitle(getString(titleResourceId));
-        FragmentManager manager = getSupportFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
+
+        final FragmentManager manager = getSupportFragmentManager();
+        final FragmentTransaction transaction = manager.beginTransaction();
         transaction.replace(R.id.container, fragment);
         transaction.commit();
     }

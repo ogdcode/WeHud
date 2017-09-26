@@ -150,6 +150,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             final String usernameOrEmail = mUsernameOrEmail.getText().toString();
             final String password = mPassword.getText().toString();
 
+            Utils.clearText(mUsernameOrEmail, mPassword);
+
             Map<String, String> login = new HashMap<>();
             login.put(PARAM_USERNAME_OR_EMAIL, usernameOrEmail);
             login.put(PARAM_PASSWORD, password);

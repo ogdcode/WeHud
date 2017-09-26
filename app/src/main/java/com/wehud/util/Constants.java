@@ -9,6 +9,7 @@ public final class Constants {
     private static final String API_URL = "http://192.168.1.41:3000";
 
     public static final String API_LOGIN = API_URL + "/auth/login";
+    public static final String API_LOGOUT = API_URL + "/auth/logout";
     public static final String API_FORGOT_PASSWORD = API_URL + "/auth/password";
 
     public static final String API_USERS = API_URL + "/users";
@@ -62,6 +63,7 @@ public final class Constants {
     public static final int READ_TIMEOUT = 3000;
 
     public static final String INTENT_LOGIN = "intent_login";
+    public static final String INTENT_LOGOUT = "intent_logout";
     public static final String INTENT_FORGOT_PASSWORD = "intent_forgot_password";
     public static final String INTENT_POSTS_LIST = "intent_posts_list";
     public static final String INTENT_POSTS_ADD = "intent_posts_add";

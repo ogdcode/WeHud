@@ -53,7 +53,7 @@ public class PageFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     private List<Post> mPosts;
 
     private boolean mPaused;
-    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (!mPaused) {

@@ -108,7 +108,8 @@ public class EventsActivity extends AppCompatActivity
                             break;
                         case Constants.INTENT_EVENTS_ADD:
                             Reward reward = Utils.getNestedReward(content);
-                            if (!reward.getEntities().isEmpty()) {
+                            List<String> entities = reward.getEntities();
+                            if (entities != null && !entities.isEmpty()) {
                                 Utils.generateRewardDialog(
                                         EventsActivity.this,
                                         getSupportFragmentManager(),
@@ -118,6 +119,7 @@ public class EventsActivity extends AppCompatActivity
                                 );
                             } else {
                                 mSwipeLayout.setRefreshing(true);
+                                if (!TextUtils.isEmpty(mUserId)) getEvents();
                                 Utils.toast(
                                         EventsActivity.this,
                                         R.string.message_createEventSuccess
@@ -365,17 +367,20 @@ public class EventsActivity extends AppCompatActivity
                     final String description = descriptionView.getText().toString();
                     final String startDateTime = (startDateTimeView.getTag() == null ?
                             "" : Utils.localDateTimeStringToIsoDateTimeString(
-                            startDateTimeView.getText().toString()
-                    )
+                            startDateTimeView.getText().toString())
                     );
                     final String endDateTime = (endDateTimeView.getTag() == null ?
                             "" : Utils.localDateTimeStringToIsoDateTimeString(
-                            endDateTimeView.getText().toString()
-                    )
+                            endDateTimeView.getText().toString())
                     );
+
+                    Utils.clearText(titleView, descriptionView, startDateTimeView, endDateTimeView);
+
                     final String planning = (planningView.getSelectedItem() == null ?
                             "" : planningView.getSelectedItem().toString()
                     );
+
+                    planningView.setSelection(0);
 
                     addEvent(title, description, startDateTime, endDateTime, planning);
                     dialog.dismiss();
