@@ -165,7 +165,7 @@ public class ContactsActivity extends AppCompatActivity
                 this,
                 Constants.INTENT_FOLLOWERS_LIST,
                 Constants.GET,
-                Constants.API_USERS + '/' + connectedUserId,
+                Constants.API_USERS_USER + '/' + connectedUserId,
                 headers
         );
         if (!call.isLoading()) call.execute();

@@ -126,7 +126,7 @@ public final class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.Even
             }
         });
 
-        if (mPlannings.isEmpty()) holder.bindUnbindButton.setVisibility(View.GONE);
+        if (!Utils.isNotEmpty(mPlannings)) holder.bindUnbindButton.setVisibility(View.GONE);
         else holder.bindUnbindButton.setVisibility(View.VISIBLE);
     }
 

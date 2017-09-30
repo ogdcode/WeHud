@@ -12,6 +12,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,14 +68,17 @@ public class PageFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                     if (response.getId().equals(mId)) {
                         mPosts = response.getPosts();
                         if (mPosts != null && !mPosts.isEmpty()) {
-                            mAdapter.notifyDataSetChanged();
+                            mAdapter = new PostsAdapter(mPosts, true);
+                            mPostListView.setAdapter(mAdapter);
                             mPostListView.invalidate();
+                            mEmptyLayout.setVisibility(View.GONE);
+                            mSwipeLayout.setVisibility(View.VISIBLE);
                         } else {
                             mEmptyLayout.setVisibility(View.VISIBLE);
                             mSwipeLayout.setVisibility(View.GONE);
                         }
-                        mSwipeLayout.setRefreshing(false);
                     }
+                    mSwipeLayout.setRefreshing(false);
                 }
 
                 if (!TextUtils.isEmpty(intent.getStringExtra(Constants.EXTRA_BROADCAST))) {
@@ -211,9 +215,16 @@ public class PageFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     @Override
     public void onResume() {
         super.onResume();
-        if (!mPaused && mIsIndexZero) this.getPosts();
-
-        mPaused = false;
+        if (!mPaused && mIsIndexZero) {
+            this.getPosts();
+            mPaused = false;
+        } else if (mPaused && !mIsIndexZero) {
+            mPaused = false;
+            Intent intent = new Intent(Constants.INTENT_REFRESH_PAGE);
+            intent.putExtra(Constants.EXTRA_REFRESH_PAGE, mId);
+            mContext.sendBroadcast(intent);
+            Log.d("MAIN", "ID: " + mId);
+        } else mPaused = false;
     }
 
     @Override

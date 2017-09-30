@@ -10,16 +10,17 @@ public final class Follower implements Parcelable {
     @SerializedName("follower")
     private User mUser;
 
-    @SerializedName("following")
-    private String mFollowing;
+    @SerializedName(value = "following", alternate = {"unfollowing"})
+    private String mFollowingOrUnfollowing;
 
     public User getUser() {
         return mUser;
     }
 
-    public String getFollowing() {
-        return mFollowing;
+    public String getFollowingOrUnfollowing() {
+        return mFollowingOrUnfollowing;
     }
+
 
     @Override
     public int describeContents() {
@@ -27,14 +28,14 @@ public final class Follower implements Parcelable {
     }
 
     @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeParcelable(mUser, i);
-        parcel.writeString(mFollowing);
+    public void writeToParcel(Parcel parcel, int flags) {
+        parcel.writeParcelable(mUser, flags);
+        parcel.writeString(mFollowingOrUnfollowing);
     }
 
     protected Follower(Parcel in) {
         mUser = in.readParcelable(User.class.getClassLoader());
-        mFollowing = in.readString();
+        mFollowingOrUnfollowing = in.readString();
     }
 
     public static final Creator<Follower> CREATOR = new Creator<Follower>() {

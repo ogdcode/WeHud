@@ -14,10 +14,11 @@
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/no_plannings"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:text="@string/no_plannings" />
+            tools:text="@string/no_plannings" />
 
         <Button
             android:id="@+id/btnCreateFirstPlanning"
@@ -29,6 +30,7 @@
     </LinearLayout>
 
     <RelativeLayout
+        android:id="@+id/layout_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/white"

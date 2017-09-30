@@ -299,11 +299,13 @@ public class SettingsActivity extends AppCompatActivity
         Map<String, String> parameters = new HashMap<>();
         parameters.put(Constants.PARAM_TOKEN, PreferencesUtils.get(this, Constants.PREF_TOKEN));
 
+        final String connectedUserId = PreferencesUtils.get(this, Constants.PREF_USER_ID);
+
         final APICall call = new APICall(
                 this,
                 Constants.INTENT_USER_GET,
                 Constants.GET,
-                Constants.API_USERS + "/598eccbc74459e02f455e4d9",
+                Constants.API_USERS_USER + '/' + connectedUserId,
                 headers,
                 parameters
         );

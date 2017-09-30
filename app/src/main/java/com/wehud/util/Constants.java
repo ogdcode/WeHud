@@ -23,6 +23,7 @@ public final class Constants {
     public static final String API_DISLIKE = API_POSTS + "/dislike";
     public static final String API_MESSAGES = API_POSTS + "/messages/all";
 
+    public static final String API_USERS_USER = API_USERS + "/user";
     public static final String API_USERS_PAGES = API_USERS + "/pages";
     public static final String API_USERS_POSTS = API_USERS + "/posts";
     public static final String API_USERS_PLANNINGS = API_USERS + "/plannings";

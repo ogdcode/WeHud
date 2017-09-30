@@ -42,13 +42,14 @@
                     tools:src="@mipmap/ic_launcher_round" />
 
                 <LinearLayout
-                    android:id="@+id/profile_layoutUser"
+                    android:id="@+id/layout_profileUser"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/profile_txtMarginRightEnd"
                     android:layout_marginLeft="@dimen/profile_txtMarginLeftStart"
                     android:layout_marginRight="@dimen/profile_txtMarginRightEnd"
                     android:layout_marginStart="@dimen/profile_txtMarginLeftStart"
+                    android:background="?attr/selectableItemBackground"
                     android:orientation="vertical">
 
                     <TextView

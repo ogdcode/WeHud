@@ -53,7 +53,7 @@ public final class Utils {
     }
 
     public static boolean isNotEmpty(final Collection collection) {
-        return collection != null && collection.isEmpty();
+        return collection != null && !collection.isEmpty();
     }
 
     public static void expand(final View v) {
@@ -111,6 +111,23 @@ public final class Utils {
         anim.setDuration(
                 (int) (initialHeight / v.getContext().getResources().getDisplayMetrics().density));
         v.startAnimation(anim);
+    }
+
+    public static long isoDateTimeStringToTimestamp(final String iso) {
+        SimpleDateFormat sdf = new SimpleDateFormat(
+                Constants.ISO_8601_PATTERN,
+                Locale.getDefault()
+        );
+        Date d;
+        long timestamp = System.currentTimeMillis();
+        try {
+            d = sdf.parse(iso);
+            timestamp = d.getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return timestamp;
     }
 
     public static String isoDateTimeStringToLocalDateTimeString(final String iso) {

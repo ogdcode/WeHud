@@ -61,6 +61,7 @@ public class UserActivity extends AppCompatActivity
 
     private User mCurrentUser;
     private String mUserId;
+    private String mConnectedUserId;
     private boolean mIsConnectedUser;
 
     private int mCurrentPage;
@@ -81,22 +82,24 @@ public class UserActivity extends AppCompatActivity
                     switch (intent.getAction()) {
                         case Constants.INTENT_USER_GET:
                             mCurrentUser = GsonUtils.getInstance().fromJson(content, User.class);
-                            String avatar = mCurrentUser.getAvatar();
-                            String username = mCurrentUser.getUsername();
-                            Score score = Utils.getScore(mCurrentUser.getScore());
-                            String levelRank =
+                            final String avatar = mCurrentUser.getAvatar();
+                            final String username = mCurrentUser.getUsername();
+                            final Score score = Utils.getScore(mCurrentUser.getScore());
+                            final String levelRank =
                                     getResources().getString(R.string.level, score.getLevel()) + "\n" +
                                     getResources().getString(R.string.rank, score.getRank());
-                            List<User> followers = mCurrentUser.getFollowers();
-                            String numFollowers = followers.size() + "\t"
+                            final List<User> followers = mCurrentUser.getFollowers();
+                            final String numFollowers = followers.size() + "\t"
                                     + getString(R.string.followerCount);
+
+                            mConnectedUserId = PreferencesUtils.get(UserActivity.this, Constants.PREF_USER_ID);
 
                             if (mIsConnectedUser)
                                 mFollowOrEventsButton.setText(getString(R.string.btnEvents));
                             else {
                                 boolean found = false;
                                 for (User user : followers) {
-                                    if (user.getId().equals(mUserId)) {
+                                    if (user.getId().equals(mConnectedUserId)) {
                                         found = true;
                                         break;
                                     }
@@ -278,7 +281,7 @@ public class UserActivity extends AppCompatActivity
     }
 
     @Override
-    public void onClick(View view) {
+    public void onClick(final View view) {
         switch (view.getId()) {
             case R.id.btnFollow:
                 if (mFollowOrEventsButton.getText().toString()
@@ -288,8 +291,13 @@ public class UserActivity extends AppCompatActivity
                         .equals(getString(R.string.btnUnfollow)))
                     this.unfollow();
                 if (mFollowOrEventsButton.getText().toString()
-                        .equals(getString(R.string.btnEvents)))
-                    startActivity(new Intent(this, EventsActivity.class));
+                        .equals(getString(R.string.btnEvents))) {
+                    Intent intent = new Intent(this, EventsActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString(KEY_USER_ID, mUserId);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }
                 break;
             default:
                 break;
@@ -297,17 +305,17 @@ public class UserActivity extends AppCompatActivity
     }
 
     @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+    public void onPageScrolled(final int position, final float positionOffset, final int positionOffsetPixels) {
 
     }
 
     @Override
-    public void onPageSelected(int position) {
+    public void onPageSelected(final int position) {
         mCurrentPage = position;
     }
 
     @Override
-    public void onPageScrollStateChanged(int state) {
+    public void onPageScrollStateChanged(final int state) {
 
     }
 
@@ -327,13 +335,13 @@ public class UserActivity extends AppCompatActivity
             Map<String, String> page = new HashMap<>();
             page.put(PARAM_PAGE, ((Page) p).getTitle());
 
-            String body = GsonUtils.getInstance().toJson(page);
+            final String body = GsonUtils.getInstance().toJson(page);
 
-            APICall call = new APICall(
+            final APICall call = new APICall(
                     this,
                     Constants.INTENT_USER_FOLLOW,
                     Constants.PATCH,
-                    Constants.API_USER_FOLLOW,
+                    Constants.API_USER_FOLLOW + '/' + mUserId,
                     body,
                     headers,
                     parameters
@@ -355,11 +363,11 @@ public class UserActivity extends AppCompatActivity
         Map<String, String> parameters = new HashMap<>();
         parameters.put(Constants.PARAM_TOKEN, PreferencesUtils.get(this, Constants.PREF_TOKEN));
 
-        APICall call = new APICall(
+        final APICall call = new APICall(
                 this,
                 Constants.INTENT_USER_GET,
                 Constants.GET,
-                Constants.API_USERS + '/' + mUserId,
+                Constants.API_USERS_USER + '/' + mUserId,
                 headers,
                 parameters
         );
@@ -374,11 +382,11 @@ public class UserActivity extends AppCompatActivity
         Map<String, String> parameters = new HashMap<>();
         parameters.put(Constants.PARAM_TOKEN, PreferencesUtils.get(this, Constants.PREF_TOKEN));
 
-        APICall call = new APICall(
+        final APICall call = new APICall(
                 this,
                 Constants.INTENT_PAGES_LIST,
                 Constants.GET,
-                Constants.API_PAGES,
+                Constants.API_USERS_PAGES + '/' + mConnectedUserId,
                 headers,
                 parameters
         );
@@ -386,11 +394,11 @@ public class UserActivity extends AppCompatActivity
     }
 
     private void follow(List<Page> pages) {
-        RecyclerView.Adapter adapter = new PagesAdapter(pages);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
+        final RecyclerView.Adapter adapter = new PagesAdapter(pages);
+        final RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
                 UserActivity.this
         );
-        DividerItemDecoration divider = new DividerItemDecoration(
+        final DividerItemDecoration divider = new DividerItemDecoration(
                 UserActivity.this, DividerItemDecoration.HORIZONTAL
         );
 
@@ -414,11 +422,11 @@ public class UserActivity extends AppCompatActivity
         Map<String, String> parameters = new HashMap<>();
         parameters.put(Constants.PARAM_TOKEN, PreferencesUtils.get(this, Constants.PREF_TOKEN));
 
-        APICall call = new APICall(
+        final APICall call = new APICall(
                 this,
                 Constants.INTENT_USER_UNFOLLOW,
                 Constants.PATCH,
-                Constants.API_USER_UNFOLLOW,
+                Constants.API_USER_UNFOLLOW + '/' + mUserId,
                 headers,
                 parameters
         );

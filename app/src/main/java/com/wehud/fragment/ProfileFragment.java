@@ -19,6 +19,7 @@ import com.wehud.R;
 import com.wehud.activity.ContactsActivity;
 import com.wehud.activity.MessagesActivity;
 import com.wehud.activity.SettingsActivity;
+import com.wehud.activity.UserActivity;
 import com.wehud.dialog.TextDialogFragment;
 import com.wehud.model.Payload;
 import com.wehud.model.User;
@@ -33,6 +34,8 @@ import java.util.Map;
 
 public class ProfileFragment extends Fragment
         implements View.OnClickListener, TextDialogFragment.OnTextDialogDismissOkListener {
+
+    private static final String KEY_USER_ID = "key_user_id";
 
     private Context mContext;
     private ImageView mProfileUserAvatar;
@@ -90,6 +93,7 @@ public class ProfileFragment extends Fragment
         final View view = inflater.inflate(R.layout.fragment_profile, container, false);
         mContext = view.getContext();
 
+        ViewGroup userProfileLayout = (ViewGroup) view.findViewById(R.id.layout_profileUser);
         mProfileUserAvatar = (ImageView) view.findViewById(R.id.profile_icUser);
         mProfileUsername = (TextView) view.findViewById(R.id.profile_username);
 
@@ -98,6 +102,8 @@ public class ProfileFragment extends Fragment
         TextView profileSettings = (TextView) view.findViewById(R.id.profile_settings);
         TextView profileSignOut = (TextView) view.findViewById(R.id.profile_signOut);
 
+        userProfileLayout.setClickable(true);
+        userProfileLayout.setOnClickListener(this);
         profileMessages.setOnClickListener(this);
         profileContacts.setOnClickListener(this);
         profileSettings.setOnClickListener(this);
@@ -140,6 +146,16 @@ public class ProfileFragment extends Fragment
     public void onClick(View view) {
         Intent intent;
         switch (view.getId()) {
+            case R.id.layout_profileUser:
+                final String connectedUserId = PreferencesUtils.get(
+                        mContext,
+                        Constants.PREF_USER_ID
+                );
+                intent = new Intent(mContext, UserActivity.class);
+                Bundle extras = new Bundle();
+                extras.putString(KEY_USER_ID, connectedUserId);
+                intent.putExtras(extras);
+                break;
             case R.id.profile_messages:
                 intent = new Intent(mContext, MessagesActivity.class);
                 break;
@@ -179,14 +195,18 @@ public class ProfileFragment extends Fragment
         headers.put(Constants.HEADER_CONTENT_TYPE, Constants.APPLICATION_JSON);
         headers.put(Constants.HEADER_ACCEPT, Constants.APPLICATION_JSON);
 
+        Map<String, String> parameters = new HashMap<>();
+        parameters.put(Constants.PARAM_TOKEN, PreferencesUtils.get(mContext, Constants.PREF_TOKEN));
+
         final String currentUserId = PreferencesUtils.get(mContext, Constants.PREF_USER_ID);
 
         final APICall call = new APICall(
                 mContext,
                 Constants.INTENT_USER_GET,
                 Constants.GET,
-                Constants.API_USERS + '/' + currentUserId,
-                headers
+                Constants.API_USERS_USER + '/' + currentUserId,
+                headers,
+                parameters
         );
         if (!call.isLoading()) call.execute();
     }

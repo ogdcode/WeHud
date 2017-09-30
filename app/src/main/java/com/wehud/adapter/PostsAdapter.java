@@ -73,8 +73,8 @@ public final class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsV
         holder.postUsername.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final Intent intent = new Intent(holder.context, UserActivity.class);
-                final Bundle bundle = new Bundle();
+                Intent intent = new Intent(holder.context, UserActivity.class);
+                Bundle bundle = new Bundle();
                 bundle.putString(KEY_USER_ID, publisher.getId());
                 intent.putExtras(bundle);
                 holder.context.startActivity(intent);

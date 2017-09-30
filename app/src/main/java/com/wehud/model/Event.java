@@ -20,16 +20,22 @@ public final class Event implements Parcelable {
     private String mDescription;
 
     @SerializedName("startDateTime")
-    private long mStartDateTime;
+    private String mStartDateTimeString;
 
     @SerializedName("endDateTime")
-    private long mEndDateTime;
+    private String mEndDateTimeString;
 
     @SerializedName("tag")
     private int mTag;
 
     @SerializedName("planning")
     private String mPlanning;
+
+    @SerializedName("sdt")
+    private long mStartDateTime;
+
+    @SerializedName("edt")
+    private long mEndDateTime;
 
     public String getId() {
         return mId;
@@ -47,12 +53,12 @@ public final class Event implements Parcelable {
         return mDescription;
     }
 
-    public long getStartDateTime() {
-        return mStartDateTime;
+    public String getStartDateTimeString() {
+        return mStartDateTimeString;
     }
 
-    public long getEndDateTime() {
-        return mEndDateTime;
+    public String getEndDateTimeString() {
+        return mEndDateTimeString;
     }
 
     public int getTag() {
@@ -63,15 +69,33 @@ public final class Event implements Parcelable {
         return mPlanning;
     }
 
+    public long getStartDateTime() {
+        return mStartDateTime;
+    }
+
+    public long getEndDateTime() {
+        return mEndDateTime;
+    }
+
+    public void setStartDateTime(long sdt) {
+        this.mStartDateTime = sdt;
+    }
+
+    public void setEndDateTime(long edt) {
+        this.mEndDateTime = edt;
+    }
+
     protected Event(Parcel in) {
         mId = in.readString();
         mCreator = in.readParcelable(User.class.getClassLoader());
         mTitle = in.readString();
         mDescription = in.readString();
-        mStartDateTime = in.readLong();
-        mEndDateTime = in.readLong();
+        mStartDateTimeString = in.readString();
+        mEndDateTimeString = in.readString();
         mTag = in.readInt();
         mPlanning = in.readString();
+        mStartDateTime = in.readLong();
+        mEndDateTime = in.readLong();
     }
 
     public static final Creator<Event> CREATOR = new Creator<Event>() {
@@ -97,10 +121,12 @@ public final class Event implements Parcelable {
         parcel.writeParcelable(mCreator, flags);
         parcel.writeString(mTitle);
         parcel.writeString(mDescription);
-        parcel.writeLong(mStartDateTime);
-        parcel.writeLong(mEndDateTime);
+        parcel.writeString(mStartDateTimeString);
+        parcel.writeString(mEndDateTimeString);
         parcel.writeInt(mTag);
         parcel.writeString(mPlanning);
+        parcel.writeLong(mStartDateTime);
+        parcel.writeLong(mEndDateTime);
     }
 
     @Override

@@ -56,6 +56,8 @@ public class EventsActivity extends AppCompatActivity
         implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener,
         TextDialogFragment.OnTextDialogDismissOkListener {
 
+    private static final String KEY_USER_ID = "key_user_id";
+
     private static final int ID_DIALOG_START_DATE_TIME = 0;
     private static final int ID_DIALOG_END_DATE_TIME = 1;
 
@@ -94,6 +96,15 @@ public class EventsActivity extends AppCompatActivity
                         case Constants.INTENT_EVENTS_LIST:
                             final Type eventListType = new TypeToken<List<Event>>(){}.getType();
                             mEvents = GsonUtils.getInstance().fromJson(content, eventListType);
+
+                            for (Event event : mEvents) {
+                                event.setStartDateTime(Utils.isoDateTimeStringToTimestamp(
+                                        event.getStartDateTimeString())
+                                );
+                                event.setEndDateTime(Utils.isoDateTimeStringToTimestamp(
+                                        event.getEndDateTimeString())
+                                );
+                            }
 
                             if (!mEvents.isEmpty()) {
                                 EventsAdapter adapter = new EventsAdapter(mEvents);
@@ -214,8 +225,8 @@ public class EventsActivity extends AppCompatActivity
         if (bundle != null) {
             mPlannings = bundle.getParcelableArrayList(KEY_PLANNINGS);
             mEvents = bundle.getParcelableArrayList(KEY_EVENTS);
-            mUserId = bundle.getString(Constants.PREF_USER_ID);
-            if (mEvents.isEmpty()) {
+            mUserId = bundle.getString(KEY_USER_ID);
+            if (!Utils.isNotEmpty(mEvents)) {
                 if (!TextUtils.isEmpty(mUserId) && !mPaused) this.getEvents();
                 else mSwipeLayout.setRefreshing(false);
             }

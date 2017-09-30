@@ -5,6 +5,7 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -139,7 +140,11 @@ public final class Game implements Parcelable {
     }
 
     public void unfollow(User user) {
-        mFollowers.remove(user);
+        Iterator<User> it = mFollowers.iterator();
+        while (it.hasNext()) {
+            User u = it.next();
+            if (u.getId().equals(user.getId())) it.remove();
+        }
     }
 
     protected Game(Parcel in) {

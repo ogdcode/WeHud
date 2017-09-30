@@ -314,7 +314,7 @@ public class SendFragment extends Fragment
                 mContext,
                 Constants.INTENT_FOLLOWERS_LIST,
                 Constants.GET,
-                Constants.API_USERS + '/' + connectedUserId,
+                Constants.API_USERS_USER + '/' + connectedUserId,
                 headers,
                 parameters
         );

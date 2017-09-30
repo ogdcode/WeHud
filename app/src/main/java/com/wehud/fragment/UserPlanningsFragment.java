@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.google.gson.reflect.TypeToken;
 import com.wehud.R;
@@ -33,6 +34,7 @@ import com.wehud.util.PreferencesUtils;
 import com.wehud.util.Utils;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,16 +44,21 @@ public class UserPlanningsFragment extends Fragment
         EditDialogFragment.OnEditDialogDismissOkListener,
         TextDialogFragment.OnTextDialogDismissOkListener {
 
+    private static final String KEY_USER_ID = "key_user_id";
+    private static final String KEY_PLANNINGS = "key_plannings";
+
     private static final String PARAM_TITLE = "title";
 
     private Context mContext;
 
     private View mEmptyLayout;
+    private ViewGroup mListLayout;
     private SwipeRefreshLayout mSwipeLayout;
     private RecyclerView mPlanningListView;
 
-    private String mCurrentUserId;
     private FragmentManager mManager;
+    private String mCurrentUserId;
+    private List<Planning> mPlannings;
 
     private boolean mPaused;
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
@@ -81,30 +88,35 @@ public class UserPlanningsFragment extends Fragment
                                 );
                             } else {
                                 Utils.toast(mContext, R.string.message_addPlanningSuccess);
+                                mSwipeLayout.setRefreshing(true);
                                 getPlannings();
                             }
                             break;
                         case Constants.INTENT_PLANNINGS_DELETE:
                             Utils.toast(mContext, R.string.message_deletePlanningSuccess);
+                            mSwipeLayout.setRefreshing(true);
                             getPlannings();
                             break;
                         case Constants.INTENT_PLANNINGS_LIST:
                             final Type planningListType = new TypeToken<List<Planning>>(){}
                                     .getType();
-                            final List<Planning> plannings = GsonUtils.getInstance().fromJson(
+                            mPlannings = GsonUtils.getInstance().fromJson(
                                     content, planningListType
                             );
 
-                            if (!plannings.isEmpty()) {
-                                PlanningsAdapter adapter = new PlanningsAdapter(plannings);
+                            if (Utils.isNotEmpty(mPlannings)) {
+                                PlanningsAdapter adapter = new PlanningsAdapter(mPlannings);
                                 adapter.setFragmentManager(mManager);
+                                mPlanningListView.setLayoutManager(
+                                        new LinearLayoutManager(mContext)
+                                );
                                 mPlanningListView.setAdapter(adapter);
 
                                 mEmptyLayout.setVisibility(View.GONE);
-                                mSwipeLayout.setVisibility(View.VISIBLE);
+                                mListLayout.setVisibility(View.VISIBLE);
                             } else {
                                 mEmptyLayout.setVisibility(View.VISIBLE);
-                                mSwipeLayout.setVisibility(View.GONE);
+                                mListLayout.setVisibility(View.GONE);
                             }
 
                             mSwipeLayout.setRefreshing(false);
@@ -136,7 +148,7 @@ public class UserPlanningsFragment extends Fragment
     public static Fragment newInstance(String userId) {
         Fragment fragment = new UserPlanningsFragment();
         Bundle args = new Bundle();
-        args.putString(Constants.PREF_USER_ID, userId);
+        args.putString(KEY_USER_ID, userId);
         fragment.setArguments(args);
 
         return fragment;
@@ -146,34 +158,43 @@ public class UserPlanningsFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            mCurrentUserId = savedInstanceState.getString(KEY_USER_ID);
+            mPlannings = savedInstanceState.getParcelableArrayList(KEY_PLANNINGS);
+        } else {
+            Bundle args = getArguments();
+            if (args != null) mCurrentUserId = args.getString(KEY_USER_ID);
+        }
+
         final View view = inflater.inflate(R.layout.fragment_user_plannings, container, false);
         mContext = view.getContext();
         mManager = getFragmentManager();
 
         mEmptyLayout = view.findViewById(R.id.layout_empty);
+        mListLayout = (ViewGroup) view.findViewById(R.id.layout_list);
         mSwipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.layout_swipe);
         mPlanningListView = (RecyclerView) view.findViewById(android.R.id.list);
 
         mEmptyLayout.setVisibility(View.VISIBLE);
-        mSwipeLayout.setVisibility(View.GONE);
+        mListLayout.setVisibility(View.GONE);
 
         mSwipeLayout.setOnRefreshListener(this);
         mSwipeLayout.setRefreshing(true);
 
-        mPlanningListView.setLayoutManager(new LinearLayoutManager(mContext));
-        mPlanningListView.addItemDecoration(new DividerItemDecoration(mContext,
-                DividerItemDecoration.HORIZONTAL));
-
-        Button createPlannngButton = (Button) view.findViewById(R.id.btnCreatePlanning);
+        TextView noPlannings = (TextView) view.findViewById(R.id.no_plannings);
+        Button createPlanningButton = (Button) view.findViewById(R.id.btnCreatePlanning);
         Button createFirstPlanningButton = (Button) view.findViewById(R.id.btnCreateFirstPlanning);
-        createPlannngButton.setOnClickListener(this);
+        createPlanningButton.setOnClickListener(this);
         createFirstPlanningButton.setOnClickListener(this);
 
         final boolean isConnectedUser = Utils.isConnectedUser(
                 mContext,
-                PreferencesUtils.get(mContext, Constants.PREF_USER_ID)
+                mCurrentUserId
         );
-        if (!isConnectedUser) createFirstPlanningButton.setVisibility(View.GONE);
+        if (!isConnectedUser) {
+            noPlannings.setText(getString(R.string.no_plannings));
+            createFirstPlanningButton.setVisibility(View.GONE);
+        } else noPlannings.setText(getString(R.string.no_connected_plannings));
 
         return view;
     }
@@ -181,9 +202,6 @@ public class UserPlanningsFragment extends Fragment
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        if (savedInstanceState != null)
-            mCurrentUserId = savedInstanceState.getString(Constants.PREF_USER_ID);
 
         IntentFilter filter = new IntentFilter();
         filter.addAction(Constants.INTENT_PLANNINGS_LIST);
@@ -196,12 +214,7 @@ public class UserPlanningsFragment extends Fragment
     @Override
     public void onResume() {
         super.onResume();
-        final Bundle args = getArguments();
-        if (args != null) {
-            mCurrentUserId = args.getString(Constants.PREF_USER_ID);
-            if (!TextUtils.isEmpty(mCurrentUserId) && !mPaused) this.getPlannings();
-            else mSwipeLayout.setRefreshing(false);
-        }
+        if (!mPaused) this.getPlannings();
 
         mPaused = false;
     }
@@ -221,7 +234,8 @@ public class UserPlanningsFragment extends Fragment
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(Constants.PREF_USER_ID, mCurrentUserId);
+        outState.putString(KEY_USER_ID, mCurrentUserId);
+        outState.putParcelableArrayList(KEY_PLANNINGS, (ArrayList<Planning>) mPlannings);
     }
 
     @Override

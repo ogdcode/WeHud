@@ -152,11 +152,9 @@ public class HomeFragment extends Fragment implements TabLayout.OnTabSelectedLis
                                 Utils.toast(mContext, R.string.message_pageRemoved, title);
                                 break;
                             case Constants.INTENT_REFRESH_PAGE:
-                                if (Integer.valueOf(code) == Constants.HTTP_OK) {
-                                    Intent refreshIntent = new Intent(Constants.INTENT_REFRESH_POSTS);
-                                    refreshIntent.putExtra(Constants.EXTRA_REFRESH_POSTS, content);
-                                    mContext.sendBroadcast(refreshIntent);
-                                }
+                                Intent refreshIntent = new Intent(Constants.INTENT_REFRESH_POSTS);
+                                refreshIntent.putExtra(Constants.EXTRA_REFRESH_POSTS, content);
+                                mContext.sendBroadcast(refreshIntent);
                                 break;
                             default:
                                 break;
