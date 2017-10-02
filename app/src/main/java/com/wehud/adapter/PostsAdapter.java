@@ -27,6 +27,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This {@link android.support.v7.widget.RecyclerView.Adapter} subclass
+ * is used to display the contents of a list of {@link Post} in a {@link RecyclerView}.
+ *
+ * @author Olivier Gonçalves, 2017
+ */
 public final class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsVH> {
 
     private static final String KEY_USER_ID = "key_user_id";
@@ -142,6 +148,12 @@ public final class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsV
         return mPosts.size();
     }
 
+    /**
+     * Sets additional content to the post, like a video, a game or a follower.
+     *
+     * @param holder a {@link android.support.v7.widget.RecyclerView.ViewHolder} subclass object
+     * @param post a {@link Post} in the list
+     */
     private void setPostMedia(final PostsVH holder, final Post post) {
         holder.postMedia.setVisibility(View.GONE);
 
@@ -187,6 +199,10 @@ public final class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsV
         }
     }
 
+    /**
+     * This {@link android.support.v7.widget.RecyclerView.ViewHolder} subclass holds
+     * references to a {@link Post} object.
+     */
     static class PostsVH extends RecyclerView.ViewHolder {
         private Context context;
         private ImageView postAvatar;

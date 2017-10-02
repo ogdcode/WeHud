@@ -31,6 +31,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This {@link android.support.v7.widget.RecyclerView.Adapter} subclass
+ * is used to handle a list of {@link Event} objects.
+ *
+ * @author Olivier Gonçalves, 2017
+ */
 public final class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsVH> {
 
     private static final String PREFIX_DELETE = "delete";
@@ -99,7 +105,7 @@ public final class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.Even
         if (TextUtils.isEmpty(planning))
             holder.bindUnbindButton.setText(holder.context.getString(R.string.btnBind));
         else holder.bindUnbindButton.setText(
-                holder.context.getResources().getString(R.string.btnUnbind, planning)
+                holder.context.getResources().getString(R.string.btnUnbindPlanning, planning)
         );
 
         holder.bindUnbindButton.setOnClickListener(new View.OnClickListener() {
@@ -153,6 +159,10 @@ public final class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.Even
         return mEvents.size();
     }
 
+    /**
+     * A {@link android.support.v7.widget.RecyclerView.ViewHolder} subclass
+     * holding references to several views describing an {@link Event} instance.
+     */
     static class EventsVH extends RecyclerView.ViewHolder
             implements View.OnClickListener, ListDialogFragment.OnListDialogDismissOkListener,
             TextDialogFragment.OnTextDialogDismissOkListener {

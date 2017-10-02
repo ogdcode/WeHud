@@ -30,6 +30,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This {@link Fragment} subclass represents a grid of different {@link Game} objects.
+ *
+ * @author Olivier Gonçalves, 2017
+ */
 public class GamesFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private Context mContext;

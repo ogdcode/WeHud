@@ -57,6 +57,18 @@ public final class ListDialogFragment extends DialogFragment {
         mDivider = divider;
     }
 
+    /**
+     * Creates the dialog window using the provided parameters.
+     *
+     * @param manager       a {@link FragmentManager} object
+     * @param listener      a {@link OnListDialogDismissOkListener} interface instance
+     * @param title         a unique {@link String} serving as header for the dialog
+     * @param list          an ensemble of {@link Parcelable} objects
+     * @param adapter       a {@link android.support.v7.widget.RecyclerView.Adapter} subclass object
+     * @param layoutManager a {@link android.support.v7.widget.RecyclerView.LayoutManager} object
+     * @param divider       a {@link DividerItemDecoration} object
+     * @param id            a unique identifier for an instance of this class
+     */
     public static void generate(FragmentManager manager, OnListDialogDismissOkListener listener,
                                 String title, ArrayList<? extends Parcelable> list,
                                 RecyclerView.Adapter adapter,
@@ -144,6 +156,9 @@ public final class ListDialogFragment extends DialogFragment {
         return builder.create();
     }
 
+    /**
+     * This interface is used to get data from this class to another that implements it.
+     */
     public interface OnListDialogDismissOkListener {
         void onListDialogDismissOk(Object o, Parcelable p);
     }

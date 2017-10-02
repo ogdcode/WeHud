@@ -8,13 +8,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.squareup.picasso.Picasso;
 import com.wehud.R;
 import com.wehud.model.Image;
 import com.wehud.util.Utils;
 
 import java.util.List;
 
+/**
+ * This {@link android.support.v7.widget.RecyclerView.Adapter} subclass
+ * handles {@link Image} objects.
+ *
+ * @author Olivier Gonçalves, 2017
+ */
 public final class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImagesVH> {
 
     private List<Image> mImages;
@@ -55,6 +60,10 @@ public final class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.Imag
         return super.getItemId(position);
     }
 
+    /**
+     * This {@link android.support.v7.widget.RecyclerView.ViewHolder} subclass
+     * holds references to views used in {@link ImagesAdapter}.
+     */
     class ImagesVH extends RecyclerView.ViewHolder implements View.OnClickListener {
         private Context context;
         private ImageView image;

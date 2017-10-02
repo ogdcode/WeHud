@@ -18,7 +18,7 @@ public final class Reward implements Parcelable {
     @SerializedName("entities")
     private List<String> mEntities;
 
-    @SerializedName("bonus")
+    @SerializedName("points")
     private int mBonus;
 
     public int getScore() {

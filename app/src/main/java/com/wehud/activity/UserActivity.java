@@ -44,6 +44,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This {@link AppCompatActivity} subclass displays a {@link User}
+ * profile, selected from a list by the connected user.
+ *
+ * @author Olivier Gonçalves, 2017
+ */
 public class UserActivity extends AppCompatActivity
         implements View.OnClickListener, ViewPager.OnPageChangeListener,
         ListDialogFragment.OnListDialogDismissOkListener,
@@ -51,6 +57,7 @@ public class UserActivity extends AppCompatActivity
 
     private static final String KEY_USER_ID = "key_user_id";
     private static final String KEY_CURRENT_PAGE = "key_current_page";
+    private static final String KEY_IS_CONNECTED_USER = "key_is_connected_user";
     private static final String PARAM_PAGE = "page";
 
     private ImageView mAvatar;
@@ -92,11 +99,7 @@ public class UserActivity extends AppCompatActivity
                             final String numFollowers = followers.size() + "\t"
                                     + getString(R.string.followerCount);
 
-                            mConnectedUserId = PreferencesUtils.get(UserActivity.this, Constants.PREF_USER_ID);
-
-                            if (mIsConnectedUser)
-                                mFollowOrEventsButton.setText(getString(R.string.btnEvents));
-                            else {
+                            if (!mIsConnectedUser) {
                                 boolean found = false;
                                 for (User user : followers) {
                                     if (user.getId().equals(mConnectedUserId)) {
@@ -109,7 +112,7 @@ public class UserActivity extends AppCompatActivity
                                         getString(R.string.btnUnfollow)
                                 );
                                 else mFollowOrEventsButton.setText(getString(R.string.btnFollow));
-                            }
+                            } else mFollowOrEventsButton.setText(getString(R.string.btnEvents));
 
                             if (!TextUtils.isEmpty(avatar))
                                 Utils.loadImage(UserActivity.this, avatar, mAvatar, 256);
@@ -204,9 +207,12 @@ public class UserActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user);
 
+        mConnectedUserId = PreferencesUtils.get(this, Constants.PREF_USER_ID);
+
         if (savedInstanceState != null) {
             mCurrentPage = savedInstanceState.getInt(KEY_CURRENT_PAGE);
             mUserId = savedInstanceState.getString(KEY_USER_ID);
+            mIsConnectedUser = savedInstanceState.getBoolean(KEY_IS_CONNECTED_USER);
         } else {
             mCurrentPage = 0;
 
@@ -278,6 +284,7 @@ public class UserActivity extends AppCompatActivity
         super.onSaveInstanceState(outState);
         outState.putInt(KEY_CURRENT_PAGE, mCurrentPage);
         outState.putString(KEY_USER_ID, mUserId);
+        outState.putBoolean(KEY_IS_CONNECTED_USER, mIsConnectedUser);
     }
 
     @Override
@@ -355,6 +362,9 @@ public class UserActivity extends AppCompatActivity
         Utils.toast(UserActivity.this, R.string.message_followingUser, mCurrentUser.getUsername());
     }
 
+    /**
+     * Calls the API to get information about a {@link User}.
+     */
     private void getUser() {
         Map<String, String> headers = new HashMap<>();
         headers.put(Constants.HEADER_CONTENT_TYPE, Constants.APPLICATION_JSON);
@@ -374,6 +384,9 @@ public class UserActivity extends AppCompatActivity
         if (!call.isLoading()) call.execute();
     }
 
+    /**
+     * Calls the API to get all {@link Page}s linked to a {@link User}.
+     */
     private void getPages() {
         Map<String, String> headers = new HashMap<>();
         headers.put(Constants.HEADER_CONTENT_TYPE, Constants.APPLICATION_JSON);
@@ -393,6 +406,13 @@ public class UserActivity extends AppCompatActivity
         if (!call.isLoading()) call.execute();
     }
 
+    /**
+     * Generates a dialog window. The user must select a {@link Page}
+     * in which every {@link com.wehud.model.Post} mentioning the
+     * followed {@link User} should appear.
+     *
+     * @param pages a list of Page objects
+     */
     private void follow(List<Page> pages) {
         final RecyclerView.Adapter adapter = new PagesAdapter(pages);
         final RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
@@ -414,7 +434,9 @@ public class UserActivity extends AppCompatActivity
         );
     }
 
-
+    /**
+     * Calls the API to make the connected user stop following a {@link User}.
+     */
     private void unfollow() {
         Map<String, String> headers = new HashMap<>();
         headers.put(Constants.HEADER_CONTENT_TYPE, Constants.APPLICATION_JSON);

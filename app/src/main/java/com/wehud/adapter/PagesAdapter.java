@@ -11,6 +11,12 @@ import com.wehud.model.Page;
 
 import java.util.List;
 
+/**
+ * This {@link android.support.v7.widget.RecyclerView.Adapter} subclass
+ * allows for handling a list of {@link Page}s in a {@link RecyclerView}.
+ *
+ * @author Olivier Gonçalves, 2017
+ */
 public final class PagesAdapter extends RecyclerView.Adapter<PagesAdapter.PagesVH> {
 
     private List<Page> mPages;
@@ -46,6 +52,10 @@ public final class PagesAdapter extends RecyclerView.Adapter<PagesAdapter.PagesV
         return super.getItemId(position);
     }
 
+    /**
+     * This {@link android.support.v7.widget.RecyclerView.ViewHolder} subclass
+     * holds references to a {@link Page} object.
+     */
     class PagesVH extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView title;
 

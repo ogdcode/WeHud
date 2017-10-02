@@ -17,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/editDialog_marginTop"
-        android:hint="@string/editDialog_newPassword"
+        android:hint="@string/dialogHint_newPassword"
         android:inputType="textPassword" />
 
     <EditText
@@ -25,7 +25,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/editDialog_marginTop"
-        android:hint="@string/editDialog_confirmNewPassword"
+        android:hint="@string/dialogHint_confirmNewPassword"
         android:inputType="textPassword" />
 
     <CheckBox
@@ -33,6 +33,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/editDialog_marginTop"
-        android:text="@string/editDialog_show_password" />
+        android:text="@string/dialogHint_show_password" />
 
 </LinearLayout>

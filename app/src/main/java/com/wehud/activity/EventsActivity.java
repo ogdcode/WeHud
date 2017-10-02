@@ -51,14 +51,25 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This {@link AppCompatActivity} subclass contains a list of {@link Event} objects.
+ * They can be accessed from {@link UserActivity} or
+ * {@link com.wehud.fragment.UserPlanningsFragment}.
+ *
+ * @author Olivier Gonçalves, 2017
+ */
 public class EventsActivity extends AppCompatActivity
         implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener,
         TextDialogFragment.OnTextDialogDismissOkListener {
 
-    private static final String KEY_USER_ID = "key_user_id";
+    /**
+     * A list of {@link String} keys used to put certain variables into
+     * {@link Bundle} objects, so they can be saved when configuratiion
+     * changes.
+     */
 
-    private static final int ID_DIALOG_START_DATE_TIME = 0;
-    private static final int ID_DIALOG_END_DATE_TIME = 1;
+    private static final String KEY_USER_ID = "key_user_id";
+    private static final String KEY_EVENTS = "key_events";
 
     private static final String PARAM_TITLE = "title";
     private static final String PARAM_DESCRIPTION = "description";
@@ -67,7 +78,12 @@ public class EventsActivity extends AppCompatActivity
     private static final String PARAM_PLANNING = "planning";
     private static final String PARAM_TAG = "tag";
 
-    private static final String KEY_EVENTS = "key_events";
+    /**
+     * Those IDs are used for the two {@link TextDialogFragment} used in this class.
+     */
+
+    private static final int ID_DIALOG_START_DATE_TIME = 0;
+    private static final int ID_DIALOG_END_DATE_TIME = 1;
 
     private View mEmptyLayout;
     private SwipeRefreshLayout mSwipeLayout;
@@ -108,6 +124,12 @@ public class EventsActivity extends AppCompatActivity
                             }
                             break;
                         case Constants.INTENT_EVENTS_ADD:
+
+                            /*
+                              We can gain points from adding events,
+                              so it is possible to get a reward when a certain
+                              score is reached.
+                             */
                             Reward reward = Utils.getNestedReward(content);
                             List<String> entities = reward.getEntities();
                             if (entities != null && !entities.isEmpty()) {
@@ -129,6 +151,8 @@ public class EventsActivity extends AppCompatActivity
                             break;
                         case Constants.INTENT_EVENTS_DELETE:
                             mSwipeLayout.setRefreshing(true);
+
+                            // Forces recreation of Event list.
                             if (!TextUtils.isEmpty(mUserId)) getEvents();
                             Utils.toast(
                                     EventsActivity.this,
@@ -344,6 +368,9 @@ public class EventsActivity extends AppCompatActivity
         Utils.toast(this, R.string.message_createEventSuccess);
     }
 
+    /**
+     * Generates an {@link AlertDialog} where the user can create a new {@link Event} object.
+     */
     @SuppressLint("InflateParams")
     private void generateNewEventDialog() {
         final View headerView = LayoutInflater.from(this).inflate(R.layout.dialog_header, null);
@@ -369,13 +396,14 @@ public class EventsActivity extends AppCompatActivity
         startDateTimeView.setText(formatter.format(date));
         startDateTimeView.setOnClickListener(this);
 
+        // Adding 1 since DAY_OF_MONTH is zero-based.
         cal.set(Calendar.DAY_OF_MONTH, dayOfMonth + 1);
         date = cal.getTime();
 
         endDateTimeView.setText(formatter.format(date));
         endDateTimeView.setOnClickListener(this);
 
-        final ArrayAdapter<String> tagAdapter = new ArrayAdapter<String>(
+        final ArrayAdapter<String> tagAdapter = new ArrayAdapter<>(
                 this,
                 android.R.layout.simple_list_item_1,
                 android.R.id.text1,
@@ -398,12 +426,19 @@ public class EventsActivity extends AppCompatActivity
             @Override
             public void onClick(DialogInterface dialog, int id) {
 
-                final TextView firstInvalidField = Utils.getFirstInvalidField(titleView, descriptionView);
+                final TextView firstInvalidField = Utils.getFirstInvalidField(
+                        titleView,
+                        descriptionView
+                );
                 if (firstInvalidField != null)
                     firstInvalidField.setError(getString(R.string.error_fieldRequired));
                 else {
                     final String title = titleView.getText().toString();
                     final String description = descriptionView.getText().toString();
+
+                    // For dates, the API has default values in case those are empty.$
+                    // If specified, they must be given in ISO8601-compliant
+                    // format (format that Mongoose uses)
                     final String startDateTime = (startDateTimeView.getTag() == null ?
                             "" : Utils.localDateTimeStringToIsoDateTimeString(
                             startDateTimeView.getText().toString())
@@ -420,8 +455,6 @@ public class EventsActivity extends AppCompatActivity
                     final String planning = (planningView.getSelectedItem() == null ?
                             "" : planningView.getSelectedItem().toString()
                     );
-
-                    planningView.setSelection(0);
 
                     addEvent(
                             title,
@@ -447,6 +480,16 @@ public class EventsActivity extends AppCompatActivity
         builder.create().show();
     }
 
+    /**
+     * Calls the API to add an {@link Event} object from the application.
+     *
+     * @param title             the title of the Event
+     * @param description       a description of the Event
+     * @param startDateTime     when the Event starts, in ISO-8601 format
+     * @param endDateTime       when the event ends, in ISO-8601 format
+     * @param planning          a name for a {@link Planning} to which bind the Event
+     * @param tag               a number representing the nature of the Event
+     */
     private void addEvent(String title, String description, String startDateTime,
                           String endDateTime, String planning, int tag
     ) {
@@ -464,7 +507,10 @@ public class EventsActivity extends AppCompatActivity
             event.put(PARAM_DESCRIPTION, description);
             if (!TextUtils.isEmpty(startDateTime)) event.put(PARAM_START_DATE_TIME, startDateTime);
             if (!TextUtils.isEmpty(endDateTime)) event.put(PARAM_END_DATE_TIME, endDateTime);
+
+            // The tag variable is made to be 0 when not specified in the API.
             if (tag > 0) event.put(PARAM_TAG, tag);
+
             if (!TextUtils.isEmpty(planning)) event.put(PARAM_PLANNING, planning);
 
             final String body = GsonUtils.getInstance().toJson(event);
@@ -482,6 +528,9 @@ public class EventsActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * Calls the API to retrieve a list of {@link Event} objects.
+     */
     private void getEvents() {
         if (!TextUtils.isEmpty(mUserId)) {
             Map<String, String> headers = new HashMap<>();
@@ -499,6 +548,9 @@ public class EventsActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * Calls the API to retrieve a list of {@link Planning} objects.
+     */
     private void getPlannings() {
         if (!TextUtils.isEmpty(mUserId)) {
             Map<String, String> headers = new HashMap<>();

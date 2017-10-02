@@ -357,8 +357,8 @@ public final class Utils {
         StringBuilder entitiesString = new StringBuilder();
         if (entities.size() == 1) entitiesString.append(entities.get(0));
         else if (entities.size() == 2) {
-            String toAppend = "a " + entities.get(0) + ' ' +
-                    context.getString(R.string.or) + " a " +
+            String toAppend = context.getString(R.string.a) + ' ' + entities.get(0) + ' ' +
+                    context.getString(R.string.or) + ' ' + context.getString(R.string.a) + ' ' +
                     entities.get(1);
             entitiesString.append(toAppend);
         }
@@ -376,6 +376,8 @@ public final class Utils {
         }
 
         final int action = reward.getAction();
+        final int score = reward.getScore();
+        final int bonus = reward.getBonus();
 
         final String title = context.getString(R.string.dialogTitle_reward);
         StringBuilder message = new StringBuilder();
@@ -383,25 +385,25 @@ public final class Utils {
             case 0:
                 message.append(context.getResources().getString(
                         R.string.dialogText_reward,
-                        action,
+                        score,
                         context.getResources().getString(R.string.new_publication, entitiesString),
-                        reward.getBonus()
+                        bonus
                 ));
                 break;
             case 1:
                 message.append(context.getResources().getString(
                         R.string.dialogText_reward,
-                        reward.getScore(),
+                        score,
                         context.getResources().getString(R.string.new_binding, entitiesString),
-                        reward.getBonus()
+                        bonus
                 ));
                 break;
             case 2:
                 message.append(context.getResources().getString(
                         R.string.dialogText_reward,
-                        reward.getScore(),
+                        score,
                         context.getResources().getString(R.string.new_follow, entitiesString),
-                        reward.getBonus()
+                        bonus
                 ));
                 break;
             default:

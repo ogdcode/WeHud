@@ -33,7 +33,6 @@ import com.wehud.util.Utils;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -121,7 +120,9 @@ public class PageFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                                         reward,
                                         0
                                 );
-                            } else if (!mIsIndexZero) {
+                            }
+
+                            if (!mIsIndexZero) {
                                 Intent likeIntent = new Intent(Constants.INTENT_REFRESH_PAGE);
                                 likeIntent.putExtra(Constants.EXTRA_REFRESH_PAGE, mId);
                                 mContext.sendBroadcast(likeIntent);

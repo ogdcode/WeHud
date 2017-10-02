@@ -26,6 +26,12 @@ import com.wehud.util.Utils;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * This {@link AppCompatActivity} subclass shows a screen where the
+ * user has the possibility of resetting their lost password.
+ *
+ * @author Olivier Gonçalves, 2017
+ */
 public class ForgotPasswordActivity extends AppCompatActivity
         implements View.OnClickListener, TextDialogFragment.OnTextDialogDismissOkListener {
 
@@ -130,6 +136,9 @@ public class ForgotPasswordActivity extends AppCompatActivity
         NavUtils.navigateUpFromSameTask(this);
     }
 
+    /**
+     * Calls the API to execute the reset password route.
+     */
     private void send() {
         TextView firstInvalidField = Utils.getFirstInvalidField(mUsernameOrEmail);
 

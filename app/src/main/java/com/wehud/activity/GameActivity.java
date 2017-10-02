@@ -42,6 +42,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This {@link AppCompatActivity} subclass displays a {@link Game}
+ * profile, selected from a list by the connected user.
+ *
+ * @author Olivier Gonçalves, 2017
+ */
 public class GameActivity extends AppCompatActivity implements View.OnClickListener,
         ListDialogFragment.OnListDialogDismissOkListener,
         TextDialogFragment.OnTextDialogDismissOkListener {
@@ -290,6 +296,10 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         Utils.toast(GameActivity.this, R.string.message_unfollowingGame, mCurrentGame.getName());
     }
 
+    /**
+     * This method is used to render all fields as gone until
+     * they gain a value, in another method.
+     */
     private void initializeFields() {
         mGenresLayout.setVisibility(View.GONE);
         mDevelopersLayout.setVisibility(View.GONE);
@@ -304,6 +314,12 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         mPegiLayout.setVisibility(View.GONE);
     }
 
+    /**
+     * Populates all fields in the screen with info about a {@link Game}.
+     * Optional fields are rendered as visible if they are filled.
+     *
+     * @param content a JSON string containing a {@link Game} instance.
+     */
     private void fillGamePage(String content) {
         final String connectedUserId = PreferencesUtils.get(this, Constants.PREF_USER_ID);
 
@@ -396,6 +412,11 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    /**
+     * Calls the API to retrieve information about a {@link Game} object.
+     *
+     * @param id a unique identifier used to identify a game
+     */
     private void getGame(String id) {
         Map<String, String> headers = new HashMap<>();
         headers.put(Constants.HEADER_CONTENT_TYPE, Constants.APPLICATION_JSON);
@@ -415,6 +436,9 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         if (!call.isLoading()) call.execute();
     }
 
+    /**
+     * Calls the API to retrieve a list of {@link Page} objects.
+     */
     private void getPages() {
         Map<String, String> headers = new HashMap<>();
         headers.put(Constants.HEADER_CONTENT_TYPE, Constants.APPLICATION_JSON);
@@ -436,6 +460,13 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         if (!call.isLoading()) call.execute();
     }
 
+    /**
+     * Generates a dialog window. The user must select a {@link Page}
+     * in which every {@link com.wehud.model.Post} about the followed
+     * {@link Game} should appear.
+     *
+     * @param pages a list of Page objects
+     */
     private void follow(ArrayList<Page> pages) {
         final RecyclerView.Adapter adapter = new PagesAdapter(pages);
         final RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
@@ -457,6 +488,9 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         );
     }
 
+    /**
+     * Calls the API to make the connected user stop following a {@link Game}.
+     */
     private void unfollow() {
         Map<String, String> headers = new HashMap<>();
         headers.put(Constants.HEADER_CONTENT_TYPE, Constants.APPLICATION_JSON);

@@ -60,7 +60,7 @@
                     style="@style/TextAppearance.AppCompat.Small"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/settings_titleUsername"
+                    android:text="@string/settings_title_username"
                     android:textColor="@android:color/darker_gray" />
 
                 <TextView
@@ -88,7 +88,7 @@
                     style="@style/TextAppearance.AppCompat.Small"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/settings_titleEmail"
+                    android:text="@string/settings_title_email"
                     android:textColor="@android:color/darker_gray" />
 
                 <TextView
@@ -116,7 +116,7 @@
                     style="@style/TextAppearance.AppCompat.Small"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/settings_titlePassword"
+                    android:text="@string/settings_title_password"
                     android:textColor="@android:color/darker_gray" />
 
                 <TextView

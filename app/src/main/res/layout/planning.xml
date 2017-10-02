@@ -78,7 +78,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:layout_marginTop="@dimen/event_marginTop"
-                android:text="@string/planning_btnUnbind" />
+                android:text="@string/btnUnbindEvents" />
 
         </LinearLayout>
 

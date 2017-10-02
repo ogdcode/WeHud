@@ -21,6 +21,13 @@ import com.wehud.R;
 
 import java.util.Calendar;
 
+/**
+ * A generic class that can be used to display a dialog window
+ * containing Date and Time pickers to let the user select a
+ * precise date and time.
+ *
+ * @author Olivier Gonçalves, 2017
+ */
 public final class DateTimePickerDialogFragment extends DialogFragment {
 
     private static final String KEY_ID = "key_id";
@@ -36,6 +43,14 @@ public final class DateTimePickerDialogFragment extends DialogFragment {
         mListener = listener;
     }
 
+    /**
+     * Creates the dialog window using the provided parameters.
+     *
+     * @param manager   a {@link FragmentManager} object
+     * @param listener  a {@link OnDateTimePickListener} interface instance
+     * @param title     a unique {@link String} serving as header for the dialog
+     * @param id        a unique identifier for an instance of this class
+     */
     public static void generate(FragmentManager manager, OnDateTimePickListener listener,
                                 String title, Object id
     ) {
@@ -136,6 +151,9 @@ public final class DateTimePickerDialogFragment extends DialogFragment {
         return builder.create();
     }
 
+    /**
+     * This interface is used to get data from this class to another that implements it.
+     */
     public interface OnDateTimePickListener {
         void onDateTimePick(final Object o, int i, int i1, int i2, int i3, int i4);
     }

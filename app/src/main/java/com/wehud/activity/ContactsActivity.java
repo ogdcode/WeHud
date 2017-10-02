@@ -30,18 +30,49 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This {@link AppCompatActivity} subclass displays a list of
+ * the connected user's followers, and indicates whether they
+ * are currently connected to the application or not.
+ *
+ * @author Olivier Gonçalves, 2017.
+ */
 public class ContactsActivity extends AppCompatActivity
         implements SwipeRefreshLayout.OnRefreshListener {
 
+    /**
+     * A layout shown when the connected user has no followers.
+     */
     private View mEmptyLayout;
+
+    /**
+     * A layout containing the list of followers and enabling swipe-to-refresh functionality.
+     */
     private SwipeRefreshLayout mSwipeLayout;
+
+    /**
+     * A layout containing a list of {@link User} that follow the connected user.
+     */
     private RecyclerView mContactListView;
 
+    /**
+     * This is used to control the state of this Activity's {@link BroadcastReceiver}
+     * instance, so as to prevent it from listening to {@link Intent}s non-stop.
+     */
     private boolean mPaused;
+
+    /**
+     * This object receives {@link Intent}s sent from requests made to the API.
+     * Different lines of code are executed depending on the Intent's content.
+     */
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+
             if (intent.getAction().equals(Constants.INTENT_FOLLOWERS_LIST) && !mPaused) {
+                // Response contains the info of a User. Get the appropriate JSON
+                // and retrieve the followers of the User using the User class and GsonUtils.
+
                 final String response = intent.getStringExtra(Constants.EXTRA_BROADCAST);
                 final Payload payload = GsonUtils.getInstance().fromJson(response, Payload.class);
 
@@ -53,17 +84,24 @@ public class ContactsActivity extends AppCompatActivity
 
                     final List<User> followers = connectedUser.getFollowers();
 
-                    if (!followers.isEmpty()) {
+                    if (Utils.isNotEmpty(followers)) {
                         final UsersAdapter adapter = new UsersAdapter(followers);
+
+                        // Forces the use of a particular ViewHolder in UsersAdapter.
                         adapter.setViewResourceId(1);
+
                         mContactListView.setAdapter(adapter);
 
                         mEmptyLayout.setVisibility(View.GONE);
                         mSwipeLayout.setVisibility(View.VISIBLE);
+
+                        // Manually set it in case no swipe was detected prior to refreshing.
                         mSwipeLayout.setRefreshing(false);
                     }
                 } else {
                     int messageId;
+
+                    // If token expires, code is 403, and user is thrown back at login screen.
                     switch (Integer.valueOf(code)) {
                         case Constants.HTTP_UNAUTHORIZED:
                             messageId = R.string.error_sessionExpired;
@@ -90,6 +128,7 @@ public class ContactsActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacts);
 
+        // Provides up navigation.
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -105,6 +144,9 @@ public class ContactsActivity extends AppCompatActivity
         mSwipeLayout.setVisibility(View.GONE);
 
         mSwipeLayout.setOnRefreshListener(this);
+
+        // Forces refresh icon to appear, bacause when in OnCreate
+        // we do not have the connected user's info.
         mSwipeLayout.setRefreshing(true);
 
         mContactListView.setLayoutManager(new LinearLayoutManager(this));
@@ -119,6 +161,9 @@ public class ContactsActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
+
+        // Calling this.getFollowers() since setting refreshing to true is not enough.
+        // However, only when not paused, which means the first time this Activity is accessed to.
         if (!mPaused) this.getFollowers();
 
         mPaused = false;
@@ -154,6 +199,10 @@ public class ContactsActivity extends AppCompatActivity
         this.getFollowers();
     }
 
+    /**
+     * Calls the API to retrieve a {@link User} object containing a {@link List<User>}
+     * that are their followers.
+     */
     private void getFollowers() {
         Map<String, String> headers = new HashMap<>();
         headers.put(Constants.HEADER_CONTENT_TYPE, Constants.APPLICATION_JSON);

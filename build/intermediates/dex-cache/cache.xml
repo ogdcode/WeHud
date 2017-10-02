@@ -3,21 +3,21 @@
 
     <item
         is-multidex="true"
-        jar="/Users/ogoncalves/Desktop/Programmes/Android/WeHud/app/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="26.0.0"
-        sha1="a03e6d130563cb92aae9821b5fa2234589b586d8">
-        <dex dex="/Users/ogoncalves/Desktop/Programmes/Android/WeHud/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run-bootstrap_07ba01009d25afc2882d0859be72b8ed160aca0e/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
         jar="/Users/ogoncalves/Desktop/Programmes/Android/WeHud/app/build/intermediates/incremental-runtime-classes/debug/instant-run.jar"
         jumboMode="true"
         optimize="true"
         revision="26.0.0"
         sha1="3be78ebc2706b2e1fe2f12d5726887a92d6c183b">
         <dex dex="/Users/ogoncalves/Desktop/Programmes/Android/WeHud/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run_f670e3df5e4f7f777aa28b888494c1c35ce2eef3/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/ogoncalves/Desktop/Programmes/Android/WeHud/app/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.0"
+        sha1="6aecb3843065dec4abe9b469f10347775899025b">
+        <dex dex="/Users/ogoncalves/Desktop/Programmes/Android/WeHud/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run-bootstrap_07ba01009d25afc2882d0859be72b8ed160aca0e/classes.dex" />
     </item>
     <item
         is-multidex="true"

@@ -6,7 +6,7 @@ package com.wehud.util;
  * @author Olivier Gonçalves, 2017
  */
 public final class Constants {
-    private static final String API_URL = "http://192.168.1.41:3000";
+    private static final String API_URL = "https://wehud.herokuapp.com";
 
     public static final String API_LOGIN = API_URL + "/auth/login";
     public static final String API_LOGOUT = API_URL + "/auth/logout";

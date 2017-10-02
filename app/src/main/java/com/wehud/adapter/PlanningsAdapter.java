@@ -28,9 +28,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This {@link android.support.v7.widget.RecyclerView.Adapter} subclass
+ * handles {@link Planning} objects and displays them according to their
+ * designated holder.
+ *
+ * @author Olivier Gonçalves, 2017
+ */
 public final class PlanningsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private static final String KEY_PLANNINGS = "key_plannings";
     private static final String KEY_EVENTS = "key_events";
 
     private List<Planning> mPlannings;
@@ -109,7 +115,7 @@ public final class PlanningsAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                             mManager,
                             planningsHolder,
                             planningsHolder.context.getString(R.string.dialogTitle_deletePlanning),
-                            planningsHolder.context.getString(R.string.message_deletePlanning),
+                            planningsHolder.context.getString(R.string.dialogMessage_deletePlanning),
                             planning.getId()
                     );
                 }

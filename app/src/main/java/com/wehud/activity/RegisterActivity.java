@@ -25,6 +25,12 @@ import com.wehud.util.Utils;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * This {@link AppCompatActivity} subclass is meant to allow
+ * a user to create an account in the application.
+ *
+ * @author Olivier Gonçalves, 2017
+ */
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String PARAM_EMAIL = "email";
@@ -142,6 +148,12 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
+    /**
+     * Calls the API to create a new {@link com.wehud.model.User} in
+     * the database.
+     *
+     * @param params the parameters necessary to create an account
+     */
     private void createAccount(String... params) {
         Map<String, String> headers = new HashMap<>();
         headers.put(Constants.HEADER_CONTENT_TYPE, Constants.APPLICATION_JSON);

@@ -32,6 +32,15 @@ public final class TextDialogFragment extends DialogFragment {
         mListener = listener;
     }
 
+    /**
+     * Creates the dialog window using the provided parameters.
+     *
+     * @param manager   a {@link FragmentManager} object
+     * @param listener  a {@link OnTextDialogDismissOkListener} interface instance
+     * @param title     a unique {@link String} serving as header for the dialog
+     * @param message   a {@link String} serving as body text for the dialog
+     * @param id        a unique identifier for an instance of this class
+     */
     public static void generate(FragmentManager manager, OnTextDialogDismissOkListener listener,
                                 String title, String message, Object id)
     {
@@ -103,6 +112,9 @@ public final class TextDialogFragment extends DialogFragment {
         return builder.create();
     }
 
+    /**
+     * This interface is used to get data from this class to another that implements it.
+     */
     public interface OnTextDialogDismissOkListener {
         void onTextDialogDismissOk(Object o);
     }

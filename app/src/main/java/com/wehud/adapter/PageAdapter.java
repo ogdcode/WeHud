@@ -1,14 +1,19 @@
 package com.wehud.adapter;
 
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This {@link FragmentStatePagerAdapter} subclass
+ * handles {@link Fragment} instances and is used
+ * with a {@link android.support.v4.view.ViewPager} object.
+ *
+ * @author Olivier Gonçalves, 2017
+ */
 public final class PageAdapter extends FragmentStatePagerAdapter {
     private List<Fragment> mFragments;
     private List<String> mTitles;
@@ -37,16 +42,20 @@ public final class PageAdapter extends FragmentStatePagerAdapter {
         mTitles.remove(title);
     }
 
-    public void clear() {
-        for (int i = 0; i < mFragments.size(); ++i) mFragments.remove(i);
-        for (int i = 0; i < mTitles.size(); ++i) mTitles.remove(i);
-    }
-
     @Override
     public Fragment getItem(int position) {
         return mFragments.get(position);
     }
 
+    /**
+     * This method was overridden to force the
+     * adapter to redraw {@link Fragment} objects
+     * that changed places after a call to the adapter's
+     * notifySetDataChanged() method.
+     *
+     * @param item an item in the adapter
+     * @return the position of the item
+     */
     @Override
     public int getItemPosition(Object item) {
         final Fragment fragment = (Fragment) item;

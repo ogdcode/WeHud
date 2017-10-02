@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
 import com.wehud.R;
 import com.wehud.activity.UserActivity;
 import com.wehud.model.User;
@@ -20,6 +19,12 @@ import com.wehud.util.Utils;
 
 import java.util.List;
 
+/**
+ * This {@link android.support.v7.widget.RecyclerView.Adapter} subclass
+ * is used to handle displaying {@link User} objects using different holders.
+ *
+ * @author Olivier Gonçalves, 2017
+ */
 public final class UsersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private List<User> mUsers;
@@ -110,6 +115,10 @@ public final class UsersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         return super.getItemId(position);
     }
 
+    /**
+     * This {@link android.support.v7.widget.RecyclerView.ViewHolder} subclass
+     * is used to display just a {@link User}'s username.
+     */
     private class UsersVH extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView username;
 
@@ -138,6 +147,11 @@ public final class UsersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
     }
 
+    /**
+     * This {@link android.support.v7.widget.RecyclerView.ViewHolder} subclass
+     * is used to hold references to a {@link User} object. It is used in
+     * {@link com.wehud.activity.ContactsActivity}.
+     */
     private class ContactsVH extends RecyclerView.ViewHolder {
         private Context context;
         private ImageView avatar;

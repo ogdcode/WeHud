@@ -205,19 +205,19 @@ public class SettingsActivity extends AppCompatActivity
         switch (view.getId()) {
             case R.id.settings_email:
                 textId = R.id.settings_email;
-                title = getString(R.string.settings_titleEmail);
+                title = getString(R.string.settings_title_email);
                 text = mEmail.getText().toString();
                 hint = getString(R.string.hint_email);
                 break;
             case R.id.settings_username:
                 textId = R.id.settings_username;
-                title = getString(R.string.settings_titleUsername);
+                title = getString(R.string.settings_title_username);
                 text = mUsername.getText().toString();
                 hint = getString(R.string.hint_username);
                 break;
             case R.id.settings_password:
                 textId = R.id.settings_password;
-                title = getString(R.string.settings_titlePassword);
+                title = getString(R.string.settings_title_password);
                 text = mPassword.getText().toString();
                 hint = getString(R.string.hint_password);
                 isPassword = true;

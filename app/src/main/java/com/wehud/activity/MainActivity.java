@@ -30,6 +30,13 @@ import com.wehud.util.Utils;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * This {@link AppCompatActivity} subclass contains a bottom menu
+ * with four {@link Fragment} instances associated to each. It is
+ * considered as the main screen of the application.
+ *
+ * @author Olivier Gonçalves, 2017
+ */
 public class MainActivity extends AppCompatActivity
         implements BottomNavigationView.OnNavigationItemSelectedListener, TextDialogFragment.OnTextDialogDismissOkListener {
 
@@ -99,14 +106,14 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onBackPressed() {
-        this.attemptSignOut();
-    }
-
-    @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(KEY_MENU_ID, mMenuId);
+    }
+
+    @Override
+    public void onBackPressed() {
+        this.attemptSignOut();
     }
 
     @Override
@@ -135,6 +142,13 @@ public class MainActivity extends AppCompatActivity
         if (!call.isLoading()) call.execute();
     }
 
+    /**
+     * Uses the given menu resource ID to initialize a {@link Fragment}
+     * instance and an appropriate {@link String} used as a title for
+     * the fragment.
+     *
+     * @param menuId the unique identifier of the instance to initialize
+     */
     private void setMenu(int menuId) {
         Fragment fragment;
         int titleResourceId;
@@ -168,6 +182,9 @@ public class MainActivity extends AppCompatActivity
         transaction.commit();
     }
 
+    /**
+     * Starts a process to make the connected user exit the application.
+     */
     private void attemptSignOut() {
         TextDialogFragment.generate(
                 getSupportFragmentManager(),
