@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public final class RefreshResponse implements Parcelable {
+public final class IDPostsResponse implements Parcelable {
 
     @SerializedName("_id")
     private String mId;
@@ -23,20 +23,20 @@ public final class RefreshResponse implements Parcelable {
         return mPosts;
     }
 
-    protected RefreshResponse(Parcel in) {
+    protected IDPostsResponse(Parcel in) {
         mId = in.readString();
         mPosts = in.createTypedArrayList(Post.CREATOR);
     }
 
-    public static final Creator<RefreshResponse> CREATOR = new Creator<RefreshResponse>() {
+    public static final Creator<IDPostsResponse> CREATOR = new Creator<IDPostsResponse>() {
         @Override
-        public RefreshResponse createFromParcel(Parcel in) {
-            return new RefreshResponse(in);
+        public IDPostsResponse createFromParcel(Parcel in) {
+            return new IDPostsResponse(in);
         }
 
         @Override
-        public RefreshResponse[] newArray(int size) {
-            return new RefreshResponse[size];
+        public IDPostsResponse[] newArray(int size) {
+            return new IDPostsResponse[size];
         }
     };
 

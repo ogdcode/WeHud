@@ -25,6 +25,7 @@ import java.util.List;
 
 public final class ListDialogFragment extends DialogFragment {
 
+    private static final String KEY_ID = "key_id";
     private static final String KEY_TITLE = "key_title";
     private static final String KEY_LIST = "key_list";
 
@@ -60,8 +61,28 @@ public final class ListDialogFragment extends DialogFragment {
                                 String title, ArrayList<? extends Parcelable> list,
                                 RecyclerView.Adapter adapter,
                                 RecyclerView.LayoutManager layoutManager,
-                                DividerItemDecoration divider) {
+                                DividerItemDecoration divider, Object id)
+    {
         Bundle args = new Bundle();
+        if (id instanceof Long)
+            args.putLong(KEY_ID, (long) id);
+        if (id instanceof Integer)
+            args.putInt(KEY_ID, (int) id);
+        if (id instanceof Short)
+            args.putShort(KEY_ID, (short) id);
+        if (id instanceof Double)
+            args.putDouble(KEY_ID, (double) id);
+        if (id instanceof Float)
+            args.putFloat(KEY_ID, (float) id);
+        if (id instanceof Byte)
+            args.putByte(KEY_ID, (byte) id);
+        if (id instanceof String)
+            args.putString(KEY_ID, id.toString());
+        if (id instanceof Character)
+            args.putChar(KEY_ID, (char) id);
+        if (id instanceof Boolean)
+            args.putBoolean(KEY_ID, (boolean) id);
+
         args.putString(KEY_TITLE, title);
         args.putParcelableArrayList(KEY_LIST, list);
 
@@ -80,6 +101,7 @@ public final class ListDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         final Context context = getActivity();
         final Bundle args = getArguments();
+        final Object dialogId = args.get(KEY_ID);
         final String title = args.getString(KEY_TITLE);
         final List<? extends Parcelable> list = args.getParcelableArrayList(KEY_LIST);
 
@@ -105,7 +127,7 @@ public final class ListDialogFragment extends DialogFragment {
                     int selectedParcelable = Long.valueOf(mAdapter.getItemId(-1)).intValue();
                     if (selectedParcelable != -1) {
                         Parcelable p = list.get(selectedParcelable);
-                        mListener.onListDialogDismissOk(p);
+                        mListener.onListDialogDismissOk(dialogId, p);
                         dismiss();
                     } else
                         Utils.toast(context, R.string.message_chooseElementInList);
@@ -123,6 +145,6 @@ public final class ListDialogFragment extends DialogFragment {
     }
 
     public interface OnListDialogDismissOkListener {
-        void onListDialogDismissOk(Parcelable p);
+        void onListDialogDismissOk(Object o, Parcelable p);
     }
 }

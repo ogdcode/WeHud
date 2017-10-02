@@ -277,7 +277,7 @@ public class UserActivity extends AppCompatActivity
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(KEY_CURRENT_PAGE, mCurrentPage);
-        outState.putString(Constants.PREF_USER_ID, mUserId);
+        outState.putString(KEY_USER_ID, mUserId);
     }
 
     @Override
@@ -320,7 +320,7 @@ public class UserActivity extends AppCompatActivity
     }
 
     @Override
-    public void onListDialogDismissOk(Parcelable p) {
+    public void onListDialogDismissOk(Object id, Parcelable p) {
         if (p instanceof Page) {
             Map<String, String> headers = new HashMap<>();
             headers.put(Constants.HEADER_CONTENT_TYPE, Constants.APPLICATION_JSON);
@@ -409,7 +409,8 @@ public class UserActivity extends AppCompatActivity
                 (ArrayList<Page>) pages,
                 adapter,
                 layoutManager,
-                divider
+                divider,
+                0
         );
     }
 

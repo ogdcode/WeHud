@@ -23,7 +23,7 @@ import com.wehud.adapter.PostsAdapter;
 import com.wehud.dialog.TextDialogFragment;
 import com.wehud.model.Payload;
 import com.wehud.model.Post;
-import com.wehud.model.RefreshResponse;
+import com.wehud.model.IDPostsResponse;
 import com.wehud.model.Reward;
 import com.wehud.network.APICall;
 import com.wehud.util.Constants;
@@ -32,6 +32,8 @@ import com.wehud.util.Utils;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,14 +62,15 @@ public class PageFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             if (!mPaused) {
                 if (!TextUtils.isEmpty(intent.getStringExtra(Constants.EXTRA_REFRESH_POSTS))) {
                     final String payload = intent.getStringExtra(Constants.EXTRA_REFRESH_POSTS);
-                    final RefreshResponse response = GsonUtils.getInstance().fromJson(
+                    final IDPostsResponse response = GsonUtils.getInstance().fromJson(
                             payload,
-                            RefreshResponse.class
+                            IDPostsResponse.class
                     );
 
                     if (response.getId().equals(mId)) {
                         mPosts = response.getPosts();
                         if (mPosts != null && !mPosts.isEmpty()) {
+                            Collections.sort(mPosts, Collections.<Post>reverseOrder());
                             mAdapter = new PostsAdapter(mPosts, true);
                             mPostListView.setAdapter(mAdapter);
                             mPostListView.invalidate();
@@ -91,10 +94,12 @@ public class PageFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                             Integer.valueOf(code) == Constants.HTTP_NO_CONTENT) {
                         final String content = payload.getContent();
 
-                        if (intent.getAction().equals(Constants.INTENT_POSTS_LIST)) {
-                            final Type postListType = new TypeToken<List<Post>>(){}.getType();
+                        if (mIsIndexZero && intent.getAction().equals(Constants.INTENT_POSTS_LIST)) {
+                            final Type postListType = new TypeToken<List<Post>>() {
+                            }.getType();
                             mPosts = GsonUtils.getInstance().fromJson(content, postListType);
                             if (mPosts != null && !mPosts.isEmpty()) {
+                                Collections.sort(mPosts, Collections.<Post>reverseOrder());
                                 mAdapter = new PostsAdapter(mPosts, true);
                                 mPostListView.setAdapter(mAdapter);
 
@@ -193,17 +198,16 @@ public class PageFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
             mId = args.getString(KEY_ID);
             mIsIndexZero = args.getInt(KEY_INDEX) == 0;
-            if (mIsIndexZero) filter.addAction(Constants.INTENT_POSTS_LIST);
-            else {
-                mPosts = args.getParcelableArrayList(KEY_POSTS);
-                if (mPosts != null && !mPosts.isEmpty()) {
-                    mAdapter = new PostsAdapter(mPosts, true);
-                    mPostListView.setAdapter(mAdapter);
-                    mEmptyLayout.setVisibility(View.GONE);
-                    mSwipeLayout.setVisibility(View.VISIBLE);
-                }
+            mPosts = args.getParcelableArrayList(KEY_POSTS);
+            if (Utils.isNotEmpty(mPosts)) {
+                Collections.sort(mPosts, Collections.<Post>reverseOrder());
+                mAdapter = new PostsAdapter(mPosts, true);
+                mPostListView.setAdapter(mAdapter);
+                mEmptyLayout.setVisibility(View.GONE);
+                mSwipeLayout.setVisibility(View.VISIBLE);
             }
 
+            filter.addAction(Constants.INTENT_POSTS_LIST);
             filter.addAction(Constants.INTENT_POST_LIKE);
             filter.addAction(Constants.INTENT_POST_DISLIKE);
             filter.addAction(Constants.INTENT_REFRESH_POSTS);
@@ -231,12 +235,6 @@ public class PageFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     public void onPause() {
         super.onPause();
         mPaused = true;
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mContext.unregisterReceiver(mReceiver);
     }
 
     @Override

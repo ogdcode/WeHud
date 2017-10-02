@@ -1,14 +1,16 @@
 package com.wehud.model;
 
+import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 import com.wehud.util.Utils;
 
 import java.util.List;
 
-public final class Post implements Parcelable {
+public final class Post implements Parcelable, Comparable<Post> {
 
     @SerializedName("_id")
     private String mId;
@@ -148,5 +150,14 @@ public final class Post implements Parcelable {
                 ", likes=" + mLikes +
                 ", datetimeCreated='" + mDatetimeCreated + '\'' +
                 '}';
+    }
+
+    @Override
+    public int compareTo(@NonNull Post post) {
+        long tstp1 = Utils.isoDateTimeStringToTimestamp(mDatetimeCreated);
+        long tstp2 = Utils.isoDateTimeStringToTimestamp(post.mDatetimeCreated);
+
+        if (Build.VERSION.SDK_INT >= 19) return Long.compare(tstp1, tstp2);
+        else return Long.valueOf(tstp1).compareTo(tstp2);
     }
 }

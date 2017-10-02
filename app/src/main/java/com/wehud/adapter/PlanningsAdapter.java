@@ -51,7 +51,7 @@ public final class PlanningsAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         mManager = manager;
     }
 
-    void setViewResourceId(int viewResourceId) {
+    public void setViewResourceId(int viewResourceId) {
         mViewResourceId = viewResourceId;
     }
 
@@ -93,6 +93,7 @@ public final class PlanningsAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
         if (holder instanceof PlanningsVH) {
             final PlanningsVH planningsHolder = (PlanningsVH) holder;
+            final String userId = planning.getCreator().getId();
             final List<Event> events = planning.getEvents();
 
             final int numEvents = events.size();
@@ -128,21 +129,25 @@ public final class PlanningsAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 planningsHolder.expandCollapseButton.setVisibility(View.VISIBLE);
             }
 
-            final String userId = planning.getCreator().getId();
-            planningsHolder.view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(planningsHolder.context, EventsActivity.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putString(Constants.PREF_USER_ID, userId);
-                    bundle.putParcelableArrayList(KEY_PLANNINGS, (ArrayList<Planning>) mPlannings);
-                    bundle.putParcelableArrayList(
-                            KEY_EVENTS, (ArrayList<Event>) planning.getEvents()
-                    );
-                    intent.putExtras(bundle);
-                    planningsHolder.context.startActivity(intent);
-                }
-            });
+            if (Utils.isNotEmpty(events))
+                planningsHolder.view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(planningsHolder.context, EventsActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putString(Constants.PREF_USER_ID, userId);
+                        bundle.putParcelableArrayList(
+                                KEY_EVENTS, (ArrayList<Event>) events
+                        );
+                        intent.putExtras(bundle);
+                        planningsHolder.context.startActivity(intent);
+                    }
+                });
+
+            if (!Utils.isConnectedUser(planningsHolder.context, userId)) {
+                planningsHolder.unbindButton.setVisibility(View.GONE);
+                planningsHolder.deleteButton.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -162,14 +167,18 @@ public final class PlanningsAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         headers.put(Constants.HEADER_CONTENT_TYPE, Constants.APPLICATION_JSON);
         headers.put(Constants.HEADER_ACCEPT, Constants.APPLICATION_JSON);
 
+        Map<String, String> parameters = new HashMap<>();
+        parameters.put(Constants.PARAM_TOKEN, PreferencesUtils.get(context, Constants.PREF_TOKEN));
+
         final String planningId = planning.getId();
 
         final APICall call = new APICall(
                 context,
                 Constants.INTENT_PLANNINGS_UNBIND,
                 Constants.PATCH,
-                Constants.API_PLANNINGS + '/' + planningId,
-                headers
+                Constants.API_PLANNING_UNBIND + '/' + planningId,
+                headers,
+                parameters
         );
         if (!call.isLoading()) call.execute();
     }
@@ -232,15 +241,6 @@ public final class PlanningsAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
             expandedLayout = (ViewGroup) view.findViewById(R.id.layout_expanded);
             expandedLayout.setVisibility(View.GONE);
-
-            final boolean isConnectedUser = Utils.isConnectedUser(
-                    context,
-                    PreferencesUtils.get(context, Constants.PREF_USER_ID)
-            );
-            if (!isConnectedUser) {
-                unbindButton.setVisibility(View.GONE);
-                deleteButton.setVisibility(View.GONE);
-            }
         }
 
         @Override
@@ -269,12 +269,19 @@ public final class PlanningsAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             headers.put(Constants.HEADER_CONTENT_TYPE, Constants.APPLICATION_JSON);
             headers.put(Constants.HEADER_ACCEPT, Constants.APPLICATION_JSON);
 
+            Map<String, String> parameters = new HashMap<>();
+            parameters.put(
+                    Constants.PARAM_TOKEN,
+                    PreferencesUtils.get(context, Constants.PREF_TOKEN)
+            );
+
             final APICall call = new APICall(
                     context,
                     Constants.INTENT_PLANNINGS_DELETE,
                     Constants.DELETE,
                     Constants.API_PLANNINGS + '/' + id,
-                    headers
+                    headers,
+                    parameters
             );
             if (!call.isLoading()) call.execute();
         }

@@ -20,11 +20,12 @@
             android:background="@color/colorPrimary"
             android:minHeight="?attr/actionBarSize"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:tabGravity="fill" />
+            app:tabGravity="fill"
+            app:tabMaxWidth="0dp"
+            app:tabMode="fixed" />
 
     </android.support.design.widget.AppBarLayout>
 
-    <include
-        layout="@layout/user" />
+    <include layout="@layout/user" />
 
 </android.support.design.widget.CoordinatorLayout>

@@ -19,6 +19,7 @@ import android.view.View;
 import com.google.gson.reflect.TypeToken;
 import com.wehud.R;
 import com.wehud.adapter.PostsAdapter;
+import com.wehud.model.IDPostsResponse;
 import com.wehud.model.Payload;
 import com.wehud.model.Post;
 import com.wehud.network.APICall;
@@ -28,6 +29,7 @@ import com.wehud.util.PreferencesUtils;
 import com.wehud.util.Utils;
 
 import java.lang.reflect.Type;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,11 +52,12 @@ public class MessagesActivity extends AppCompatActivity implements SwipeRefreshL
 
                 if (Integer.valueOf(code) == Constants.HTTP_OK) {
                     final String content = payload.getContent();
+                    final IDPostsResponse idPosts = GsonUtils.getInstance().fromJson(
+                            content, IDPostsResponse.class);
+                    final List<Post> messages = idPosts.getPosts();
 
-                    final Type postListType = new TypeToken<List<Post>>(){}.getType();
-                    final List<Post> messages = GsonUtils.getInstance().fromJson(content, postListType);
-
-                    if (!messages.isEmpty()) {
+                    if (Utils.isNotEmpty(messages)) {
+                        Collections.sort(messages, Collections.<Post>reverseOrder());
                         final PostsAdapter adapter = new PostsAdapter(messages, false);
                         mMessageListView.setAdapter(adapter);
 

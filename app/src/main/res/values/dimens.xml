@@ -120,6 +120,7 @@
     <dimen name="planning_marginRightEnd">8dp</dimen>
     <dimen name="login_paddingLeftStart">5dp</dimen>
     <dimen name="avatarSize">48dp</dimen>
+    <dimen name="avatarSize_big">64dp</dimen>
     <dimen name="planning_marginTop">16dp</dimen>
     <dimen name="event_horizontalSpacing">32dp</dimen>
     <dimen name="event_imgBtnMarginTop">8dp</dimen>

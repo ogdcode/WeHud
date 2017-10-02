@@ -269,7 +269,8 @@ public class SendFragment extends Fragment
                 list,
                 adapter,
                 layoutManager,
-                divider
+                divider,
+                0
         );
     }
 
@@ -288,7 +289,7 @@ public class SendFragment extends Fragment
     }
 
     @Override
-    public void onListDialogDismissOk(Parcelable p) {
+    public void onListDialogDismissOk(Object id, Parcelable p) {
         if (p instanceof User)
             mNewPostFollower.setText(((User) p).getUsername());
         if (p instanceof Game)

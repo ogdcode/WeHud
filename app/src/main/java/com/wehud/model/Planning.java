@@ -71,6 +71,6 @@ public final class Planning implements Parcelable {
 
     @Override
     public String toString() {
-        return mTitle + " [" + mEvents.size() + " event(s)]";
+        return mTitle;
     }
 }

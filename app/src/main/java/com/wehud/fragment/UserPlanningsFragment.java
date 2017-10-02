@@ -106,6 +106,7 @@ public class UserPlanningsFragment extends Fragment
 
                             if (Utils.isNotEmpty(mPlannings)) {
                                 PlanningsAdapter adapter = new PlanningsAdapter(mPlannings);
+                                adapter.setViewResourceId(1);
                                 adapter.setFragmentManager(mManager);
                                 mPlanningListView.setLayoutManager(
                                         new LinearLayoutManager(mContext)
@@ -120,6 +121,10 @@ public class UserPlanningsFragment extends Fragment
                             }
 
                             mSwipeLayout.setRefreshing(false);
+                            break;
+                        case Constants.INTENT_PLANNINGS_UNBIND:
+                            Utils.toast(mContext, R.string.message_unboundPlanning);
+                            getPlannings();
                             break;
                         default:
                             break;
@@ -194,6 +199,7 @@ public class UserPlanningsFragment extends Fragment
         if (!isConnectedUser) {
             noPlannings.setText(getString(R.string.no_plannings));
             createFirstPlanningButton.setVisibility(View.GONE);
+            createPlanningButton.setVisibility(View.GONE);
         } else noPlannings.setText(getString(R.string.no_connected_plannings));
 
         return view;
@@ -207,6 +213,7 @@ public class UserPlanningsFragment extends Fragment
         filter.addAction(Constants.INTENT_PLANNINGS_LIST);
         filter.addAction(Constants.INTENT_PLANNINGS_ADD);
         filter.addAction(Constants.INTENT_PLANNINGS_DELETE);
+        filter.addAction(Constants.INTENT_PLANNINGS_UNBIND);
 
         mContext.registerReceiver(mReceiver, filter);
     }
@@ -214,7 +221,7 @@ public class UserPlanningsFragment extends Fragment
     @Override
     public void onResume() {
         super.onResume();
-        if (!mPaused) this.getPlannings();
+        if (!TextUtils.isEmpty(mCurrentUserId)) this.getPlannings();
 
         mPaused = false;
     }
@@ -246,11 +253,11 @@ public class UserPlanningsFragment extends Fragment
                 EditDialogFragment.generate(
                         mManager,
                         this,
-                        0,
                         getString(R.string.dialogTitle_createPlanning),
                         null,
                         getString(R.string.hint_planningTitle),
-                        false
+                        false,
+                        0
                 );
                 break;
             default:

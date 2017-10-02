@@ -117,12 +117,14 @@
     <string name="add">Add</string>
     <string name="error_fieldRequired">This field is required.</string>
     <string name="message_createEventSuccess">Event was successfully created</string>
+    <string name="message_deleteEventSuccess">Event was deleted</string>
     <string name="dialogTitle_chooseEventStartDateTime">Choose event start date and time</string>
     <string name="dialogTitle_chooseEventEndDateTime">Choose event end date and time</string>
     <string name="btnCreateFirstPlanning">Create my first planning</string>
     <string name="planning_btnUnbind">Unbind all events</string>
     <string name="btnBind">Bind to a planning</string>
-    <string name="btnUnbind">Unbind from planning</string>
+    <string name="btnUnbindContains">Unbind from planning</string>
+    <string name="btnUnbind">Unbind from planning %s</string>
     <string name="dialogTitle_createPlanning">Create A Planning</string>
     <string name="hint_planningTitle">Title</string>
     <string name="message_addPlanningSuccess">A new planning has been created</string>
@@ -130,7 +132,7 @@
     <string name="dialogTitle_deletePlanning">Delete Planning</string>
     <string name="message_deletePlanning">Delete this planning?</string>
     <string name="dialogTitle_choosePlanning">Choose a planning</string>
-    <string name="dialogTitle_eventUnbind">Unbind from planning</string>
+    <string name="dialogTitle_eventUnbind">Unbind</string>
     <string name="dialogText_eventUnbind">Remove this event from planning %s?</string>
     <string name="message_eventBound">Event was added to planning %s</string>
     <string name="message_eventUnbound">Event was removed from planning %s</string>
@@ -157,6 +159,7 @@
     <string name="no_plannings">This user has not created a planning yet.</string>
     <string name="no_connected_plannings">You have not created a planning yet. Want to do so?</string>
     <string name="no_events">There are no events yet.</string>
+    <string name="no_connected_events">You do not have created events yet.</string>
     <string name="no_user_posts">This user has not posted anything yet.</string>
     <string name="no_posts">There are no posts to be found.</string>
     <string name="no_messages">There are no messages to be found.</string>
@@ -176,4 +179,6 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="message_unboundPlanning">This planning has no events now</string>
+    <string name="btnCreateFirstEvent">Create first event</string>
 </resources>

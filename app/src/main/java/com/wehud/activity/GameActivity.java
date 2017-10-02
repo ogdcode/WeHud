@@ -256,7 +256,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    public void onListDialogDismissOk(Parcelable p) {
+    public void onListDialogDismissOk(Object id, Parcelable p) {
         if (p instanceof Page) {
             final String pageTitle = ((Page) p).getTitle();
 
@@ -351,15 +351,15 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         );
         mStatus.setText(status.getDescription());
         if (!genres.isEmpty()) {
-            Utils.putStringListIntoTextView(mGenres, genres);
+            Utils.putStringListInTextView(mGenres, genres);
             mGenresLayout.setVisibility(View.VISIBLE);
         }
         if (!developers.isEmpty()) {
-            Utils.putStringListIntoTextView(mDevelopers, developers);
+            Utils.putStringListInTextView(mDevelopers, developers);
             mDevelopersLayout.setVisibility(View.VISIBLE);
         }
         if (!publishers.isEmpty()) {
-            Utils.putStringListIntoTextView(mPublishers, publishers);
+            Utils.putStringListInTextView(mPublishers, publishers);
             mPublishersLayout.setVisibility(View.VISIBLE);
         }
         if (!TextUtils.isEmpty(franchise)) {
@@ -371,7 +371,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             mMainGameLayout.setVisibility(View.VISIBLE);
         }
         if (!modes.isEmpty()) {
-            Utils.putStringListIntoTextView(mModes, modes);
+            Utils.putStringListInTextView(mModes, modes);
             mModesLayout.setVisibility(View.VISIBLE);
         }
         if (!TextUtils.isEmpty(firstReleaseDate)) {
@@ -452,7 +452,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 pages,
                 adapter,
                 layoutManager,
-                divider
+                divider,
+                0
         );
     }
 

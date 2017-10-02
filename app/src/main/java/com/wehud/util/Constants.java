@@ -21,7 +21,7 @@ public final class Constants {
 
     public static final String API_LIKE = API_POSTS + "/like";
     public static final String API_DISLIKE = API_POSTS + "/dislike";
-    public static final String API_MESSAGES = API_POSTS + "/messages/all";
+    public static final String API_MESSAGES = API_POSTS + "/all/messages";
 
     public static final String API_USERS_USER = API_USERS + "/user";
     public static final String API_USERS_PAGES = API_USERS + "/pages";
@@ -38,6 +38,7 @@ public final class Constants {
 
     public static final String API_EVENT_BIND = API_EVENTS + "/bind";
     public static final String API_EVENT_UNBIND = API_EVENTS + "/unbind";
+    public static final String API_PLANNING_UNBIND = API_PLANNINGS + "/unbind";
 
     public static final String HEADER_CONTENT_TYPE = "Content-Type";
     public static final String HEADER_ACCEPT = "Accept";
@@ -106,7 +107,14 @@ public final class Constants {
 
     static final String CHARACTERS = "0123456789abcdef";
 
-    static final String[] RANKS = {"I", "H", "G", "F", "E", "D", "C", "B", "A", "S"};
+    static final String[] RANKS = {"J", "H", "G", "F", "E", "D", "C", "B", "A", "S"};
+
+    static final String
+            TAG_EVENT_LABEL = "Other",
+            TAG_LIVE_LABEL = "Live",
+            TAG_MEETUP_LABEL = "Meetup",
+            TAG_YOUTUBE_LABEL = "YouTube",
+            TAG_BIRTHDAY_LABEL = "Birthday";
 
     static final int
             TAG_EVENT = 0,
@@ -126,4 +134,5 @@ public final class Constants {
 
     static final String LOCAL_PATTERN_DATETIME = "dd/MM/yyyy HH:mm";
     static final String LOCAL_PATTERN_DATE = "dd/MM/yyyy";
+    static final String LOCAL_PATTERN_TIME = "HH:mm";
 }

@@ -24,7 +24,7 @@ import com.wehud.R;
 
 public final class EditDialogFragment extends DialogFragment {
 
-    private static final String KEY_VIEW_ID = "key_view_id";
+    private static final String KEY_ID = "key_view_id";
     private static final String KEY_HINT = "key_hint";
     private static final String KEY_TITLE = "key_title";
     private static final String KEY_TEXT = "key_text";
@@ -45,26 +45,28 @@ public final class EditDialogFragment extends DialogFragment {
     }
 
     public static void generate(FragmentManager manager, OnEditDialogDismissOkListener listener,
-                                Object id, String title, String text, String hint, boolean password) {
+                                String title, String text, String hint, boolean password,
+                                Object id)
+    {
         Bundle args = new Bundle();
         if (id instanceof Long)
-            args.putLong(KEY_VIEW_ID, (long) id);
+            args.putLong(KEY_ID, (long) id);
         if (id instanceof Integer)
-            args.putInt(KEY_VIEW_ID, (int) id);
+            args.putInt(KEY_ID, (int) id);
         if (id instanceof Short)
-            args.putShort(KEY_VIEW_ID, (short) id);
+            args.putShort(KEY_ID, (short) id);
         if (id instanceof Double)
-            args.putDouble(KEY_VIEW_ID, (double) id);
+            args.putDouble(KEY_ID, (double) id);
         if (id instanceof Float)
-            args.putFloat(KEY_VIEW_ID, (float) id);
+            args.putFloat(KEY_ID, (float) id);
         if (id instanceof Byte)
-            args.putByte(KEY_VIEW_ID, (byte) id);
+            args.putByte(KEY_ID, (byte) id);
         if (id instanceof String)
-            args.putString(KEY_VIEW_ID, id.toString());
+            args.putString(KEY_ID, id.toString());
         if (id instanceof Character)
-            args.putChar(KEY_VIEW_ID, (char) id);
+            args.putChar(KEY_ID, (char) id);
         if (id instanceof Boolean)
-            args.putBoolean(KEY_VIEW_ID, (boolean) id);
+            args.putBoolean(KEY_ID, (boolean) id);
 
         args.putString(KEY_TITLE, title);
         args.putString(KEY_TEXT, text);
@@ -83,7 +85,7 @@ public final class EditDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         final Context context = getActivity();
         final Bundle args = getArguments();
-        final Object viewId = args.get(KEY_VIEW_ID);
+        final Object dialogId = args.get(KEY_ID);
         final String[] text = {args.getString(KEY_TEXT)};
         final String title = args.getString(KEY_TITLE);
         final String hint = args.getString(KEY_HINT);
@@ -151,7 +153,7 @@ public final class EditDialogFragment extends DialogFragment {
                             confirmNewPassword.setError(getString(R.string.error_passwords_no_match));
                         } else text[0] = newPassword.getText().toString();
                     }
-                    mListener.onEditDialogDismissOk(viewId, text[0]);
+                    mListener.onEditDialogDismissOk(dialogId, text[0]);
                 }
                 dismiss();
             }

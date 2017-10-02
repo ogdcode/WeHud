@@ -164,8 +164,17 @@ public final class Utils {
 
     public static String timestampToLocalDateString(final long timestamp) {
         final Timestamp tstp = new Timestamp(timestamp);
-        DateFormat df = new SimpleDateFormat(Constants.LOCAL_PATTERN_DATE, Locale.getDefault());
-        return df.format(new Date(tstp.getTime()));
+        DateFormat dateFormatter = new SimpleDateFormat(Constants.LOCAL_PATTERN_DATE, Locale.getDefault());
+        Date d = new Date(tstp.getTime());
+        return dateFormatter.format(d);
+    }
+
+    public static String timestampToLocalDateTimeString(final long timestamp) {
+        final Timestamp tstp = new Timestamp(timestamp);
+        DateFormat dateFormatter = new SimpleDateFormat(Constants.LOCAL_PATTERN_DATE, Locale.getDefault());
+        DateFormat timeFormatter = new SimpleDateFormat(Constants.LOCAL_PATTERN_TIME, Locale.getDefault());
+        Date d = new Date(tstp.getTime());
+        return dateFormatter.format(d) + "\n" + timeFormatter.format(d);
     }
 
     public static Status getStatus(final Context context, final int status) {
@@ -204,6 +213,45 @@ public final class Utils {
         }
 
         return new Status(resId, sb.toString());
+    }
+
+    public static String[] getAllTags() {
+        return new String[]{
+                Constants.TAG_LIVE_LABEL,
+                Constants.TAG_MEETUP_LABEL,
+                Constants.TAG_YOUTUBE_LABEL,
+                Constants.TAG_BIRTHDAY_LABEL,
+                Constants.TAG_EVENT_LABEL
+        };
+    }
+
+    public static Tag getTag(final String tag) {
+        int code, icon;
+
+        switch (tag) {
+            case Constants.TAG_LIVE_LABEL:
+                code = Constants.TAG_LIVE;
+                icon = R.drawable.ic_live;
+                break;
+            case Constants.TAG_MEETUP_LABEL:
+                code = Constants.TAG_MEETUP;
+                icon = R.drawable.ic_meetup;
+                break;
+            case Constants.TAG_YOUTUBE_LABEL:
+                code = Constants.TAG_YOUTUBE;
+                icon = R.drawable.ic_youtube;
+                break;
+            case Constants.TAG_BIRTHDAY_LABEL:
+                code = Constants.TAG_BIRTHDAY;
+                icon = R.drawable.ic_birthday;
+                break;
+            default:
+                code = Constants.TAG_EVENT;
+                icon = R.drawable.ic_event;
+                break;
+        }
+
+        return new Tag(code, icon);
     }
 
     public static Tag getTag(final int tag) {
@@ -252,7 +300,7 @@ public final class Utils {
         for (TextView view : views) view.setText(null);
     }
 
-    public static void putStringListIntoTextView(TextView txt, final List<String> strings) {
+    public static void putStringListInTextView(TextView txt, final List<String> strings) {
         final int len = strings.size();
         for (int i = 0; i < len; ++i) {
             if (i < len - 1) txt.append(strings.get(i) + ", ");
@@ -270,23 +318,22 @@ public final class Utils {
     }
 
     public static Score getScore(final int score) {
-        int level, rankIndex;
-        if (score >= 0 && score < 100) level = (score / 10) + 1;
-        else level = score / 100;
-        rankIndex = level - 1;
+        String scoreStr = String.valueOf(score);
+        int len = scoreStr.length();
+        int level;
+        int rankIndex;
 
-        StringBuilder rank = new StringBuilder();
-        if (score > 999) {
-            final int len = String.valueOf(level).length();
-            rankIndex = (level / ((len - 1) * 10)) - 1;
-            rank.append(Constants.RANKS[rankIndex]);
+        if (score > 9) level = (scoreStr.charAt(len - 2) - '0') + 1;
+        else level = 1;
+        if (score > 99) rankIndex = scoreStr.charAt(len - 3) - '0';
+        else rankIndex = 0;
 
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < len - 1; ++i) sb.append('+');
-
-            rank.append(sb.toString());
+        StringBuilder rank = new StringBuilder(Constants.RANKS[rankIndex]);
+        int numberOfPluses = len - 3;
+        if (numberOfPluses > 0) {
+            if (numberOfPluses > 4) for (int i = 3; i < numberOfPluses; ++i) rank.append('X');
+            else for (int i = 0; i < numberOfPluses; ++i) rank.append('+');
         }
-        else rank.append(Constants.RANKS[rankIndex]);
 
         return new Score(level, rank.toString());
     }
@@ -374,6 +421,19 @@ public final class Utils {
         return generateString(rng, Constants.CHARACTERS, 24);
     }
 
+    private static String generateString(
+            final Random rng,
+            final String characters,
+            final int length)
+    {
+        char[] text = new char[length];
+        for (int i = 0; i < length; i++)
+        {
+            text[i] = characters.charAt(rng.nextInt(characters.length()));
+        }
+        return new String(text);
+    }
+
     /**
      * Helper method to call a Picasso static instance to load images.
      *
@@ -419,18 +479,5 @@ public final class Utils {
             final int i2)
     {
         Picasso.with(context).load(imgUrl).resize(i, i2).into(iv);
-    }
-
-    private static String generateString(
-            final Random rng,
-            final String characters,
-            final int length)
-    {
-        char[] text = new char[length];
-        for (int i = 0; i < length; i++)
-        {
-            text[i] = characters.charAt(rng.nextInt(characters.length()));
-        }
-        return new String(text);
     }
 }

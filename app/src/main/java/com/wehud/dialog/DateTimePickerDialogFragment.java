@@ -40,14 +40,24 @@ public final class DateTimePickerDialogFragment extends DialogFragment {
                                 String title, Object id
     ) {
         Bundle args = new Bundle();
-        if (id instanceof Long || id instanceof Integer || id instanceof Short)
+        if (id instanceof Long)
             args.putLong(KEY_ID, (long) id);
-        if (id instanceof Double || id instanceof Float)
+        if (id instanceof Integer)
+            args.putInt(KEY_ID, (int) id);
+        if (id instanceof Short)
+            args.putShort(KEY_ID, (short) id);
+        if (id instanceof Double)
             args.putDouble(KEY_ID, (double) id);
+        if (id instanceof Float)
+            args.putFloat(KEY_ID, (float) id);
         if (id instanceof Byte)
             args.putByte(KEY_ID, (byte) id);
-        if (id instanceof String || id instanceof Character)
+        if (id instanceof String)
             args.putString(KEY_ID, id.toString());
+        if (id instanceof Character)
+            args.putChar(KEY_ID, (char) id);
+        if (id instanceof Boolean)
+            args.putBoolean(KEY_ID, (boolean) id);
 
         args.putString(KEY_TITLE, title);
 

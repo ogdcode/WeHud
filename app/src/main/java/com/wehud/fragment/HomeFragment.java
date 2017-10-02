@@ -264,9 +264,9 @@ public class HomeFragment extends Fragment implements TabLayout.OnTabSelectedLis
         switch (item.getItemId()) {
             case R.id.menu_post_add:
                 EditDialogFragment.generate(
-                        manager, this, 0,
+                        manager, this,
                         getString(R.string.dialogTitle_addPage), null,
-                        getString(R.string.hint_name), false
+                        getString(R.string.hint_name), false, 0
                 );
                 break;
             case R.id.menu_delete:

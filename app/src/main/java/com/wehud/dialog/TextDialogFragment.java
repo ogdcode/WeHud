@@ -33,7 +33,8 @@ public final class TextDialogFragment extends DialogFragment {
     }
 
     public static void generate(FragmentManager manager, OnTextDialogDismissOkListener listener,
-                                String title, String message, Object id) {
+                                String title, String message, Object id)
+    {
         Bundle args = new Bundle();
         if (id instanceof Long)
             args.putLong(KEY_ID, (long) id);

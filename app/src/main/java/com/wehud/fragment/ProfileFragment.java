@@ -125,9 +125,8 @@ public class ProfileFragment extends Fragment
     @Override
     public void onResume() {
         super.onResume();
-        if (!mPaused) this.getCurrentUserInfo();
-
         mPaused = false;
+        this.getCurrentUserInfo();
     }
 
     @Override

@@ -22,19 +22,29 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <FrameLayout
+        <LinearLayout
             android:id="@+id/layout_empty"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@android:color/darker_gray">
+            android:background="@android:color/darker_gray"
+            android:gravity="center"
+            android:orientation="vertical">
 
             <TextView
+                android:id="@+id/no_events"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="@string/empty_list" />
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                tools:text="@string/no_events" />
 
-        </FrameLayout>
+            <Button
+                android:id="@+id/btnCreateFirstEvent"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/btnCreateFirstEvent" />
+
+        </LinearLayout>
 
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/layout_swipe"

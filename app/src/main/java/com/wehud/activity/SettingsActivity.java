@@ -238,11 +238,11 @@ public class SettingsActivity extends AppCompatActivity
         EditDialogFragment.generate(
                 getSupportFragmentManager(),
                 this,
-                textId,
                 title,
                 text,
                 hint,
-                isPassword
+                isPassword,
+                textId
         );
     }
 
@@ -261,7 +261,7 @@ public class SettingsActivity extends AppCompatActivity
     }
 
     @Override
-    public void onListDialogDismissOk(Parcelable p) {
+    public void onListDialogDismissOk(Object id, Parcelable p) {
         if (p instanceof Image) {
             mImage = (Image) p;
 
@@ -328,7 +328,8 @@ public class SettingsActivity extends AppCompatActivity
                 images,
                 adapter,
                 layoutManager,
-                null
+                null,
+                0
         );
     }
 

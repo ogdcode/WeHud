@@ -6,13 +6,28 @@
     android:orientation="vertical"
     android:padding="@dimen/dialogEvent_padding">
 
-    <EditText
-        android:id="@+id/title"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/hint_title"
-        android:inputType="text"
-        android:maxLines="@integer/text_maxLines" />
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="@string/hint_title"
+            android:inputType="text"
+            android:maxLines="@integer/text_maxLines" />
+
+        <Spinner
+            android:id="@+id/tag"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+    </LinearLayout>
 
     <android.support.v4.widget.Space
         android:layout_width="match_parent"
