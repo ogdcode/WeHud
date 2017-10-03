@@ -78,15 +78,22 @@ public final class GamesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         if (holder instanceof GameCoversVH) {
             final GameCoversVH coversHolder = (GameCoversVH) holder;
 
-            final String cover = "https://" + game.getCover();
-            if (!TextUtils.isEmpty(cover) && mGridColumns > 0)
+            final String cover = game.getCover();
+            final String name = game.getName();
+            if (!TextUtils.isEmpty(cover) && mGridColumns > 0) {
                 Utils.loadImage(
                         coversHolder.context,
-                        cover,
+                        "https://" + cover,
                         coversHolder.cover,
                         Resources.getSystem().getDisplayMetrics().widthPixels / mGridColumns
                 );
-            else coversHolder.cover.setImageResource(R.mipmap.ic_launcher);
+                coversHolder.name.setVisibility(View.GONE);
+            }
+            else {
+                coversHolder.cover.setImageResource(R.drawable.ic_game);
+                coversHolder.name.setText(name);
+                coversHolder.name.setVisibility(View.VISIBLE);
+            }
 
             coversHolder.cover.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -115,11 +122,13 @@ public final class GamesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private class GameCoversVH extends RecyclerView.ViewHolder {
         private Context context;
         private ImageView cover;
+        private TextView name;
 
         GameCoversVH(View view) {
             super(view);
             context = view.getContext();
             cover = (ImageView) view.findViewById(R.id.avatar);
+            name = (TextView) view.findViewById(R.id.name);
         }
     }
 

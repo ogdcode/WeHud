@@ -228,7 +228,6 @@ public class PageFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             Intent intent = new Intent(Constants.INTENT_REFRESH_PAGE);
             intent.putExtra(Constants.EXTRA_REFRESH_PAGE, mId);
             mContext.sendBroadcast(intent);
-            Log.d("MAIN", "ID: " + mId);
         } else mPaused = false;
     }
 
