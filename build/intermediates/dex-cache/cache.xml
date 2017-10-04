@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="true"
+        jar="/Users/ogoncalves/Desktop/Programmes/Android/WeHud/app/build/intermediates/incremental-runtime-classes/debug/instant-run.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.0"
+        sha1="3be78ebc2706b2e1fe2f12d5726887a92d6c183b">
+        <dex dex="/Users/ogoncalves/Desktop/Programmes/Android/WeHud/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run_f670e3df5e4f7f777aa28b888494c1c35ce2eef3/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/ogoncalves/Desktop/Programmes/Android/WeHud/app/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.0"
+        sha1="6cca9c5fa89f46867585ad5fbe1353cf24154995">
+        <dex dex="/Users/ogoncalves/Desktop/Programmes/Android/WeHud/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run-bootstrap_07ba01009d25afc2882d0859be72b8ed160aca0e/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/ogoncalves/Desktop/Programmes/Android/WeHud/app/libs/YouTubeAndroidPlayerApi.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.0"
+        sha1="3c4f96ff493456651cc7bdb0b47e10eb25545a16">
+        <dex dex="/Users/ogoncalves/Desktop/Programmes/Android/WeHud/app/build/intermediates/transforms/dex/debug/folders/1000/2/YouTubeAndroidPlayerApi_a383c7f8866cf80673ddef6089efa9a8df13f38f/classes.dex" />
+    </item>
+
+</items>

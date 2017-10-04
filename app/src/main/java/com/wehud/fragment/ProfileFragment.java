@@ -45,23 +45,31 @@ public class ProfileFragment extends Fragment
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equals(Constants.INTENT_USER_GET) && !mPaused) {
+            if (!mPaused) {
                 final String response = intent.getStringExtra(Constants.EXTRA_BROADCAST);
                 final Payload payload = GsonUtils.getInstance().fromJson(response, Payload.class);
 
                 final String code = payload.getCode();
 
-                if (Integer.valueOf(code) == Constants.HTTP_OK) {
-                    final String content = payload.getContent();
-                    final User currentUser = GsonUtils.getInstance().fromJson(content, User.class);
+                if (Integer.valueOf(code) == Constants.HTTP_OK ||
+                        Integer.valueOf(code) == Constants.HTTP_NO_CONTENT) {
+                    if (intent.getAction().equals(Constants.INTENT_USER_GET)) {
+                        final String content = payload.getContent();
+                        final User currentUser = GsonUtils.getInstance().fromJson(content, User.class);
 
-                    final String avatar = currentUser.getAvatar();
-                    final String username = currentUser.getUsername();
+                        final String avatar = currentUser.getAvatar();
+                        final String username = currentUser.getUsername();
 
-                    if (!TextUtils.isEmpty(avatar))
-                        Utils.loadImage(mContext, avatar, mProfileUserAvatar);
-                    else mProfileUserAvatar.setImageResource(R.mipmap.ic_launcher_round);
-                    mProfileUsername.setText(username);
+                        if (!TextUtils.isEmpty(avatar))
+                            Utils.loadImage(mContext, avatar, mProfileUserAvatar);
+                        else mProfileUserAvatar.setImageResource(R.mipmap.ic_launcher_round);
+                        mProfileUsername.setText(username);
+                    }
+
+                    if (intent.getAction().equals(Constants.INTENT_LOGOUT)) {
+                        PreferencesUtils.clear(mContext);
+                        getActivity().finish();
+                    }
                 } else {
                     int messageId;
                     switch (Integer.valueOf(code)) {
@@ -118,6 +126,7 @@ public class ProfileFragment extends Fragment
 
         IntentFilter filter = new IntentFilter();
         filter.addAction(Constants.INTENT_USER_GET);
+        filter.addAction(Constants.INTENT_LOGOUT);
 
         mContext.registerReceiver(mReceiver, filter);
     }
@@ -176,7 +185,22 @@ public class ProfileFragment extends Fragment
 
     @Override
     public void onTextDialogDismissOk(Object id) {
-        getActivity().finish();
+        Map<String, String> headers = new HashMap<>();
+        headers.put(Constants.HEADER_CONTENT_TYPE, Constants.APPLICATION_JSON);
+        headers.put(Constants.HEADER_ACCEPT, Constants.APPLICATION_JSON);
+
+        Map<String, String> parameters = new HashMap<>();
+        parameters.put(Constants.PARAM_TOKEN, PreferencesUtils.get(mContext, Constants.PREF_TOKEN));
+
+        final APICall call = new APICall(
+                mContext,
+                Constants.INTENT_LOGOUT,
+                Constants.GET,
+                Constants.API_LOGOUT,
+                headers,
+                parameters
+        );
+        if (!call.isLoading()) call.execute();
     }
 
     private void attemptSignOut() {
