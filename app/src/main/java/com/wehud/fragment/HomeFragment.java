@@ -83,7 +83,7 @@ public class HomeFragment extends Fragment implements TabLayout.OnTabSelectedLis
                                 final Type pageListType = new TypeToken<List<Page>>(){}.getType();
                                 mPages = GsonUtils.getInstance().fromJson(content, pageListType);
 
-                                if (!mPages.isEmpty()) {
+                                if (Utils.isNotEmpty(mPages)) {
                                     int i = 1;
                                     for (Page page : mPages)
                                         mAdapter.add(

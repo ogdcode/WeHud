@@ -97,6 +97,7 @@ public final class Constants {
     public static final String INTENT_EVENTS_UNBIND = "intent_events_unbind";
     public static final String INTENT_REFRESH_PAGE = "intent_refresh_page";
     public static final String INTENT_REFRESH_POSTS = "intent_refresh_posts";
+    public static final String REFRESH_ALL_PAGES = "refresh_all_pages";
 
     public static final String EXTRA_BROADCAST = "extra_broadcast";
     public static final String EXTRA_REFRESH_PAGE = "extra_refresh_page";
